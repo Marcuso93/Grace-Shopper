@@ -14,5 +14,5 @@ describe('/api/health endpoint', () => {
     const response = await request.get('/api/health');
     expect(response.status).toBe(200);
     expect(response.body.healthy).toBe(true);
-  });
+  }); 
 });
