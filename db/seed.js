@@ -1,27 +1,30 @@
 const {
-  client,
+  //client,
   // declare your model imports here
   createUser,
   createInventory,
-  createReviews
+  //createReviews
   // for example, User
-} = require('.');
+} = require('./');
+
+const client = require("./client")
+
+
 
 async function buildTables() {
   try {
     client.connect();
     console.log("Dropping All Tables...")
-
     // drop tables in correct order
     await client.query(`
-      DROP TABLE IF EXISTS users;
-      DROP TABLE IF EXISTS inventory;
-      DROP TABLE IF EXISTS cart;
       DROP TABLE IF EXISTS reviews;
+      DROP TABLE IF EXISTS cart;
+      DROP TABLE IF EXISTS inventory;
+      DROP TABLE IF EXISTS users;
     `)
 
     // build tables in correct order
-
+    console.log('hello')
     await client.query(`
     CREATE TABLE users (
       id SERIAL PRIMARY KEY,
@@ -34,14 +37,14 @@ async function buildTables() {
       category VARCHAR(255),
       description TEXT NOT NULL,
       price INTEGER,
-      purchasedCount INTEGER,
+      "purchasedCount" INTEGER,
       stock INTEGER,
-      "isPublic" BOOLEAN DEFAULT false,
+      "isPublic" BOOLEAN DEFAULT false
     );
     CREATE TABLE cart(
       id SERIAL PRIMARY KEY,
       name VARCHAR(255),
-      price INTEGER,
+      price INTEGER
     );
     CREATE TABLE Reviews(
       id SERIAL PRIMARY KEY,
@@ -49,9 +52,8 @@ async function buildTables() {
       "itemId" INTEGER REFERENCES inventory(id),
       username VARCHAR(255) UNIQUE NOT NULL,
       stars INTEGER,
-      description TEXT NOT NULL,
+      description TEXT NOT NULL
     );
-    
   `)
     console.log("Finished building tables!");
   } catch (error) {
@@ -69,7 +71,10 @@ async function createInitialData() {
       { username: "marcus", password: "1234BigMoney" },
     ]
     const users = await Promise.all(usersToCreate.map(createUser))
+    console.log("USERS", users)
+    console.log("Finish creating users...")
 
+    console.log("Starting to create inventory...")
     const inventoryToCreate = [
       { 
         name: "work desk", 
@@ -92,7 +97,10 @@ async function createInitialData() {
       },
     ]
     const inventory = await Promise.all(inventoryToCreate.map(createInventory))
+    console.log(inventory)
+    console.log("Finish creating inventory...")
     
+    console.log("Starting to create cart...")
     const cartToCreate = [
       { name: 'albert', price: "150"},
       { name: 'sandra', price: "65"},
@@ -101,6 +109,8 @@ async function createInitialData() {
       { name: 'albert', price: "65"}
     ]
     const cart = await Promise.all(cartToCreate.map(createCart))
+    console.log(cart)
+    console.log("Finish creating cart...")
 
     const reviewsToCreate =[
       {username: "albert", creatorId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
@@ -108,13 +118,16 @@ async function createInitialData() {
       {username: "glamgal", creatorId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
       {username: "Marcus", creatorId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
     ]
-    const reviews = await Promise.all(reviewsToCreate.map(createReviews))
+    console.log(reviewsToCreate)
+    // const reviews = await Promise.all(reviewsToCreate.map(createReviews))
 
-    console.log("Users created:")
-    console.log(users)
-    console.log("Finished creating users!")
+    //console.log("Users created:")
+    //console.log(users)
+    console.log(items)
+    console.log("Finished creating tables!")
+    
   } catch (error) {
-    console.error("Error creating users!")
+    console.error("Error creating tables!")
     throw error
   }
 }
@@ -124,3 +137,9 @@ buildTables()
   .then(createInitialData)
   .catch(console.error)
   .finally(() => client.end());
+
+
+
+
+
+

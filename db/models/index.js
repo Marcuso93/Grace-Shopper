@@ -11,5 +11,6 @@ module.exports = {
   // for example, create a users.js file for a User model
   // and User: require('./user') here
   ...require('./user'),
+  ...require('./inventory')
 };
 
