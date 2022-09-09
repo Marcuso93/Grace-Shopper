@@ -3,6 +3,8 @@ const {
   // declare your model imports here
   createUser,
   createInventory,
+  addToCart,
+  createReviews
   //createReviews
   // for example, User
 } = require('./');
@@ -18,18 +20,21 @@ async function buildTables() {
     // drop tables in correct order
     await client.query(`
       DROP TABLE IF EXISTS reviews;
-      DROP TABLE IF EXISTS cart;
+      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
       DROP TABLE IF EXISTS users;
     `)
 
     // build tables in correct order
-    console.log('hello')
+    console.log('hello again')
     await client.query(`
     CREATE TABLE users (
       id SERIAL PRIMARY KEY,
       username VARCHAR(255) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL
+      password VARCHAR(255) NOT NULL,
+      address VARCHAR(255),
+      fullname VARCHAR(255),
+      email VARCHAR(255)
     );
     CREATE TABLE inventory(
       id SERIAL PRIMARY KEY,
@@ -39,19 +44,23 @@ async function buildTables() {
       price INTEGER,
       "purchasedCount" INTEGER,
       stock INTEGER,
-      "isPublic" BOOLEAN DEFAULT false
+      "isPublic" BOOLEAN DEFAULT true
     );
-    CREATE TABLE cart(
+    CREATE TABLE carts(
       id SERIAL PRIMARY KEY,
-      name VARCHAR(255),
-      price INTEGER
+      "userId" INTEGER REFERENCES users(id),
+      "inventoryId" INTEGER REFERENCES inventory(id),
+      quantity INTEGER,
+      price INTEGER,
+      "isPurchased" BOOLEAN DEFAULT false
     );
-    CREATE TABLE Reviews(
+    CREATE TABLE reviews(
       id SERIAL PRIMARY KEY,
-      "creatorId" INTEGER REFERENCES users(id),
+      "userId" INTEGER REFERENCES users(id),
       "itemId" INTEGER REFERENCES inventory(id),
       username VARCHAR(255) UNIQUE NOT NULL,
       stars INTEGER,
+      "isPublic" BOOLEAN DEFAULT true,
       description TEXT NOT NULL
     );
   `)
@@ -65,10 +74,10 @@ async function createInitialData() {
   console.log("Starting to create users...")
   try {
     const usersToCreate = [
-      { username: "albert", password: "bertie99" },
-      { username: "sandra", password: "sandra123" },
-      { username: "glamgal", password: "glamgal123" },
-      { username: "marcus", password: "1234BigMoney" },
+      { username: "albert", password: "bertie99", address: "colorado", fullname: "Albert Smith", email: "albert@gmail.com" },
+      { username: "sandra", password: "sandra123", address: "Denver", fullname: "Sandra Copper", email: "Sandra@aol.com"},
+      { username: "glamgal", password: "glamgal123", address: "Fort Collins", fullname: "Shrimp Man", email: "Shrimp@gmail.com" },
+      { username: "marcus", password: "1234BigMoney", address: "Golden", fullname: "Marcus Ortega", email: "Marcus@gmail.com"},
     ]
     const users = await Promise.all(usersToCreate.map(createUser))
     console.log("USERS", users)
@@ -100,30 +109,33 @@ async function createInitialData() {
     console.log(inventory)
     console.log("Finish creating inventory...")
     
-    console.log("Starting to create cart...")
-    const cartToCreate = [
-      { name: 'albert', price: "150"},
-      { name: 'sandra', price: "65"},
-      { name: 'glamgal', price: "65"},
-      { name: 'Marcus', price: "150"},
-      { name: 'albert', price: "65"}
+    console.log("Starting to create carts...")
+    const cartsToCreate = [
+      { userId: 1, inventoryId: 2, quantity: 1, price: 65, isPurchased: false },
+      { userId: 2, inventoryId: 1, quantity: 1, price: 150, isPurchased: false },
+      // { name: 'glamgal', price: "65"},
+      // { name: 'Marcus', price: "150"},
+      // { name: 'albert', price: "65"}
+
+      // {id: , inventoryId: , quantity: , price: , total }
+
+      
     ]
-    const cart = await Promise.all(cartToCreate.map(createCart))
+    const cart = await Promise.all(cartsToCreate.map(addToCart))
     console.log(cart)
-    console.log("Finish creating cart...")
+    console.log("Finish creating carts...")
 
+    console.log("Starting to create reviews...")
     const reviewsToCreate =[
-      {username: "albert", creatorId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
-      {username: "sandra", creatorId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
-      {username: "glamgal", creatorId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
-      {username: "Marcus", creatorId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
+      {username: "albert", userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
+      {username: "sandra", userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
+      {username: "glamgal", userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
+      {username: "Marcus", userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
     ]
-    console.log(reviewsToCreate)
-    // const reviews = await Promise.all(reviewsToCreate.map(createReviews))
+    const reviews = await Promise.all(reviewsToCreate.map(createReviews))
+    console.log(reviews)
+    console.log("Finish creating reviews...")
 
-    //console.log("Users created:")
-    //console.log(users)
-    console.log(items)
     console.log("Finished creating tables!")
     
   } catch (error) {
