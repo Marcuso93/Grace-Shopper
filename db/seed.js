@@ -4,7 +4,7 @@ const {
   createUser,
   createInventory,
   addToCart,
-  createReviews
+  createReviews,
   //createReviews
   // for example, User
 } = require('./');
@@ -19,6 +19,7 @@ async function buildTables() {
     console.log("Dropping All Tables...")
     // drop tables in correct order
     await client.query(`
+      DROP TABLE IF EXISTS cart_inventory;
       DROP TABLE IF EXISTS reviews;
       DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
@@ -34,7 +35,8 @@ async function buildTables() {
       password VARCHAR(255) NOT NULL,
       address VARCHAR(255),
       fullname VARCHAR(255),
-      email VARCHAR(255)
+      email VARCHAR(255),
+      "isAdmin" BOOLEAN DEFAULT false
     );
     CREATE TABLE inventory(
       id SERIAL PRIMARY KEY,
@@ -44,7 +46,8 @@ async function buildTables() {
       price INTEGER,
       "purchasedCount" INTEGER,
       stock INTEGER,
-      "isPublic" BOOLEAN DEFAULT true
+      "isCustomizable" BOOLEAN DEFAULT true,
+      "isActive" BOOLEAN DEFAULT true
     );
     CREATE TABLE carts(
       id SERIAL PRIMARY KEY,
@@ -63,6 +66,14 @@ async function buildTables() {
       "isPublic" BOOLEAN DEFAULT true,
       description TEXT NOT NULL
     );
+    CREATE TABLE cart_inventory(
+      id SERIAL PRIMARY KEY, 
+      "inventoryId" INTEGER REFERENCES inventory(id),
+      "cartsId" INTEGER REFERENCES carts(id),
+      quantity INTEGER,
+      price INTEGER,
+      UNIQUE ("inventoryId", "cartsId")
+      )
   `)
     console.log("Finished building tables!");
   } catch (error) {
@@ -91,8 +102,9 @@ async function createInitialData() {
         price: "150", 
         description: "beetle kill wood and epoxy", 
         purchasedCount: "0",
-        stock: "0",
-        isPublic: "false"
+        stock: "10",
+        isPublic: "false",
+        isCustomizable: "false"
       },
 
       { 
@@ -101,8 +113,9 @@ async function createInitialData() {
         price: "65", 
         description: "hard wood with custom laser engraving", 
         purchasedCount: "0",
-        stock: "0",
-        isPublic: "false"
+        stock: "10",
+        isPublic: "false",
+        isCustomizable: "true"
       },
     ]
     const inventory = await Promise.all(inventoryToCreate.map(createInventory))
@@ -116,8 +129,6 @@ async function createInitialData() {
       // { name: 'glamgal', price: "65"},
       // { name: 'Marcus', price: "150"},
       // { name: 'albert', price: "65"}
-
-      // {id: , inventoryId: , quantity: , price: , total }
 
       
     ]
@@ -144,14 +155,19 @@ async function createInitialData() {
   }
 }
 
+console.log('Starting to test cart.js');
+const itemToAddToCart = {
+  id: 1,
+  name: "work desk",
+  category: "table",
+  price: "150",
+  description: "beetle kill wood and epoxy",
+  purchasedCount: "0",
+  stock: "10",
+  isPublic: "false"
+}
 
 buildTables()
   .then(createInitialData)
   .catch(console.error)
   .finally(() => client.end());
-
-
-
-
-
-

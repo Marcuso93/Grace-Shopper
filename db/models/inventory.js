@@ -8,14 +8,15 @@ async function createInventory({
     price, 
     purchasedCount, 
     stock,
-    isPublic
+    isActive,
+    isCustomizable
     }) {
    try {
      const { rows: [ inventory ] } = await client.query(`
-     INSERT INTO inventory( name, category, description, price, "purchasedCount", stock, "isPublic") 
-     VALUES($1, $2, $3, $4, $5, $6, $7)  
+     INSERT INTO inventory( name, category, description, price, "purchasedCount", stock, "isActive", "isCustomizable") 
+     VALUES($1, $2, $3, $4, $5, $6, $7, $8)  
      RETURNING *;
-     `, [name, category, description, price, purchasedCount, stock, isPublic]);
+     `, [name, category, description, price, purchasedCount, stock, isActive, isCustomizable]);
   
      return inventory;
    } catch (error) {
@@ -81,7 +82,7 @@ async function createInventory({
         UPDATE inventory
         SET ${setString}
           WHERE id=${inventoryId}
-        RETURNING*;
+        RETURNING *;
       `, Object.values(fields));
       
       return updatedInventory;
@@ -91,9 +92,27 @@ async function createInventory({
     }
   }
 
+  async function deactivateInventory({ inventoryId }){
+    try {
+      const { rows: [ deactivateInventory ]} = await client.query(`
+        UPDATE 
+        SET "isActive"=false
+          WHERE id=$1
+        RETURNING*;
+      `, [ inventoryId ]);
+      
+      return deactivateInventory;
+
+    } catch(error){
+      throw error
+    }
+  }
+
 module.exports = {
     createInventory,
     getInventory,
     getInventoryById, 
-    updateInventory
+    getInventoryByName,
+    updateInventory,
+    deactivateInventory
 }

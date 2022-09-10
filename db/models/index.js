@@ -13,6 +13,7 @@ module.exports = {
   ...require('./user'),
   ...require('./inventory'),
   ...require('./cart'),
-  ...require('./reviews')
+  ...require('./reviews'),
+  ...require('./cart_inventory')
 };
 
