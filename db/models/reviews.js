@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 const client = require("../client")
 
-async function createReviews({
+async function createReview({
     username, userId, itemId, stars, description
 }) {
     try {
@@ -39,7 +39,7 @@ async function getReviewByItemId(itemId){
         throw error
     }
 }
-async function getReviewByUserId(userId){
+async function getReviewsByUserId(userId){
     try{
         const{ rows: [reviews]} = await client.query(`
         SELECT *
@@ -104,13 +104,14 @@ async function updateReview({id, ...fields}){
     }
 }
 
+
 module.exports = {
-    createReviews,
+    createReview,
     getReviewById,
     getReviewByItemId,
-    getReviewByUserId,
+    getReviewsByUserId,
     removeReview,
     getStarsByItemId,
     canEditReview,
-    updateReview
+    updateReview,
 };

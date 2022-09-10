@@ -2,17 +2,17 @@
 const client = require("../client")
 const { getUserByUsername } = require('./user') 
 
-async function addToCart({ userId, inventoryId, quantity, price, isPurchased }) {
+async function addToCart({userId, inventoryId, quantity, price, isPurchased}) {
     try {
         const { rows: [ cart ] } = await client.query(`
             INSERT INTO carts("userId", "inventoryId", quantity, price, "isPurchased")
             VALUES($1, $2, $3, $4, $5)
             RETURNING *;
-        `, [ userId ,inventoryId, quantity, price, isPurchased]);
+        `, [ userId, inventoryId, quantity, price, isPurchased ]);
         
         return cart;
     
-    }catch(error){
+    } catch (error) {
         throw error
     }
 }
@@ -21,7 +21,7 @@ async function getCartByUsername(username) {
     try {
         const user = await getUserByUsername(username);
 
-        const { rows: [cart] } = await client.query(`
+        const { rows: cart } = await client.query(`
             SELECT*
             FROM carts
             JOIN users ON carts."userId"=users.id
@@ -36,17 +36,6 @@ async function getCartByUsername(username) {
         throw error;
     }
 }
-
-// COULD BE for previous purchase
-// async function getCartById(id) {
-//     try {
-//         const { rows: [cart] } = await client.query(`
-//             SELECT
-//         `)
-//     } catch(error) { 
-//         throw error;
-//     }
-// }
 
 async function removeItemFromCart(inventoryId) {
     try { 
@@ -64,23 +53,9 @@ async function removeItemFromCart(inventoryId) {
     }
 }
 
-async function removeAllItemsFromCart(cartId) {
-    try {
-        const { rows: [deletedCart] } = await client.query(`
-            DELETE
-            FROM carts
-            WHERE id=$1
-            RETURNING*
-        `, [cartId]);
 
-        return deletedCart;
-        
-    } catch (error) {
-        throw error;
-    }
-}
 
-async function getPurchasedCartsByUsername(){
+async function getPurchasedCartsByUsername(username){
     try {
         const user = await getUserByUsername(username);
 
@@ -101,11 +76,25 @@ async function getPurchasedCartsByUsername(){
 }
 
 // TODO: will need a way to update all items in cart to "isPurchased"=true
+async function updateCartToPurchased(cartId) {
+    try {
+        const { rows: [updatedCart] } = await client.query(`
+            UPDATE carts
+            SET "isPurchased"=true
+            WHERE id=${cartId}
+            RETURNING*;
+      `, [cartId]);
+
+        return updatedCart;
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {
     addToCart,
     getCartByUsername,
     removeItemFromCart,
-    removeAllItemsFromCart,
-    getPurchasedCartsByUsername
+    getPurchasedCartsByUsername,
+    updateCartToPurchased
 }
