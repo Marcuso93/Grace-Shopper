@@ -5,58 +5,58 @@ const { requireLogin, requireAdmin } = require('./utils');
 const {
   createReview,
   getReviewById,
-  // getReviewByItemId,
-  // getReviewByUserId,
-  // removeReview,
-  // getStarsByItemId,
+  getReviewsByItemId,
+  removeReview,
+  getStarsByItemId,
   canEditReview,
   updateReview,
+  addReviewToItem,
 } = require('../db')
 
 //api requests below
 
-//get get single items reviews 
-// TODO: make way to add reviews to inventory item like we did
-// with attaching activities to routines
+// get reviews for a item
+reviewsRouter.get('/item/:itemId', async (req, res, next) => {
+  const { itemId } = req.params;
 
-// reviewsRouter.get('/inventory/:inventoryId', async (req, res, next) => {
-//   try {
-//     const { inventoryId } = req.params;
-//     const itemReview = await getReviewByItemId(inventoryId);
+  try {
+    const itemReviews = await getReviewsByItemId(itemId);
 
-//     res.send(itemReview);
-//   } catch (error) {
-//     throw error
-//   }
-// })
+    res.send(itemReviews);
+  } catch ({ name, message }) {
+    next({ name, message })
+  }
+})
+
 
 //post review
 reviewsRouter.post('/', requireLogin, async (req, res, next) => {
   try {
-    const user = req.user;
+    const userId = req.user.id;
     const { itemId, stars, description } = req.body;
-    const userReview = await createReview({
-      username: user.username,
-      userId: user.id,
-      itemId,
-      stars,
-      description
-    });
+    
+    const userReview = await createReview({ userId, itemId, stars, description });
 
-    res.send(userReview)
-  } catch (error) {
-    throw error
+    // will we need to return this?
+    const reviewId = userReview.id;
+    await addReviewToItem({ itemId, reviewId });
+
+    res.send(userReview);
+  } catch ({ name, message }) {
+    next({ name, message })
   }
 })
 
 //Patch my Review 
-reviewsRouter.patch('/:reviewId', requireLogin, async (req, res, next) => {
+reviewsRouter.patch('/:reviewId',requireLogin, async (req, res, next) => {
   const { reviewId } = req.params;
   const { ...fields } = req.body;
 
   try {
-    const originalReview = await getReviewById(reviewId);
-    if (canEditReview(req.user.id, originalReview.id)) {
+    const userId = req.user.id;
+    const canEdit = await canEditReview({ userId, reviewId });
+
+    if (canEdit) {
       const updatedReview = await updateReview({ id: reviewId, ...fields });
 
       res.send(updatedReview);
@@ -67,10 +67,35 @@ reviewsRouter.patch('/:reviewId', requireLogin, async (req, res, next) => {
         "name": "UnauthorizedUserError"
       });
     }
+    
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+})
+
+//going to be delete review 
+reviewsRouter.delete('/:reviewId',requireLogin, async (req, res, next) => {
+  const { reviewId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const canEdit = await canEditReview({ userId, reviewId })
+    if (canEdit) {
+      const deletedReview = await removeReview(reviewId);
+
+      res.send(deletedReview);
+    }else {
+      res.status(403).send({
+        "error": "UnauthorizedUserError",
+        "message": `User ${req.user.username} is not allowed to remove this review `,
+        "name": "UnauthorizedUserError"
+      });
+    }
 
   } catch ({ name, message }) {
     next({ name, message });
   }
 })
+
 
 module.exports = reviewsRouter;
