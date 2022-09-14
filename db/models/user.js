@@ -3,7 +3,7 @@
 const client = require('../client');
 const bcrypt = require('bcrypt');
 
-async function createUser({ username, password, address, fullname, email}) {
+async function createUser({ username, password, address, fullname, email }) {
   try {
     const SALT_COUNT = 10;
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
@@ -40,8 +40,6 @@ async function getUser({ username, password }) {
     throw error
   }
 }
-
-
 
 async function getUserById(userId) {
   try {

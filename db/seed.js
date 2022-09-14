@@ -4,7 +4,7 @@ const {
   createUser,
   createInventory,
   addToCart,
-  createReviews,
+  createReview,
   //createReviews
   // for example, User
 } = require('./');
@@ -19,6 +19,7 @@ async function buildTables() {
     console.log("Dropping All Tables...")
     // drop tables in correct order
     await client.query(`
+      DROP TABLE IF EXISTS item_reviews;
       DROP TABLE IF EXISTS cart_inventory;
       DROP TABLE IF EXISTS reviews;
       DROP TABLE IF EXISTS carts;
@@ -61,9 +62,8 @@ async function buildTables() {
       id SERIAL PRIMARY KEY,
       "userId" INTEGER REFERENCES users(id),
       "itemId" INTEGER REFERENCES inventory(id),
-      username VARCHAR(255) UNIQUE NOT NULL,
       stars INTEGER,
-      "isPublic" BOOLEAN DEFAULT true,
+      "isActive" BOOLEAN DEFAULT true,
       description TEXT NOT NULL
     );
     CREATE TABLE cart_inventory(
@@ -73,7 +73,13 @@ async function buildTables() {
       quantity INTEGER,
       price INTEGER,
       UNIQUE ("inventoryId", "cartsId")
-      )
+    );
+    CREATE TABLE item_reviews(
+      id SERIAL PRIMARY KEY,
+      "itemId" INTEGER REFERENCES inventory(id),
+      "reviewId" INTEGER REFERENCES reviews(id),
+      "isActive" BOOLEAN DEFAULT true
+    );
   `)
     console.log("Finished building tables!");
   } catch (error) {
@@ -103,7 +109,7 @@ async function createInitialData() {
         description: "beetle kill wood and epoxy", 
         purchasedCount: "0",
         stock: "10",
-        isPublic: "false",
+        isActive: "true",
         isCustomizable: "false"
       },
 
@@ -114,7 +120,7 @@ async function createInitialData() {
         description: "hard wood with custom laser engraving", 
         purchasedCount: "0",
         stock: "10",
-        isPublic: "false",
+        isActive: "true",
         isCustomizable: "true"
       },
     ]
@@ -138,12 +144,12 @@ async function createInitialData() {
 
     console.log("Starting to create reviews...")
     const reviewsToCreate =[
-      {username: "albert", userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
-      {username: "sandra", userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
-      {username: "glamgal", userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
-      {username: "Marcus", userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
+      {userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
+      {userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
+      {userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
+      {userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
     ]
-    const reviews = await Promise.all(reviewsToCreate.map(createReviews))
+    const reviews = await Promise.all(reviewsToCreate.map(createReview))
     console.log(reviews)
     console.log("Finish creating reviews...")
 
@@ -164,7 +170,7 @@ const itemToAddToCart = {
   description: "beetle kill wood and epoxy",
   purchasedCount: "0",
   stock: "10",
-  isPublic: "false"
+  isActive: "true"
 }
 
 buildTables()

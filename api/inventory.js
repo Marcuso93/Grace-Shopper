@@ -7,10 +7,12 @@ const {
     getInventory,
     // getInventoryById, 
     // getInventoryByName,
+    deactivateInventory,
     updateInventory
 } = require('../db')
 
 // TODO: create a way to attach reviews to inventory item
+// TODO: test requireAdmin
 
 //api requests below
 inventoryRouter.get('/', async(req, res, next) => {
@@ -23,6 +25,7 @@ inventoryRouter.get('/', async(req, res, next) => {
   }
 })
 
+// TODO: will we need this?
 // inventoryRouter.get('/:inventoryId', async(req, res, next) =>{
 //   try {
 //     const { inventoryId } = req.params;
@@ -64,7 +67,7 @@ inventoryRouter.delete('/:inventoryId', requireAdmin, async (req, res, next) => 
   const { inventoryId } = req.params;
   
   try {
-    const deactivatedItem = await deactivateInventory({inventoryId});
+    const deactivatedItem = await deactivateInventory({ inventoryId });
 
     res.send(deactivatedItem);
   } catch ({name, message}){

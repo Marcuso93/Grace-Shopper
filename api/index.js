@@ -2,6 +2,7 @@ const express = require('express');
 const apiRouter = require('express').Router();
 const jwt = require('jsonwebtoken')
 
+
 apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');

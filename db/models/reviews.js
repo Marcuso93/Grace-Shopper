@@ -2,116 +2,145 @@
 const client = require("../client")
 
 async function createReview({
-    username, userId, itemId, stars, description
+    userId, itemId, stars, description
 }) {
     try {
-        const { rows: [ reviews ] } = await client.query(`
-            INSERT INTO reviews(username, "userId", "itemId", stars, description)
-            VALUES($1, $2, $3, $4, $5)
+        const { rows: [review] } = await client.query(`
+            INSERT INTO reviews("userId", "itemId", stars, description)
+            VALUES($1, $2, $3, $4)
             RETURNING *;
-        `, [username, userId, itemId, stars, description]);
-        return reviews
-    }catch(error){
+        `, [userId, itemId, stars, description]);
+
+        return review
+    } catch (error) {
         throw error
     }
 }
-async function getReviewById(Id){
-    try{
-        const{ rows: [reviews]} = await client.query(`
+async function getReviewById(Id) {
+    try {
+        const { rows: reviews } = await client.query(`
         SELECT *
         FROM reviews
-        WHERE id = $1
-        `,[Id])
+            WHERE id = $1
+        `, [Id]);
+
         return reviews
-    }catch(error){
+    } catch (error) {
         throw error
     }
 }
-async function getReviewByItemId(itemId){
-    try{
-        const{ rows: [reviews]} = await client.query(`
+async function getReviewsByItemId(itemId) {
+    try {
+        const { rows: reviews } = await client.query(`
         SELECT *
         FROM reviews
         WHERE "itemId" = $1
-        `,[itemId])
+        `, [itemId]);
+
         return reviews
-    }catch(error){
+    } catch (error) {
         throw error
     }
 }
-async function getReviewsByUserId(userId){
-    try{
-        const{ rows: [reviews]} = await client.query(`
+async function getReviewsByUserId(userId) {
+    try {
+        const { rows: reviews } = await client.query(`
         SELECT *
         FROM reviews
         WHERE "userId" = $1 
-        `,[userId])
+        `, [userId]);
+
         return reviews
-    }catch(error){
+    } catch (error) {
         throw error
     }
 }
-async function removeReview(){
-    try{
-        const{ rows: [removeReview]} = await client.query(`
+async function removeReview(reviewId) {
+    try {
+        const { rows: [removedReview] } = await client.query(`
         UPDATE reviews
-        SET "isPublic" = false
-        RETURNING *       
-        `,[userId])
-        return removeReview;
-    }catch(error){
+        SET "isActive" = false
+            WHERE id = $1
+        RETURNING*     
+        `, [reviewId])
+        return removedReview;
+    } catch (error) {
         throw error
     }
 }
-async function getStarsByItemId(itemId){
-    try{
-        const{ rows: [reviewStars]} = await client.query(`
+async function getStarsByItemId(itemId) {
+    try {
+        const { rows: reviewStars } = await client.query(`
         SELECT DISTINCT review.*, stars
         FROM reviews
         WHERE "itemId" = $1
-        `,[itemId])
+        `, [itemId])
         return reviewStars
-    }catch(error){
+    } catch (error) {
         throw error
     }
 }
-async function canEditReview(userId, reviewId){
-    try{
-        const{ rows: [review]} = await client.query(`
+async function canEditReview({userId, reviewId }) {
+    try {
+        const { rows: [review] } = await client.query(`
         SELECT*
         FROM reviews
-        WHERE VALUES ($1, $2)
-        RETURNING *
-        `,[userId, reviewId])
-        return (review.userId === userId)
-    }catch(error){
+            WHERE id=$1
+        `, [reviewId])
+
+        if (review.userId === userId) {return true} 
+
+        return false
+
+    } catch (error) {
         throw error
     }
 }
 
-async function updateReview({id, ...fields}){
-    const {stars, description} = fields
-    try{
-        const{ rows: [review]} = await client.query(`
+async function updateReview({ id, ...fields }) {
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${key}" =$${index + 1}`
+    ).join(', ');
+
+    if (setString.length === 0) return;
+
+    try {
+        const { rows: [updatedReview] } = await client.query(`
             UPDATE reviews
-            SET "stars"= $2, "description"= $3
-            WHERE id = $1
-            RETURNING*
-        `,[id, stars, description])
-        return review
-    }catch(error){
+            SET ${setString}
+                WHERE id=${id}
+            RETURNING *;
+        `, Object.values(fields));
+
+        return updatedReview;
+
+    } catch (error) {
         throw error
     }
 }
 
+async function addReviewToItem({ itemId, reviewId }) {
+    try {
+        const { rows: [itemReview] } = await client.query(`
+            INSERT INTO item_reviews( "itemId", "reviewId")
+            VALUES ($1, $2)
+            RETURNING *
+        `, [itemId, reviewId]);
+
+        return itemReview
+    } catch (error) {
+        throw error
+    }
+}
 
 module.exports = {
     createReview,
     getReviewById,
-    getReviewByItemId,
+    getReviewsByItemId,
     getReviewsByUserId,
     removeReview,
     getStarsByItemId,
     canEditReview,
     updateReview,
+    addReviewToItem,
 };

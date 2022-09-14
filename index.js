@@ -1,4 +1,5 @@
 // This is the Web Server
+require("dotenv").config();
 const express = require('express');
 const server = express();
 const apiRouter = require('./api');
@@ -20,6 +21,7 @@ server.use(express.json());
 const path = require('path');
 server.use(express.static(path.join(__dirname, 'build')));
 
+
 // here's our API
 server.use('/api', apiRouter);
 
@@ -33,6 +35,12 @@ const { client } = require('./db');
 
 // connect to the server
 const PORT = process.env.PORT || 4000;
+
+// Error handler next
+server.use((error, req, res, next) => {
+  res.status(500);
+  res.send(error);
+});
 
 // define a server handle to close open tcp connection after unit tests have run
 const handle = server.listen(PORT, async () => {
