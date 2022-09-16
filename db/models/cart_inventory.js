@@ -36,7 +36,7 @@ async function getCartInventoryByUserCart({cartId}) {
       SELECT*
       FROM cart_inventory
       WHERE "cartId"=$1
-    `, [id]);
+    `, [cartId]);
 
     return cart_inventory
 
