@@ -3,15 +3,13 @@ const {
   // declare your model imports here
   createUser,
   createInventory,
-  addToCart,
   createReview,
+  addItemToCart
   //createReviews
   // for example, User
 } = require('./');
 
 const client = require("./client")
-
-
 
 async function buildTables() {
   try {
@@ -22,7 +20,6 @@ async function buildTables() {
       DROP TABLE IF EXISTS item_reviews;
       DROP TABLE IF EXISTS cart_inventory;
       DROP TABLE IF EXISTS reviews;
-      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
       DROP TABLE IF EXISTS users;
     `)
@@ -42,21 +39,12 @@ async function buildTables() {
     CREATE TABLE inventory(
       id SERIAL PRIMARY KEY,
       name VARCHAR(255),
-      category VARCHAR(255),
       description TEXT NOT NULL,
       price INTEGER,
       "purchasedCount" INTEGER,
       stock INTEGER,
       "isCustomizable" BOOLEAN DEFAULT true,
       "isActive" BOOLEAN DEFAULT true
-    );
-    CREATE TABLE carts(
-      id SERIAL PRIMARY KEY,
-      "userId" INTEGER REFERENCES users(id),
-      "inventoryId" INTEGER REFERENCES inventory(id),
-      quantity INTEGER,
-      price INTEGER,
-      "isPurchased" BOOLEAN DEFAULT false
     );
     CREATE TABLE reviews(
       id SERIAL PRIMARY KEY,
@@ -65,22 +53,23 @@ async function buildTables() {
       stars INTEGER,
       "isActive" BOOLEAN DEFAULT true,
       description TEXT NOT NULL
-    );
+      );
     CREATE TABLE cart_inventory(
       id SERIAL PRIMARY KEY, 
+      "userId" INTEGER REFERENCES users(id),
       "inventoryId" INTEGER REFERENCES inventory(id),
-      "cartsId" INTEGER REFERENCES carts(id),
       quantity INTEGER,
       price INTEGER,
-      UNIQUE ("inventoryId", "cartsId")
+      "isPurchased" BOOLEAN DEFAULT false,
+      UNIQUE ("inventoryId", "userId")
     );
     CREATE TABLE item_reviews(
       id SERIAL PRIMARY KEY,
       "itemId" INTEGER REFERENCES inventory(id),
       "reviewId" INTEGER REFERENCES reviews(id),
       "isActive" BOOLEAN DEFAULT true
-    );
-  `)
+      );
+    `)
     console.log("Finished building tables!");
   } catch (error) {
     console.error("Error building tables!");
@@ -92,9 +81,9 @@ async function createInitialData() {
   try {
     const usersToCreate = [
       { username: "albert", password: "bertie99", address: "colorado", fullname: "Albert Smith", email: "albert@gmail.com" },
-      { username: "sandra", password: "sandra123", address: "Denver", fullname: "Sandra Copper", email: "Sandra@aol.com"},
+      { username: "sandra", password: "sandra123", address: "Denver", fullname: "Sandra Copper", email: "Sandra@aol.com" },
       { username: "glamgal", password: "glamgal123", address: "Fort Collins", fullname: "Shrimp Man", email: "Shrimp@gmail.com" },
-      { username: "marcus", password: "1234BigMoney", address: "Golden", fullname: "Marcus Ortega", email: "Marcus@gmail.com"},
+      { username: "marcus", password: "1234BigMoney", address: "Golden", fullname: "Marcus Ortega", email: "Marcus@gmail.com", isAdmin: true },
     ]
     const users = await Promise.all(usersToCreate.map(createUser))
     console.log("USERS", users)
@@ -102,22 +91,20 @@ async function createInitialData() {
 
     console.log("Starting to create inventory...")
     const inventoryToCreate = [
-      { 
-        name: "work desk", 
-        category: "table", 
-        price: "150", 
-        description: "beetle kill wood and epoxy", 
+      {
+        name: "work desk",
+        price: "150",
+        description: "beetle kill wood and epoxy",
         purchasedCount: "0",
         stock: "10",
         isActive: "true",
         isCustomizable: "false"
       },
 
-      { 
-        name: "cutting board", 
-        category: "cutting board", 
-        price: "65", 
-        description: "hard wood with custom laser engraving", 
+      {
+        name: "cutting board",
+        price: "65",
+        description: "hard wood with custom laser engraving",
         purchasedCount: "0",
         stock: "10",
         isActive: "true",
@@ -127,53 +114,46 @@ async function createInitialData() {
     const inventory = await Promise.all(inventoryToCreate.map(createInventory))
     console.log(inventory)
     console.log("Finish creating inventory...")
-    
-    console.log("Starting to create carts...")
-    const cartsToCreate = [
-      { userId: 1, inventoryId: 2, quantity: 1, price: 65, isPurchased: false },
-      { userId: 2, inventoryId: 1, quantity: 1, price: 150, isPurchased: false },
-      // { name: 'glamgal', price: "65"},
-      // { name: 'Marcus', price: "150"},
-      // { name: 'albert', price: "65"}
-
-      
-    ]
-    const cart = await Promise.all(cartsToCreate.map(addToCart))
-    console.log(cart)
-    console.log("Finish creating carts...")
 
     console.log("Starting to create reviews...")
-    const reviewsToCreate =[
-      {userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
-      {userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
-      {userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
-      {userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
+    const reviewsToCreate = [
+      { userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
+      { userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
+      { userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
+      { userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
     ]
     const reviews = await Promise.all(reviewsToCreate.map(createReview))
     console.log(reviews)
     console.log("Finish creating reviews...")
+    
+    console.log('Building cart...');
+    const cartItems = [
+      { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
+      { userId: 1, inventoryId: 2, quantity: 5, price: 10 }
+    ]
+    const cart = await Promise.all(cartItems.map(addItemToCart));
+    console.log('cart:', cart);
+    console.log('Finished building cart...')
 
     console.log("Finished creating tables!")
-    
+
   } catch (error) {
     console.error("Error creating tables!")
     throw error
   }
 }
-
-console.log('Starting to test cart.js');
-const itemToAddToCart = {
-  id: 1,
-  name: "work desk",
-  category: "table",
-  price: "150",
-  description: "beetle kill wood and epoxy",
-  purchasedCount: "0",
-  stock: "10",
-  isActive: "true"
-}
+  
 
 buildTables()
   .then(createInitialData)
   .catch(console.error)
   .finally(() => client.end());
+
+// CREATE TABLE carts(
+//   id SERIAL PRIMARY KEY,
+//   "userId" INTEGER REFERENCES users(id),
+//   "inventoryId" INTEGER REFERENCES inventory(id),
+//   quantity INTEGER,
+//   price INTEGER,
+//   "isPurchased" BOOLEAN DEFAULT false
+// );

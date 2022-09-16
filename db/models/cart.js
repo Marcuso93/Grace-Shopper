@@ -42,7 +42,7 @@ const client = require("../client")
 // async function removeItemFromCart(inventoryId) {
 //     try { 
 //             const { rows: [deletedItem]}  = await client.query(`
-//                 DETETE
+//                 DELETE
 //                 FROM carts
 //                 WHERE "inventoryId"=$1
 //                 RETURNING *

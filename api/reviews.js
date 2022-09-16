@@ -4,10 +4,10 @@ const { requireLogin, requireAdmin } = require('./utils');
 
 const {
   createReview,
-  getReviewById,
+  // getReviewById,
   getReviewsByItemId,
   removeReview,
-  getStarsByItemId,
+  // getStarsByItemId,
   canEditReview,
   updateReview,
   addReviewToItem,
@@ -97,5 +97,18 @@ reviewsRouter.delete('/:reviewId',requireLogin, async (req, res, next) => {
   }
 })
 
+reviewsRouter.delete('/:reviewId/admin',requireAdmin, async (req, res, next) => {
+  const { reviewId } = req.params;
+
+  try {
+      const deletedReview = await removeReview(reviewId);
+
+      res.send(deletedReview);
+
+
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+})
 
 module.exports = reviewsRouter;

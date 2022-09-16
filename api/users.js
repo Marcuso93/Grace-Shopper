@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env
 const { requireLogin, requireAdmin } = require('./utils');
@@ -11,6 +11,7 @@ const {
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
+  getCartInventoryByUserId
 } = require('../db');
 
 //api calls below
@@ -35,9 +36,6 @@ usersRouter.post('/login', async (req, res, next) => {
 
   try {
     const user = await getUser({username, password});
-    // const user = await getUserByUsername(username)
-    // const hashedPassword = user.password;
-    // const matched = await bcrypt.compare(password, hashedPassword);
 
     if (user) {
       const token = jwt.sign({
@@ -98,17 +96,7 @@ usersRouter.post('/register', async (req, res, next) => {
   }
 });
 
-// Prob not necessary
-// usersRouter.get('/me', requireLogin, async (req, res, next) => {
-//   try {
-//     res.send(req.user)
-//     next()
-//   } catch ({ name, message }) {
-//     next({ name, message });
-//   }
-// });
-
-//get my reviews
+// get my reviews
 usersRouter.get('/:userId/reviews', async (req, res, next) => {
   const { userId } = req.params;
 
@@ -121,6 +109,17 @@ usersRouter.get('/:userId/reviews', async (req, res, next) => {
   }
 })
 
+// get my cart
+usersRouter.get('/:userId/cart', async (req, res, next) => {
+  const { userId } = req.params;
 
+  try {
+    const cart = await getCartInventoryByUserId({userId});
+
+    res.send(cart);
+  } catch ({ name, message }) {
+    next({ name, message })
+  }
+})
 
 module.exports = usersRouter;

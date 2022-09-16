@@ -1,19 +1,17 @@
 const express = require('express');
-const { addItemToCart, updateCartInventory, removeItemFromCart } = require('../db');
+const { addItemToCart, updateCartItem, removeItemFromCart } = require('../db');
 const { requireLogin } = require('./utils');
 
 const cartInventoryRouter = express.Router();
 
-// TODO: in usersRouter we could create a way to get all of the users items in cart
-
 // POST /api/cart_inventory
 // Create cart_inventory, ie add item to cart
-// TODO: check user if we switch from cartsId to userId
+// TODO: check user is correct user?
 cartInventoryRouter.post('/', requireLogin, async (req, res, next) => {
-  const { cartsId, inventoryId, quantity, price } = req.body;
+  const { userId, inventoryId, quantity, price } = req.body;
 
   try {
-    const cart_item = await addItemToCart({ cartsId, inventoryId, quantity, price });
+    const cart_item = await addItemToCart({ userId, inventoryId, quantity, price });
 
     res.send(cart_item);
   } catch ({name, message}) {
@@ -28,7 +26,7 @@ cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, nex
   const { ...fields } = req.body;
 
   try {
-    const cart_item = await updateCartInventory({ id: cartInventoryId, ...fields });
+    const cart_item = await updateCartItem({ id: cartInventoryId, ...fields });
 
     res.send(cart_item);
   } catch ({name, message}){
@@ -49,5 +47,7 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
     next({name, message})
   }
 });
+
+// TODO: what do we co when order is submitted
 
 module.exports = cartInventoryRouter;
