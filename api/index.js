@@ -1,5 +1,5 @@
 const express = require('express');
-const apiRouter = require('express').Router();
+const apiRouter = express.Router();
 const jwt = require('jsonwebtoken')
 
 

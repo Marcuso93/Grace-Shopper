@@ -12,7 +12,7 @@ module.exports = {
   // and User: require('./user') here
   ...require('./user'),
   ...require('./inventory'),
-  ...require('./cart'),
+  // ...require('./cart'),
   ...require('./reviews'),
   ...require('./cart_inventory')
 };

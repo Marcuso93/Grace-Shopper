@@ -39,7 +39,7 @@ inventoryRouter.get('/', async(req, res, next) => {
 
 inventoryRouter.post('/', requireAdmin, async (req, res, next) => {
   const { name, category, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
-  const inventoryObj = { name, category, description, price, purchasedCount, stock, isPublic, isCustomizable };
+  const inventoryObj = { name, description, price, purchasedCount, stock, isPublic, isCustomizable };
   
   try {
     const newInventory = await createInventory(inventoryObj);

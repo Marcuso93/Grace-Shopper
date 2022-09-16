@@ -14,13 +14,13 @@ async function getCartItemById(id) {
   }
 }
 
-async function addItemToCart({ cartsId, inventoryId, quantity, price }) {
+async function addItemToCart({ userId, inventoryId, quantity, price }) {
   try {
     const { rows: [cart_item] } = await client.query(`
-      INSERT INTO cart_inventory("cartsId", "inventoryId", quantity, price)
+      INSERT INTO cart_inventory("userId", "inventoryId", quantity, price)
       VALUES ($1, $2, $3, $4)
       RETURNING*
-    `, [cartsId, inventoryId, quantity, price]);
+    `, [userId, inventoryId, quantity, price]);
 
     return cart_item
   } catch (error) {
@@ -28,15 +28,14 @@ async function addItemToCart({ cartsId, inventoryId, quantity, price }) {
   }
 }
 
-// TODO: OR MAYBE WE JUST DO THIS BY USER ID????? ELIMINATE CARTS TABLE ALTOGETHER???
 // Will return all inventory in cart
-async function getCartInventoryByUserCart({cartId}) {
+async function getCartInventoryByUserId({userId}) {
   try {
     const { rows: cart_inventory } = await client.query(`
       SELECT*
       FROM cart_inventory
-      WHERE "cartId"=$1
-    `, [cartId]);
+        WHERE "userId"=$1 AND "isPurchased"=false
+    `, [userId]);
 
     return cart_inventory
 
@@ -97,7 +96,7 @@ async function removeItemFromCart(id) {
 module.exports = {
   getCartItemById,
   addItemToCart,
-  getCartInventoryByUserCart,
+  getCartInventoryByUserId,
   updateCartItem,
   removeItemFromCart
 };
