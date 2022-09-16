@@ -5,7 +5,7 @@ const { requireLogin, requireAdmin } = require('./utils');
 const {
   createReview,
   // getReviewById,
-  getReviewsByItemId,
+  // getReviewsByItemId,
   removeReview,
   // getStarsByItemId,
   canEditReview,
@@ -14,20 +14,6 @@ const {
 } = require('../db')
 
 //api requests below
-
-// get reviews for a item
-reviewsRouter.get('/item/:itemId', async (req, res, next) => {
-  const { itemId } = req.params;
-
-  try {
-    const itemReviews = await getReviewsByItemId(itemId);
-
-    res.send(itemReviews);
-  } catch ({ name, message }) {
-    next({ name, message })
-  }
-})
-
 
 //post review
 reviewsRouter.post('/', requireLogin, async (req, res, next) => {

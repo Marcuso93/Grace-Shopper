@@ -15,11 +15,11 @@ const {
 } = require('../db');
 
 //api calls below
-usersRouter.get('/', async (req, res, next) => {
+usersRouter.get('/', requireAdmin, async (req, res, next) => {
   try {
-    const AllUsers = await getAllUsers();
+    const allUsers = await getAllUsers();
 
-    res.send(AllUsers)
+    res.send(allUsers)
   } catch (error) {
     throw error;
   }

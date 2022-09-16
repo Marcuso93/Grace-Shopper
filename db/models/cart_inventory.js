@@ -14,13 +14,13 @@ async function getCartItemById(id) {
   }
 }
 
-async function addItemToCart({ userId, inventoryId, quantity, price }) {
+async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased=false }) {
   try {
     const { rows: [cart_item] } = await client.query(`
-      INSERT INTO cart_inventory("userId", "inventoryId", quantity, price)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO cart_inventory("userId", "inventoryId", quantity, price, "isPurchased")
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING*
-    `, [userId, inventoryId, quantity, price]);
+    `, [userId, inventoryId, quantity, price, isPurchased]);
 
     return cart_item
   } catch (error) {
