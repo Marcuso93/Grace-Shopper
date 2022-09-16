@@ -74,7 +74,7 @@ async function getUserByUsername(username) {
 async function getAllUsers() {
   try {
     const { rows } = await client.query(`
-      SELECT id, username
+      SELECT*
       FROM users;
     `);
 

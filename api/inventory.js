@@ -5,10 +5,11 @@ const { requireAdmin } = require('./utils');
 const {
     createInventory,
     getInventory,
-    // getInventoryById, 
-    // getInventoryByName,
+    getInventoryById, 
+    //getInventoryByName,
     deactivateInventory,
-    updateInventory
+    updateInventory,
+    getReviewsByItemId,
 } = require('../db')
 
 // TODO: create a way to attach reviews to inventory item
@@ -22,6 +23,29 @@ inventoryRouter.get('/', async(req, res, next) => {
     res.send(getAllInventory);
   } catch ({name, message}){
       next({name, message});
+  }
+});
+
+inventoryRouter.get('/:inventoryId', async(req, res, next) => {
+  const {inventoryId} = req.params;
+
+  try {
+    const item = await getInventoryById(inventoryId);
+    
+    res.send(item);
+  } catch ({name, message}) {
+    next({name, message})
+  }
+})
+
+inventoryRouter.get('/:inventoryId/reviews', async(req, res, next) => {
+  const {inventoryId} = req.params;
+  try {
+    const reviews = await getReviewsByItemId(inventoryId);
+
+    res.send(reviews);
+  } catch({name, message}){
+     next({name, message});
   }
 })
 
@@ -38,7 +62,7 @@ inventoryRouter.get('/', async(req, res, next) => {
 // })
 
 inventoryRouter.post('/', requireAdmin, async (req, res, next) => {
-  const { name, category, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
+  const { name, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
   const inventoryObj = { name, description, price, purchasedCount, stock, isPublic, isCustomizable };
   
   try {

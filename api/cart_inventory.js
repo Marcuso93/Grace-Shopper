@@ -7,7 +7,7 @@ const cartInventoryRouter = express.Router();
 // POST /api/cart_inventory
 // Create cart_inventory, ie add item to cart
 // TODO: check user is correct user?
-cartInventoryRouter.post('/', requireLogin, async (req, res, next) => {
+cartInventoryRouter.post('/',requireLogin, async (req, res, next) => {
   const { userId, inventoryId, quantity, price } = req.body;
 
   try {
@@ -20,7 +20,8 @@ cartInventoryRouter.post('/', requireLogin, async (req, res, next) => {
 });
 
 // PATCH /api/cart_inventory/:cartInventoryId
-// Update an item type in cart (probably just count?)
+// Update an item type in cart (TODO: probably just quantity and isPurchased???)
+// TODO: Check user is correct user?
 cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, next) => {
   const { cartInventoryId } = req.params;
   const { ...fields } = req.body;
@@ -36,6 +37,7 @@ cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, nex
 
 // DELETE /api/cart_inventory/:cartInventoryId
 // Remove an item from the cart
+// TODO: check user is correct user?
 cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, next) => {
   const { cartInventoryId } = req.params;
 
@@ -48,6 +50,6 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
   }
 });
 
-// TODO: what do we co when order is submitted
+// TODO: what do we co when order is submitted????
 
 module.exports = cartInventoryRouter;

@@ -20,6 +20,7 @@ async function buildTables() {
       DROP TABLE IF EXISTS item_reviews;
       DROP TABLE IF EXISTS cart_inventory;
       DROP TABLE IF EXISTS reviews;
+      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
       DROP TABLE IF EXISTS users;
     `)
@@ -33,7 +34,7 @@ async function buildTables() {
       password VARCHAR(255) NOT NULL,
       address VARCHAR(255),
       fullname VARCHAR(255),
-      email VARCHAR(255),
+      email VARCHAR(255) UNIQUE NOT NULL,
       "isAdmin" BOOLEAN DEFAULT false
     );
     CREATE TABLE inventory(
@@ -60,8 +61,7 @@ async function buildTables() {
       "inventoryId" INTEGER REFERENCES inventory(id),
       quantity INTEGER,
       price INTEGER,
-      "isPurchased" BOOLEAN DEFAULT false,
-      UNIQUE ("inventoryId", "userId")
+      "isPurchased" BOOLEAN DEFAULT false
     );
     CREATE TABLE item_reviews(
       id SERIAL PRIMARY KEY,
@@ -129,7 +129,7 @@ async function createInitialData() {
     console.log('Building cart...');
     const cartItems = [
       { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 1, inventoryId: 2, quantity: 5, price: 10 }
+      { userId: 1, inventoryId: 2, quantity: 5, price: 10, isPurchased: "true" }
     ]
     const cart = await Promise.all(cartItems.map(addItemToCart));
     console.log('cart:', cart);

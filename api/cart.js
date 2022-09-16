@@ -1,6 +1,6 @@
 const express = require('express');
 const cartRouter = express.Router();
-const { getCartByUsername } = require('../db')
+// const { getCartByUsername } = require('../db')
 
 //api requests below
 // cartRouter.get('/', , async (req, res, next) => {
