@@ -30,11 +30,11 @@ apiRouter.use(async (req, res, next) => {
   }
 });
 
-apiRouter.get('/', (req, res, next) => {
-  res.send({
-    message: 'API is under construction!',
-  });
-});
+// apiRouter.get('/', (req, res, next) => {
+//   res.send({
+//     message: 'API is under construction!',
+//   });
+// });
 
 apiRouter.get('/health', (req, res, next) => {
   res.send({
@@ -63,7 +63,7 @@ const cartInventoryRouter = require('./cart_inventory');
 apiRouter.use('/cart_inventory', cartInventoryRouter);
 
 // 404 not found 
-apiRouter.use('*', async (req, res, ) => {
+apiRouter.use('*', async (req, res) => {
   res.status(404)
   res.send({
       message: "page not found"
