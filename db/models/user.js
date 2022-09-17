@@ -41,7 +41,8 @@ async function getUser({ username, password }) {
   }
 }
 
-async function getUserById(userId) {
+async function getUserById({userId}) {
+  console.log('HI is getUserById running?')
   try {
     const { rows: [user] } = await client.query(`
       SELECT *

@@ -9,8 +9,8 @@ export const apiCall = async (url, method = 'GET', token, body) => {
     if (data.error) {
       throw data.error;
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
   }
   return data;
 }
@@ -26,16 +26,12 @@ const getFetchOptions = (method, body) => {
 }
 
 const setToken = (body, token) => {
-  // TODO: add this back in
-  // const localToken = JSON.parse(localStorage.getItem('grace-shopper-jwt'));
-  // if (localToken) {
-  //   body.headers = Object.assign(body.headers, { 'Authorization': `Bearer ${localToken}` })
-  //   return body;
-  // } else if (token) { body.headers = Object.assign(body.headers, { 'Authorization': `Bearer ${token}` }) }
-
-  // TODO: TEMP:
-  if (token) {
-    body.headers = Object.assign(body.headers, { 'Authorization': `Bearer ${token}` })
+  const localToken = JSON.parse(localStorage.getItem('grace-shopper-jwt'));
+  if (localToken) {
+    body.headers = Object.assign(body.headers, { 'Authorization': `Bearer ${localToken}` })
+    return body;
+  } else if (token) { 
+    body.headers = Object.assign(body.headers, { 'Authorization': `Bearer ${token}` }) 
   }
   return body;
 }
@@ -62,10 +58,11 @@ export const registerUser = async (username, password, address, fullname, email)
 }
 
 // TODO: figure out how to make this work
-// export const getLocalUser = async (localToken) => {
-//   const data = await apiCall('/users/me', 'GET', localToken);
-//   return data || []
-// }
+export const getLocalUser = async (localToken) => {
+  console.log('localToken in getLocalUser', localToken)
+  const data = await apiCall('/users/me', 'POST', null, { token: localToken });
+  return data || []
+}
 
 export const fetchCart = async () => {
   const data = await apiCall('/cart', "GET", null)

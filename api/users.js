@@ -7,7 +7,7 @@ const { requireLogin, requireAdmin } = require('./utils');
 const {
   createUser,
   getUser,
-  // getUserById,
+  getUserById,
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
@@ -119,6 +119,36 @@ usersRouter.get('/:userId/cart', async (req, res, next) => {
     res.send(cart);
   } catch ({ name, message }) {
     next({ name, message })
+  }
+})
+
+usersRouter.post('/me', async (req, res, next) => {
+  console.log('IS API ROUTE EVEN WORKING')
+  const { token } = req.body;
+  console.log('local token in req.body', token);
+
+  try {
+    jwt.verify(localToken, JWT_SECRET, async function (error, decodedToken) {
+      console.log('secret in usersRouter.post', JWT_SECRET);
+      if (error) {
+        throw error;
+      }
+      if (decodedToken && decodedToken.id) {
+        console.log('decodedToken', decodedToken)
+        const user = await getUserById({userId: decodedToken.id});
+        console.log('user back from getUserById', user)
+
+        res.send(user);
+      } else if (!decodedToken.id) {
+        next({ 
+          name: 'DecodedTokenError',
+          message: 'Error fetching user info from token in localStorage.'
+        })
+      }
+    })
+
+  } catch ({name, message}) {
+    next({name, message})
   }
 })
 

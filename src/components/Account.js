@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { loginUser, registerUser } from '../utilities/apiCalls';
-// import { setTokenInLocalStorage } from '../utilities/utils';
+import { setTokenInLocalStorage } from '../utilities/utils';
 
 const Account = ({ token, setToken, user, setUser }) => {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ const Account = ({ token, setToken, user, setUser }) => {
   const [email, setEmail] = useState('');
 
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const login = await loginUser(username, password);
     if (login.error) {
       alert(`Error: ${login.message}. If you do not have an account, please register.`);
@@ -43,7 +43,7 @@ const Account = ({ token, setToken, user, setUser }) => {
   const setUserData = (returnedUser, returnedToken) => {
     setUser(returnedUser);
     setToken(returnedToken);
-    // setTokenInLocalStorage(returnedToken);
+    setTokenInLocalStorage(returnedToken);
     resetForm();
   }
 
@@ -68,11 +68,9 @@ const Account = ({ token, setToken, user, setUser }) => {
           </> :
           <form
             className='login-form'
-            onSubmit={(event) => {
-              isRegistered ?
-                handleLogin(event) :
-                handleRegistration(event)
-            }}>
+            onSubmit={ (event) => {
+              isRegistered ? handleLogin(event) : handleRegistration(event)
+          }}>
             <h3>{isRegistered ? "Login" : "Register"}</h3>
             <div>
               <div> Username </div>
@@ -105,6 +103,7 @@ const Account = ({ token, setToken, user, setUser }) => {
                     type='password'
                     name='password-confirmation'
                     placeholder='Password'
+                    value={passwordConfirmation}
                     onChange={(event) => { setPasswordConfirmation(event.target.value) }}
                   />
                   {/* TODO: onscreen error messaging */}
@@ -147,6 +146,7 @@ const Account = ({ token, setToken, user, setUser }) => {
             }
             <button type='submit'>{isRegistered ? 'Login' : 'Register'}</button>
             {
+              // Change these to a button
               isRegistered ?
                 <>
                   <a onClick={(event) => {

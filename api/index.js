@@ -1,6 +1,7 @@
 const express = require('express');
 const apiRouter = express.Router();
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { getUserById } = require('../db')
 
 apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
@@ -12,7 +13,7 @@ apiRouter.use(async (req, res, next) => {
     const token = auth.slice(prefix.length);
 
     try {
-      const {JWT_SECRET} = process.env;
+      const { JWT_SECRET } = process.env;
       const { id } = jwt.verify(token, JWT_SECRET);
 
       if (id) {
@@ -25,7 +26,7 @@ apiRouter.use(async (req, res, next) => {
   } else {
     next({
       name: 'AuthorizationHeaderError',
-      message: `Authorization token must start with ${ prefix }`
+      message: `Authorization token must start with ${prefix}`
     });
   }
 });
@@ -66,7 +67,7 @@ apiRouter.use('/cart_inventory', cartInventoryRouter);
 apiRouter.use('*', async (req, res) => {
   res.status(404)
   res.send({
-      message: "page not found"
+    message: "page not found"
   })
 });
 
