@@ -25,6 +25,24 @@
   padding: .5rem;
   filter: drop-shadow(1px 1px 1px rgb(59, 59, 59));
 }
+*,*::before, *::after{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+.navlink::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #fff;
+  transition: width 0.3s ease-out;
+}
+.navlink:hover::before{
+  width: 100%;
+}
 .navlink, input[type=button] {
   margin-right: 2rem;
   color: rgb(255, 255, 255);
@@ -41,9 +59,9 @@
 }
 .navlink:hover {
   background-color: rgb(14, 13, 13);
-  text-decoration: underline;
   transition: .5s;
 }
+
 main{
   margin-top: 50px;
   text-align: center;
