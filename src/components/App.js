@@ -1,32 +1,86 @@
 import React, { useState, useEffect } from 'react';
+import ReactDom from 'react-dom';
+import { NavLink, Route } from 'react-router-dom'; 
 // getAPIHealth is defined in our axios-services directory index.js
 // you can think of that directory as a collection of api adapters
 // where each adapter fetches specific info from our express server's /api route
-import { getAPIHealth } from '../axios-services';
+// import { getAPIHealth } from '../axios-services';
 import '../style/App.css';
+import {
+  Home,
+  Account,
+  Inventory,
+  Cart,
+  Admin
+} from './index';
+import { checkLocalStorage } from '../utilities/utils';
 
 const App = () => {
-  const [APIHealth, setAPIHealth] = useState('');
+  // const [APIHealth, setAPIHealth] = useState('');
+  const [user, setUser] = useState(false);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
-    // follow this pattern inside your useEffect calls:
-    // first, create an async function that will wrap your axios service adapter
-    // invoke the adapter, await the response, and set the data
-    const getAPIStatus = async () => {
-      const { healthy } = await getAPIHealth();
-      setAPIHealth(healthy ? 'api is up! :D' : 'api is down :/');
-    };
-
-    // second, after you've defined your getter above
-    // invoke it immediately after its declaration, inside the useEffect callback
-    getAPIStatus();
+    // (async () => {
+    //   if (!token) {
+    //     const localToken = checkLocalStorage();
+    //     if (localToken) {
+    //       setToken(localToken);
+    //       // getUser
+    //       // TODO: need a way to get the users info submitting only token
+    //     }
+    //   }
+    // })()
   }, []);
 
   return (
-    <div className="app-container">
-      <h1>Hello, World!</h1>
-      <p>API Status: {APIHealth}</p>
-    </div>
+    <main>
+      <nav className='navbar'>
+        <NavLink to="/home" className="navlink" activeClassName="active">
+          Home
+        </NavLink>
+    
+        <NavLink to="/inventory" className="navlink" activeClassName="active">
+          Inventory
+        </NavLink>
+    
+        <NavLink to="/account" className="navlink" activeClassName="active">
+          Account
+        </NavLink>
+    
+        <NavLink to="/cart" className="navlink" activeClassName="active">
+          Cart
+        </NavLink>
+
+        <NavLink to="/admin" className="navlink" activeClassName="active">
+          Admin
+        </NavLink>
+      </nav>
+
+      <Route path="/home">
+        <Home />
+      </Route>
+
+      <Route path="/inventory">
+        <Inventory/>
+      </Route>
+
+      <Route path="/account">
+        <Account token={token} setToken={setToken} user={user} setUser={setUser} />
+      </Route>
+
+      <Route path="/cart">
+        <Cart />
+      </Route>
+
+      <Route path="/admin">
+        <Admin />
+      </Route>
+    </main>
+    // <div className="app-container">
+    //   <h1>Hello, World!</h1>
+    //   <p>API Status: {APIHealth}</p>
+    // </div>
   );
 };
 
