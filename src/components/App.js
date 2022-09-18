@@ -30,9 +30,11 @@ const App = () => {
         const localToken = checkLocalStorage();
         if (localToken) {
           setToken(localToken);
+          console.log('Token set.')
           const localUser = await getLocalUser();
           if (localUser) { 
             setUser(localUser) }
+            console.log('User set.')
         }
       }
     })()
