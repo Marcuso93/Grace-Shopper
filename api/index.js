@@ -63,6 +63,10 @@ apiRouter.use('/cart', cartsRouter);
 const cartInventoryRouter = require('./cart_inventory');
 apiRouter.use('/cart_inventory', cartInventoryRouter);
 
+// ROUTER: /api/orders
+const ordersRouter = require('./orders');
+apiRouter.use('/orders', ordersRouter);
+
 // 404 not found 
 apiRouter.use('*', async (req, res) => {
   res.status(404)

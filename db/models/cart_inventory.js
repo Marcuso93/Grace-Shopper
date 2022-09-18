@@ -5,7 +5,7 @@ async function getCartItemById(id) {
     const { rows: [cart_item] } = await client.query(`
       SELECT *
       FROM cart_inventory
-      WHERE id = $1
+        WHERE id = $1 AND "isPurchased"=false
     `, [id]);
 
     return cart_item
@@ -57,7 +57,7 @@ async function updateCartItem({ id, ...fields }) {
     const { rows: [updatedCartItem] } = await client.query(`
       UPDATE cart_inventory
       SET ${setString}
-        WHERE id=${id}
+        WHERE id=${id} AND "isPurchased"=false
       RETURNING *;
     `, Object.values(fields));
 
@@ -74,7 +74,7 @@ async function removeItemFromCart(id) {
     const { rows: [deletedCartItem] } = await client.query(`
       DELETE
       FROM cart_inventory
-      WHERE id=$1
+        WHERE id=$1 AND "isPurchased"=false
       RETURNING*
     `, [id]);
 
@@ -84,19 +84,44 @@ async function removeItemFromCart(id) {
   }
 }
 
-// TODO: I don't think we'll need this... the cart_inventory will be associated with user already
-// No one else should have access to the users "cart"
+async function canEditCartInventory({cartInventoryId, userId}){
+  try {
+    const { rows: [cartItem] } = await client.query(`
+      SELECT*
+      FROM cart_inventory
+          WHERE id=$1
+      `, [cartInventoryId])
 
-// async function canEditCartInventory(){
+    if (cartItem.userId === userId) { return true }
 
-// }
+    return false
 
-// TODO: remove all items from cart
+  } catch (error) {
+    throw error
+  }
+}
+
+async function removeAllItemsFromCart(userId) {
+  try {
+    const { rows: deletedCartItems } = await client.query(`
+      DELETE
+      FROM cart_inventory
+        WHERE "userId"=$1 AND "isPurchased"=false
+      RETURNING*
+    `, [userId]);
+
+    return deletedCartItems
+  } catch (error) {
+    throw error
+  }
+}
 
 module.exports = {
   getCartItemById,
   addItemToCart,
   getCartInventoryByUserId,
   updateCartItem,
-  removeItemFromCart
+  removeItemFromCart,
+  canEditCartInventory,
+  removeAllItemsFromCart
 };

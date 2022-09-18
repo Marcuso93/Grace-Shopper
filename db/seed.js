@@ -4,7 +4,8 @@ const {
   createUser,
   createInventory,
   createReview,
-  addItemToCart
+  createNewOrder,
+  addItemToCart,
   //createReviews
   // for example, User
 } = require('./');
@@ -19,6 +20,7 @@ async function buildTables() {
     await client.query(`
       DROP TABLE IF EXISTS item_reviews;
       DROP TABLE IF EXISTS cart_inventory;
+      DROP TABLE IF EXISTS orders;
       DROP TABLE IF EXISTS reviews;
       DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS inventory;
@@ -28,46 +30,53 @@ async function buildTables() {
     // build tables in correct order
     console.log('hello again')
     await client.query(`
-    CREATE TABLE users (
-      id SERIAL PRIMARY KEY,
-      username VARCHAR(255) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      address VARCHAR(255),
-      fullname VARCHAR(255),
-      email VARCHAR(255) UNIQUE NOT NULL,
-      "isAdmin" BOOLEAN DEFAULT false
-    );
-    CREATE TABLE inventory(
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255),
-      description TEXT NOT NULL,
-      price INTEGER,
-      "purchasedCount" INTEGER,
-      stock INTEGER,
-      "isCustomizable" BOOLEAN DEFAULT true,
-      "isActive" BOOLEAN DEFAULT true
-    );
-    CREATE TABLE reviews(
-      id SERIAL PRIMARY KEY,
-      "userId" INTEGER REFERENCES users(id),
-      "itemId" INTEGER REFERENCES inventory(id),
-      stars INTEGER,
-      "isActive" BOOLEAN DEFAULT true,
-      description TEXT NOT NULL
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        address VARCHAR(255),
+        fullname VARCHAR(255),
+        email VARCHAR(255) UNIQUE NOT NULL,
+        "isAdmin" BOOLEAN DEFAULT false
       );
-    CREATE TABLE cart_inventory(
-      id SERIAL PRIMARY KEY, 
-      "userId" INTEGER REFERENCES users(id),
-      "inventoryId" INTEGER REFERENCES inventory(id),
-      quantity INTEGER,
-      price INTEGER,
-      "isPurchased" BOOLEAN DEFAULT false
-    );
-    CREATE TABLE item_reviews(
-      id SERIAL PRIMARY KEY,
-      "itemId" INTEGER REFERENCES inventory(id),
-      "reviewId" INTEGER REFERENCES reviews(id),
-      "isActive" BOOLEAN DEFAULT true
+      CREATE TABLE inventory(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT NOT NULL,
+        price INTEGER,
+        "purchasedCount" INTEGER,
+        stock INTEGER,
+        "isCustomizable" BOOLEAN DEFAULT true,
+        "isActive" BOOLEAN DEFAULT true
+      );
+      CREATE TABLE reviews(
+        id SERIAL PRIMARY KEY,
+        "userId" INTEGER REFERENCES users(id),
+        "itemId" INTEGER REFERENCES inventory(id),
+        stars INTEGER,
+        "isActive" BOOLEAN DEFAULT true,
+        description TEXT NOT NULL
+      );
+      CREATE TABLE orders(
+        id SERIAL PRIMARY KEY,
+        "orderDate" TIMESTAMPTZ DEFAULT NOW(),
+        "userId" INTEGER REFERENCES users(id),
+        price INTEGER
+      );
+      CREATE TABLE cart_inventory(
+        id SERIAL PRIMARY KEY, 
+        "userId" INTEGER REFERENCES users(id),
+        "inventoryId" INTEGER REFERENCES inventory(id),
+        quantity INTEGER,
+        price INTEGER,
+        "isPurchased" BOOLEAN DEFAULT false,
+        "orderId" INTEGER REFERENCES orders(id) DEFAULT null
+      );
+      CREATE TABLE item_reviews(
+        id SERIAL PRIMARY KEY,
+        "itemId" INTEGER REFERENCES inventory(id),
+        "reviewId" INTEGER REFERENCES reviews(id),
+        "isActive" BOOLEAN DEFAULT true
       );
     `)
     console.log("Finished building tables!");
@@ -129,11 +138,20 @@ async function createInitialData() {
     console.log('Building cart...');
     const cartItems = [
       { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 1, inventoryId: 2, quantity: 5, price: 10, isPurchased: "true" }
+      { userId: 1, inventoryId: 2, quantity: 5, price: 10 }
     ]
     const cart = await Promise.all(cartItems.map(addItemToCart));
     console.log('cart:', cart);
     console.log('Finished building cart...')
+
+    console.log('Building order...');
+    // const order = {
+    //   userId: 1,
+    //   price: 50000
+    // }
+    const order = await createNewOrder({userId: 1, price: 50000})
+    console.log('ORDER:', order)
+    console.log('Finished building order.')
 
     console.log("Finished creating tables!")
 
