@@ -17,7 +17,7 @@ const Logout = ({ isLoggingOut, setIsLoggingOut, setUser, setToken }) => {
 
   return (
     isLoggingOut ?
-    <div style={{zIndex: '4'}}>
+    <div className='logout-popup' style={{zIndex: '4'}}>
       <button onClick={ logoutUser }>Logout</button>
       <button onClick= { cancelLogout }>Cancel</button>
     </div> :

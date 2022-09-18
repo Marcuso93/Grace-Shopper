@@ -145,22 +145,13 @@ const Account = ({ token, setToken, user, setUser }) => {
               null
             }
             <button type='submit'>{isRegistered ? 'Login' : 'Register'}</button>
-            {
-              // Change these to a button
+            <br/>
+            <button className='login-register-button' onClick={(event) => {
+              event.preventDefault();
               isRegistered ?
-                <>
-                  <a onClick={(event) => {
-                    event.preventDefault();
-                    setIsRegistered(false);
-                  }}>Need to register a new user?</a>
-                </> :
-                <>
-                  <a onClick={(event) => {
-                    event.preventDefault();
-                    setIsRegistered(true);
-                  }}>Already have an account?</a>
-                </>
-            }
+              setIsRegistered(false) :
+              setIsRegistered(true); 
+            }}>{ isRegistered ? 'Need to register a new user?' : 'Already have an account?' }</button>
           </form>
       }
     </div>
