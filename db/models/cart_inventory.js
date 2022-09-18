@@ -44,7 +44,7 @@ async function getCartInventoryByUserId({userId}) {
   }
 }
 
-// The fields will be "cartsId", "inventoryId", quantity, price (probably not cartsId though-- they won't switch to someone elses cart).
+// The fields will be "inventoryId", quantity, price
 // The id here is the cart_inventory id... i.e. one type of item in cart
 async function updateCartItem({ id, ...fields }) {
   const setString = Object.keys(fields).map(
@@ -69,14 +69,14 @@ async function updateCartItem({ id, ...fields }) {
 }
 
 // Will remove one type of inventory from "cart" using cart_inventory ID
-async function removeItemFromCart(id) {
+async function removeItemFromCart(cart_inventoryId) {
   try {
     const { rows: [deletedCartItem] } = await client.query(`
       DELETE
       FROM cart_inventory
         WHERE id=$1 AND "isPurchased"=false
       RETURNING*
-    `, [id]);
+    `, [cart_inventoryId]);
 
     return deletedCartItem
   } catch (error) {

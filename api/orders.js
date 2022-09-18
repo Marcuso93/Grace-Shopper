@@ -1,9 +1,22 @@
 const express = require('express');
-const { createNewOrder, getOrderHistoryByUserId } = require('../db/models/orders');
+const { createNewOrder, getOrderHistoryByUserId, getAllOrders } = require('../db/models/orders');
 const { requireLogin } = require('./utils');
 const ordersRouter = express.Router();
 
-// create new order
+// Get all orders (FOR ADMIN ONLY)
+// GET /api/orders
+// TODO: requireAdmin
+ordersRouter.get('/', async (req, res, next) => {
+  try {
+    const orders = await getAllOrders();
+
+    res.send(orders);
+  } catch ({name, message}){
+    next({name, message})
+  }
+})
+
+// Create/Submit new order
 // POST /api/orders
 // TODO: check if correct user?
 // TODO: requireLogin
@@ -19,8 +32,10 @@ ordersRouter.post('/', async (req, res, next) => {
   }
 });
 
-// get users order history
+// Get users order history
 // GET /api/orders/user/:userId
+// TODO: This will include 'inactivated' (deleted) orders... 
+// we could filter them out on the front end when we don't want them
 // TODO: requireLogin
 ordersRouter.get('/user/:userId', async (req, res, next) => {
   const { userId } = req.params; 
@@ -28,12 +43,19 @@ ordersRouter.get('/user/:userId', async (req, res, next) => {
   try {
     const orders = await getOrderHistoryByUserId(userId);
 
-    res.send(orders);
+    if (!orders) {
+      res.send({
+        name: 'NoOrdersToDisplay',
+        message: 'User does not have any past orders to display.'
+      })
+    } else {
+      res.send(orders);
+    }
   } catch ({name, message}) {
     next({name, message})
   }
 });
 
-// TODO: EDIT ORDER?
+// TODO: EDIT ORDER, ITEM IN ORDER, REMOVE ITEM IN ORDER, DELETE ORDER? (Possibly for Admin to use?)
 
 module.exports = ordersRouter;

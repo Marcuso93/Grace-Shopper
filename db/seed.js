@@ -61,7 +61,8 @@ async function buildTables() {
         id SERIAL PRIMARY KEY,
         "orderDate" TIMESTAMPTZ DEFAULT NOW(),
         "userId" INTEGER REFERENCES users(id),
-        price INTEGER
+        price INTEGER,
+        inactivated BOOLEAN DEFAULT false
       );
       CREATE TABLE cart_inventory(
         id SERIAL PRIMARY KEY, 
@@ -135,20 +136,18 @@ async function createInitialData() {
     console.log(reviews)
     console.log("Finish creating reviews...")
     
-    console.log('Building cart...');
+    console.log('Building carts...');
     const cartItems = [
       { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 1, inventoryId: 2, quantity: 5, price: 10 }
+      { userId: 1, inventoryId: 2, quantity: 5, price: 10 },
+      { userId: 2, inventoryId: 1, quantity: 2, price: 5000 },
+      { userId: 2, inventoryId: 2, quantity: 5, price: 10}
     ]
-    const cart = await Promise.all(cartItems.map(addItemToCart));
-    console.log('cart:', cart);
+    const inventoryInCarts = await Promise.all(cartItems.map(addItemToCart));
+    console.log('Inventory in carts:', inventoryInCarts);
     console.log('Finished building cart...')
 
     console.log('Building order...');
-    // const order = {
-    //   userId: 1,
-    //   price: 50000
-    // }
     const order = await createNewOrder({userId: 1, price: 50000})
     console.log('ORDER:', order)
     console.log('Finished building order.')
