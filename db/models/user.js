@@ -96,7 +96,6 @@ async function emailInUseCheck(emailInput) {
 
     rows.forEach(row => {
       if (row.email && (row.email === emailInput)) { 
-        console.log(row.email)
         inUse = true;
       }
     })

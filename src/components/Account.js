@@ -15,7 +15,6 @@ const Account = ({ token, setToken, user, setUser }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
     const login = await loginUser(username, password);
-    console.log(login)
     if (login.error) {
       alert(`Error: ${login.message} If you do not have an account, please register.`);
     } else if (login.user && login.token) {
@@ -27,7 +26,9 @@ const Account = ({ token, setToken, user, setUser }) => {
 
   const handleRegistration = async (event) => {
     event.preventDefault();
-    if (password === passwordConfirmation) {
+    if (password !== passwordConfirmation) {
+      alert("The passwords don't match!")
+    } else {
       const registration = await registerUser(username, password, address, fullname, email);
       if (registration.error) {
         alert(`Error: ${registration.message}`);
@@ -36,8 +37,6 @@ const Account = ({ token, setToken, user, setUser }) => {
       } else {
         alert('There was an error during registration.');
       }
-    } else {
-      alert("The passwords don't match!");
     }
   }
 

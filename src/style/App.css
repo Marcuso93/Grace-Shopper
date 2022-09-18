@@ -45,7 +45,7 @@ input[type=button] {
   transition: width 0.3s ease-out;
 }
 
-.navlink:hover::before {
+.navlink:hover::before, input[type=button]:hover::before {
   width: 100%;
 }
 
@@ -60,12 +60,12 @@ input[type=button] {
   border-radius: 8px
 }
 
-.navlink.active {
+.navlink.active, input[type=button].active {
   color: rgb(255, 255, 255);
   font-size: 18pt;
 }
 
-.navlink:hover {
+.navlink:hover, input[type=button] {
   background-color: rgb(14, 13, 13);
   transition: .5s;
 }
