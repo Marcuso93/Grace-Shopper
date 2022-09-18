@@ -49,17 +49,21 @@ const App = () => {
           Inventory
         </NavLink>
     
-        <NavLink to="/account" className="navlink" activeClassName="active">
-          Account
-        </NavLink>
-    
         <NavLink to="/cart" className="navlink" activeClassName="active">
           Cart
         </NavLink>
 
-        <NavLink to="/admin" className="navlink" activeClassName="active">
-          Admin
+        <NavLink to="/account" className="navlink" activeClassName="active">
+          { (user && token) ? 'Account' : 'Login/Register' }
         </NavLink>
+        
+        {
+          (user && token && user.isAdmin) ?
+          <NavLink to="/admin" className="navlink" activeClassName="active">
+            Admin
+          </NavLink> :
+          null
+        }
 
         {
           (token && user) ?

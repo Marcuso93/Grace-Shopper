@@ -17,7 +17,6 @@ input[type=button] {
 }
 
 .navbar {
-  /* margin-bottom: 1rem; */
   background-color: black;
   display: flex;
   justify-content: center;
