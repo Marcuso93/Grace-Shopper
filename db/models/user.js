@@ -26,15 +26,17 @@ async function createUser({ username, password, address, fullname, email, isAdmi
 async function getUser({ username, password }) {
   try {
     const user = await getUserByUsername(username);
-    const hashedPassword = user.password;
-
-    const isValid = await bcrypt.compare(password, hashedPassword)
-
-    if (isValid) {
-      delete user.password
-      return user
+    if (user) {
+      const hashedPassword = user.password;
+      const isValid = await bcrypt.compare(password, hashedPassword)
+      if (isValid) {
+        delete user.password
+        return user
+      } else {
+        return 'passwordNotValid'
+      }
     } else {
-      return null
+      return 'userDoesNotExist'
     }
   } catch (error) {
     throw error
@@ -84,6 +86,27 @@ async function getAllUsers() {
   }
 }
 
+async function emailInUseCheck(emailInput) {
+  try {
+    let inUse = false;
+    const { rows } = await client.query(`
+      SELECT email
+      FROM users;
+    `);
+
+    rows.forEach(row => {
+      if (row.email && (row.email === emailInput)) { 
+        console.log(row.email)
+        inUse = true;
+      }
+    })
+
+    return inUse
+  } catch (error) {
+    throw error
+  }
+}
+
 
 module.exports = {
   // add your database adapter fns here
@@ -92,4 +115,5 @@ module.exports = {
   getUserById,
   getUserByUsername,
   getAllUsers,
+  emailInUseCheck
 };

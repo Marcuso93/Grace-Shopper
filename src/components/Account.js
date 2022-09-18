@@ -17,7 +17,7 @@ const Account = ({ token, setToken, user, setUser }) => {
     const login = await loginUser(username, password);
     console.log(login)
     if (login.error) {
-      alert(`Error: ${login.message}. If you do not have an account, please register.`);
+      alert(`Error: ${login.message} If you do not have an account, please register.`);
     } else if (login.user && login.token) {
       setUserData(login.user, login.token);
     } else {
@@ -30,7 +30,7 @@ const Account = ({ token, setToken, user, setUser }) => {
     if (password === passwordConfirmation) {
       const registration = await registerUser(username, password, address, fullname, email);
       if (registration.error) {
-        alert(`Error: ${registration.message}.`);
+        alert(`Error: ${registration.message}`);
       } else if (registration.user && registration.token) {
         setUserData(registration.user, registration.token);
       } else {
