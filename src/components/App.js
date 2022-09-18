@@ -30,9 +30,9 @@ const App = () => {
         const localToken = checkLocalStorage();
         if (localToken) {
           setToken(localToken);
-          const localUser = await getLocalUser(localToken);
-          console.log('getLocalUser function sending back', localUser)
-          if (localUser) { setUser(localUser) }
+          const localUser = await getLocalUser();
+          if (localUser) { 
+            setUser(localUser) }
         }
       }
     })()

@@ -57,10 +57,8 @@ export const registerUser = async (username, password, address, fullname, email)
   return data || []
 }
 
-// TODO: figure out how to make this work
-export const getLocalUser = async (localToken) => {
-  console.log('localToken in getLocalUser', localToken)
-  const data = await apiCall('/users/me', 'POST', null, { token: localToken });
+export const getLocalUser = async () => {
+  const data = await apiCall('/users/me');
   return data || []
 }
 

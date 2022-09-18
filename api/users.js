@@ -2,12 +2,12 @@ const express = require('express');
 const usersRouter = express.Router();
 // const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = process.env
+const { JWT_SECRET } = process.env;
 const { requireLogin, requireAdmin } = require('./utils');
 const {
   createUser,
   getUser,
-  getUserById,
+  // getUserById,
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
@@ -23,7 +23,7 @@ usersRouter.get('/', requireAdmin, async (req, res, next) => {
   } catch (error) {
     throw error;
   }
-})
+});
 
 usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
@@ -50,9 +50,8 @@ usersRouter.post('/login', async (req, res, next) => {
         message: 'Username or password is incorrect.',
       })
     }
-  } catch (error) {
-    console.log(error);
-    next(error);
+  } catch ({name, message}) {
+    next({name, message});
   }
 });
 
@@ -89,10 +88,9 @@ usersRouter.post('/register', async (req, res, next) => {
       message: "thank you for signing up",
       token,
       user,
-
     })
-  } catch ({ error, name, message }) {
-    next({ error, name, message })
+  } catch ({ name, message }) {
+    next({ name, message })
   }
 });
 
@@ -107,7 +105,7 @@ usersRouter.get('/:userId/reviews', async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message })
   }
-})
+});
 
 // get my cart
 usersRouter.get('/:userId/cart', async (req, res, next) => {
@@ -120,36 +118,17 @@ usersRouter.get('/:userId/cart', async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message })
   }
-})
+});
 
-usersRouter.post('/me', async (req, res, next) => {
-  console.log('IS API ROUTE EVEN WORKING')
-  const { token } = req.body;
-  console.log('local token in req.body', token);
-
-  try {
-    jwt.verify(localToken, JWT_SECRET, async function (error, decodedToken) {
-      console.log('secret in usersRouter.post', JWT_SECRET);
-      if (error) {
-        throw error;
-      }
-      if (decodedToken && decodedToken.id) {
-        console.log('decodedToken', decodedToken)
-        const user = await getUserById({userId: decodedToken.id});
-        console.log('user back from getUserById', user)
-
-        res.send(user);
-      } else if (!decodedToken.id) {
-        next({ 
-          name: 'DecodedTokenError',
-          message: 'Error fetching user info from token in localStorage.'
-        })
-      }
+usersRouter.get('/me', async(req, res, next) => {
+  if (req.user) {
+    res.send(req.user)
+  } else {
+    next({
+      name: 'UserFetchError', 
+      message: 'There was an error fetching user data. Please try logging in.'
     })
-
-  } catch ({name, message}) {
-    next({name, message})
   }
-})
+});
 
 module.exports = usersRouter;
