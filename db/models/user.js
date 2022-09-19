@@ -30,7 +30,6 @@ async function getUser({ username, password }) {
       const hashedPassword = user.password;
       const isValid = await bcrypt.compare(password, hashedPassword)
       if (isValid) {
-        delete user.password
         return user
       } else {
         return 'passwordNotValid'
@@ -67,6 +66,8 @@ async function getUserByUsername(username) {
     WHERE username = $1
     `, [username])
 
+    delete user.password
+
     return user
   } catch (error) {
     throw error
@@ -75,12 +76,16 @@ async function getUserByUsername(username) {
 
 async function getAllUsers() {
   try {
-    const { rows } = await client.query(`
+    const { rows: users } = await client.query(`
       SELECT*
       FROM users;
     `);
 
-    return rows;
+    users.forEach(user => {
+      delete user.password
+    })
+
+    return users;
   } catch (error) {
     throw error;
   }

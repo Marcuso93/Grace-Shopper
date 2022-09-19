@@ -29,16 +29,17 @@ async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased
 }
 
 // Will return all inventory in cart
-async function getCartInventoryByUserId({userId}) {
+async function getCartByUserId({userId}) {
   try {
-    const { rows: cart_inventory } = await client.query(`
+    const { rows: cart } = await client.query(`
       SELECT*
       FROM cart_inventory
         WHERE "userId"=$1 AND "isPurchased"=false
     `, [userId]);
 
-    return cart_inventory
-
+    if (cart.length) {
+      return cart
+    } else return false
   } catch(error) {
     throw error
   }
@@ -119,7 +120,7 @@ async function removeAllItemsFromCart(userId) {
 module.exports = {
   getCartItemById,
   addItemToCart,
-  getCartInventoryByUserId,
+  getCartByUserId,
   updateCartItem,
   removeItemFromCart,
   canEditCartInventory,

@@ -1,6 +1,6 @@
 const express = require('express');
 const { createNewOrder, getOrderHistoryByUserId, getAllOrders } = require('../db/models/orders');
-const { requireLogin } = require('./utils');
+const { requireLogin, requireAdmin } = require('./utils');
 const ordersRouter = express.Router();
 
 // Get all orders (FOR ADMIN ONLY)
@@ -26,7 +26,10 @@ ordersRouter.post('/', async (req, res, next) => {
   try {
     const newOrder = await createNewOrder({userId, price});
 
-    res.send(newOrder);
+    res.send( newOrder ? newOrder : {
+      name: 'EmptyCart',
+      message: 'The cart is empty, unable to create new order.'
+    });
   } catch ({name, message}) {
     next({name, message})
   }
@@ -43,19 +46,12 @@ ordersRouter.get('/user/:userId', async (req, res, next) => {
   try {
     const orders = await getOrderHistoryByUserId(userId);
 
-    if (!orders) {
-      res.send({
-        name: 'NoOrdersToDisplay',
-        message: 'User does not have any past orders to display.'
-      })
-    } else {
-      res.send(orders);
-    }
+    res.send( orders ? orders : { name: 'NoOrdersToDisplay', message: 'No order history to display.' })
   } catch ({name, message}) {
     next({name, message})
   }
 });
 
-// TODO: EDIT ORDER, ITEM IN ORDER, REMOVE ITEM IN ORDER, DELETE ORDER? (Possibly for Admin to use?)
+// TODO: EDIT ORDER OR ITEM IN ORDER, REMOVE ITEM IN ORDER, DELETE ORDER? (Possibly for Admin to use?)
 
 module.exports = ordersRouter;

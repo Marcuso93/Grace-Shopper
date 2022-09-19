@@ -4,7 +4,8 @@ const {
   updateCartItem, 
   canEditCartInventory,
   removeItemFromCart,
-  removeAllItemsFromCart
+  removeAllItemsFromCart,
+  getCartByUserId
 } = require('../db');
 const { requireLogin } = require('./utils');
 
@@ -79,6 +80,22 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
   }
 });
 
+// GET /api/cart_inventory/user/:userId
+// Get users cart by user ID
+// TODO: requireLogin
+cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
+  const { userId } = req.params;
+  // TODO: check that req.user.id matches (or isAdmin???)
+
+  try {
+    const cart = await getCartByUserId({userId})
+
+    res.send(cart.length? cart : {name: 'EmptyCart', message: 'The cart is empty!'})
+  } catch ({name, message}) {
+    next({name, message})
+  }
+});
+
 // DELETE /api/cart_inventory/user/:userId
 // Remove all items from a users cart
 cartInventoryRouter.delete('/user/:userId', requireLogin, async(req, res, next) => {
@@ -100,7 +117,5 @@ cartInventoryRouter.delete('/user/:userId', requireLogin, async(req, res, next) 
     throw error
   }
 })
-
-// TODO: what do we do when order is submitted????
 
 module.exports = cartInventoryRouter;

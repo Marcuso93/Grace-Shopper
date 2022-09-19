@@ -1,39 +1,72 @@
 /* eslint-disable no-useless-catch */
-const client = require("../client")
+const client = require("../client");
+const { getCartByUserId } = require("./cart_inventory");
+const { getAllUsers } = require("./user");
 
+// This will return all orders submitted by any user (for admin)
+// Returns order, plus user object, plus array of item objects
 async function getAllOrders(){
   try {
     const { rows: orders } = await client.query(`
-      SELECT*
+      SELECT orders.*
       FROM orders
     `);
 
-    const ordersWithItemsAttached = await attachCartItemsToOrders(orders);
+    const ordersWithUsers = await attachUsersToOrders(orders);
+    
+    ordersWithUsers.forEach(order => delete order.userId)
 
-    return ordersWithItemsAttached
+    const ordersWithUsersAndItems = await attachCartItemsToOrders(ordersWithUsers);
+
+    return ordersWithUsersAndItems
   } catch (error) {
     throw error
   }
 }
 
+// Attaches relevant user object to orders passed in
+async function attachUsersToOrders(orders){
+  const ordersToReturn = [...orders];
+  try {
+    const allUsers = await getAllUsers();
+    
+    ordersToReturn.forEach(order => {
+      const userToAdd = allUsers.filter(user => user.id === order.userId);
+      order.user = userToAdd[0];
+    })
+  
+    return ordersToReturn
+  } catch (error) {
+    throw error
+  }
+}
+
+// When user submits order
 async function createNewOrder({userId, price}){
   try {
-    const { rows: [order] } = await client.query(`
-      INSERT INTO orders("userId", price)
-      VALUES($1, $2)
-      RETURNING*
-    `, [userId, price]);
+    const itemsInCart = await getCartByUserId({userId})
 
-    await addCartToOrder({orderId: order.id, userId});
-
-    const orderWithCartItemsAttached = await attachCartItemsToOrders([order]);
-
-    return orderWithCartItemsAttached[0]
+    if (itemsInCart) {
+      const { rows: [order] } = await client.query(`
+        INSERT INTO orders("userId", price)
+        VALUES($1, $2)
+        RETURNING*
+      `, [userId, price]);
+  
+      await addCartToOrder({orderId: order.id, userId});
+  
+      const orderWithCartItemsAttached = await attachCartItemsToOrders([order]);
+  
+      return orderWithCartItemsAttached[0]
+    } else {
+      return false
+    }
   } catch (error) {
     throw error
   }
 }
 
+// Sets isPurchased to true on items in user's cart, adds the order ID
 async function addCartToOrder({orderId, userId}){
   try {
     const { rows: cartItemsToOrder } = await client.query(`
@@ -49,6 +82,7 @@ async function addCartToOrder({orderId, userId}){
   }
 }
 
+// Returns the array of orders with array of relevant item objects attached
 async function attachCartItemsToOrders(orders) {
   const ordersToReturn = [...orders];
   const includedOrderIds = orders.map((_, index) => `$${index + 1}`).join(', ');
@@ -57,9 +91,9 @@ async function attachCartItemsToOrders(orders) {
   
   try {
     const { rows: cartItems } = await client.query(`
-      SELECT inventory.id AS "inventoryId", inventory.name, 
-        inventory.description, cart_inventory.quantity, cart_inventory.price, 
-        cart_inventory.id AS "cartInventoryId", cart_inventory."orderId"
+      SELECT inventory.id AS "inventoryId", cart_inventory.id AS "cartInventoryId", 
+        inventory.name, inventory.description, cart_inventory.quantity, 
+        cart_inventory.price, cart_inventory."orderId"
       FROM inventory
       JOIN cart_inventory ON cart_inventory."inventoryId" = inventory.id
       WHERE cart_inventory."orderId" IN (${includedOrderIds});
@@ -67,6 +101,7 @@ async function attachCartItemsToOrders(orders) {
 
     for (const order of ordersToReturn) {
       const itemsToAdd = cartItems.filter(item => item.orderId === order.id);
+      itemsToAdd.forEach(item => delete item.orderId)
       order.items = itemsToAdd;
     }
 
@@ -92,7 +127,8 @@ async function getOrderHistoryByUserId(userId) {
   }
 }
 
-// TODO: update order and/or items in order... (maybe something only admin could do?)
+// Updates order information-- NOT cart_inventory items
+// Can be used to 'delete' order by setting inactivated to true
 async function updateSubmittedOrder({ orderId, ...fields }) {
   const setString = Object.keys(fields).map(
     (key, index) => `"${key}" =$${index + 1}`
@@ -152,17 +188,13 @@ async function removeSingleItemFromSubmittedOrder({cart_inventoryId, orderId}) {
   }
 }
 
-async function deleteOrder(){
-
-}
-
 module.exports = {
   getAllOrders,
   createNewOrder,
   addCartToOrder,
   attachCartItemsToOrders,
   getOrderHistoryByUserId,
-  updateSubmittedOrder,
-  updateSingleItemInSubmittedOrder,
-  removeSingleItemFromSubmittedOrder
+  // updateSubmittedOrder,
+  // updateSingleItemInSubmittedOrder,
+  // removeSingleItemFromSubmittedOrder
 }
