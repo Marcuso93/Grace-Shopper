@@ -11,26 +11,33 @@ import {
   Account,
   Inventory,
   Cart,
-  Admin
+  Admin,
+  Logout
 } from './index';
+import { getLocalUser } from '../utilities/apiCalls';
 import { checkLocalStorage } from '../utilities/utils';
+
 
 const App = () => {
   // const [APIHealth, setAPIHealth] = useState('');
   const [user, setUser] = useState(false);
   const [token, setToken] = useState('');
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
-    // (async () => {
-    //   if (!token) {
-    //     const localToken = checkLocalStorage();
-    //     if (localToken) {
-    //       setToken(localToken);
-    //       // getUser
-    //       // TODO: need a way to get the users info submitting only token
-    //     }
-    //   }
-    // })()
+    (async () => {
+      if (!token) {
+        const localToken = checkLocalStorage();
+        if (localToken) {
+          setToken(localToken);
+          console.log('Token set.')
+          const localUser = await getLocalUser();
+          if (localUser) { 
+            setUser(localUser) }
+            console.log('User set.')
+        }
+      }
+    })()
   }, []);
 
   return (
@@ -44,17 +51,36 @@ const App = () => {
           Inventory
         </NavLink>
     
-        <NavLink to="/account" className="navlink" activeClassName="active">
-          Account
-        </NavLink>
-    
         <NavLink to="/cart" className="navlink" activeClassName="active">
           Cart
         </NavLink>
 
-        <NavLink to="/admin" className="navlink" activeClassName="active">
-          Admin
+        <NavLink to="/account" className="navlink" activeClassName="active">
+          { (user && token) ? 'Account' : 'Login/Register' }
         </NavLink>
+        
+        {
+          (user && token && user.isAdmin) ?
+          <NavLink to="/admin" className="navlink" activeClassName="active">
+            Admin
+          </NavLink> :
+          null
+        }
+
+        {
+          (token && user) ?
+          <input
+            type='button'
+            value='Logout'
+            className='navlink'
+            onClick={(event) => {
+              event.preventDefault();
+              setIsLoggingOut(true);
+            }}
+          /> :
+          null
+        }
+
       </nav>
 
       <Route path="/home">
@@ -76,6 +102,13 @@ const App = () => {
       <Route path="/admin">
         <Admin />
       </Route>
+
+      <Logout 
+        isLoggingOut={isLoggingOut} 
+        setIsLoggingOut={setIsLoggingOut} 
+        setUser={setUser} 
+        setToken={setToken} 
+      />
     </main>
     // <div className="app-container">
     //   <h1>Hello, World!</h1>

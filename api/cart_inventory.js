@@ -1,19 +1,33 @@
 const express = require('express');
-const { addItemToCart, updateCartItem, removeItemFromCart } = require('../db');
+const { 
+  addItemToCart, 
+  updateCartItem, 
+  canEditCartInventory,
+  removeItemFromCart,
+  removeAllItemsFromCart,
+  getCartByUserId
+} = require('../db');
 const { requireLogin } = require('./utils');
 
 const cartInventoryRouter = express.Router();
 
 // POST /api/cart_inventory
 // Create cart_inventory, ie add item to cart
-// TODO: check user is correct user?
 cartInventoryRouter.post('/',requireLogin, async (req, res, next) => {
   const { userId, inventoryId, quantity, price } = req.body;
 
   try {
-    const cart_item = await addItemToCart({ userId, inventoryId, quantity, price });
-
-    res.send(cart_item);
+    if (req.user.id === userId) {
+      const cart_item = await addItemToCart({ userId, inventoryId, quantity, price });
+  
+      res.send(cart_item);
+    } else {
+      res.status(403).send({
+        "error": "UnauthorizedUserError",
+        "message": `User ${req.user.username} is not allowed to add this item to the cart.`,
+        "name": "UnauthorizedUserError"
+      });
+    }
   } catch ({name, message}) {
     next({name, message})
   }
@@ -21,15 +35,23 @@ cartInventoryRouter.post('/',requireLogin, async (req, res, next) => {
 
 // PATCH /api/cart_inventory/:cartInventoryId
 // Update an item type in cart (TODO: probably just quantity and isPurchased???)
-// TODO: Check user is correct user?
 cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, next) => {
   const { cartInventoryId } = req.params;
   const { ...fields } = req.body;
 
   try {
-    const cart_item = await updateCartItem({ id: cartInventoryId, ...fields });
-
-    res.send(cart_item);
+    const canEdit = await canEditCartInventory({cartInventoryId, userId: req.user.id});
+    if (canEdit) {
+      const cart_item = await updateCartItem({ id: cartInventoryId, ...fields });
+  
+      res.send(cart_item);
+    } else {
+      res.status(403).send({
+        "error": "UnauthorizedUserError",
+        "message": `User ${req.user.username} is not allowed to update this cart item.`,
+        "name": "UnauthorizedUserError"
+      });
+    }
   } catch ({name, message}){
     next({name, message})
   }
@@ -37,19 +59,63 @@ cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, nex
 
 // DELETE /api/cart_inventory/:cartInventoryId
 // Remove an item from the cart
-// TODO: check user is correct user?
 cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, next) => {
   const { cartInventoryId } = req.params;
 
   try {
-    const removedCartItem = await removeItemFromCart(cartInventoryId);
-    
-    res.send(removedCartItem);
+    const canEdit = await canEditCartInventory({ cartInventoryId, userId: req.user.id })
+    if (canEdit) {
+      const removedCartItem = await removeItemFromCart(cartInventoryId);
+      
+      res.send(removedCartItem);
+    } else {
+      res.status(403).send({
+        "error": "UnauthorizedUserError",
+        "message": `User ${req.user.username} is not allowed to remove this cart item.`,
+        "name": "UnauthorizedUserError"
+      });
+    }
   } catch ({name, message}) {
     next({name, message})
   }
 });
 
-// TODO: what do we co when order is submitted????
+// GET /api/cart_inventory/user/:userId
+// Get users cart by user ID
+// TODO: requireLogin
+cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
+  const { userId } = req.params;
+  // TODO: check that req.user.id matches (or isAdmin???)
+
+  try {
+    const cart = await getCartByUserId({userId})
+
+    res.send(cart.length? cart : {name: 'EmptyCart', message: 'The cart is empty!'})
+  } catch ({name, message}) {
+    next({name, message})
+  }
+});
+
+// DELETE /api/cart_inventory/user/:userId
+// Remove all items from a users cart
+cartInventoryRouter.delete('/user/:userId', requireLogin, async(req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    if (req.user.id === userId){
+      const removedCartItems = await removeAllItemsFromCart(userId);
+
+      res.send(removedCartItems);
+    } else {
+      res.status(403).send({
+        "error": "UnauthorizedUserError",
+        "message": `User ${req.user.username} is not allowed to remove all items from this cart.`,
+        "name": "UnauthorizedUserError"
+      });
+    }
+  } catch (error) {
+    throw error
+  }
+})
 
 module.exports = cartInventoryRouter;

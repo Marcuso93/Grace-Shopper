@@ -14,6 +14,7 @@ module.exports = {
   ...require('./inventory'),
   // ...require('./cart'),
   ...require('./reviews'),
-  ...require('./cart_inventory')
+  ...require('./cart_inventory'),
+  ...require('./orders')
 };
 

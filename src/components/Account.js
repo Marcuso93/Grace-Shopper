@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { loginUser, registerUser } from '../utilities/apiCalls';
-// import { setTokenInLocalStorage } from '../utilities/utils';
+import { setTokenInLocalStorage } from '../utilities/utils';
 
 const Account = ({ token, setToken, user, setUser }) => {
   const [username, setUsername] = useState('');
@@ -13,10 +13,10 @@ const Account = ({ token, setToken, user, setUser }) => {
   const [email, setEmail] = useState('');
 
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const login = await loginUser(username, password);
     if (login.error) {
-      alert(`Error: ${login.message}. If you do not have an account, please register.`);
+      alert(`Error: ${login.message} If you do not have an account, please register.`);
     } else if (login.user && login.token) {
       setUserData(login.user, login.token);
     } else {
@@ -26,24 +26,24 @@ const Account = ({ token, setToken, user, setUser }) => {
 
   const handleRegistration = async (event) => {
     event.preventDefault();
-    if (password === passwordConfirmation) {
+    if (password !== passwordConfirmation) {
+      alert("The passwords don't match!")
+    } else {
       const registration = await registerUser(username, password, address, fullname, email);
       if (registration.error) {
-        alert(`Error: ${registration.message}.`);
+        alert(`Error: ${registration.message}`);
       } else if (registration.user && registration.token) {
         setUserData(registration.user, registration.token);
       } else {
         alert('There was an error during registration.');
       }
-    } else {
-      alert("The passwords don't match!");
     }
   }
 
   const setUserData = (returnedUser, returnedToken) => {
     setUser(returnedUser);
     setToken(returnedToken);
-    // setTokenInLocalStorage(returnedToken);
+    setTokenInLocalStorage(returnedToken);
     resetForm();
   }
 
@@ -68,11 +68,9 @@ const Account = ({ token, setToken, user, setUser }) => {
           </> :
           <form
             className='login-form'
-            onSubmit={(event) => {
-              isRegistered ?
-                handleLogin(event) :
-                handleRegistration(event)
-            }}>
+            onSubmit={ (event) => {
+              isRegistered ? handleLogin(event) : handleRegistration(event)
+          }}>
             <h3>{isRegistered ? "Login" : "Register"}</h3>
             <div>
               <div> Username </div>
@@ -105,6 +103,7 @@ const Account = ({ token, setToken, user, setUser }) => {
                     type='password'
                     name='password-confirmation'
                     placeholder='Password'
+                    value={passwordConfirmation}
                     onChange={(event) => { setPasswordConfirmation(event.target.value) }}
                   />
                   {/* TODO: onscreen error messaging */}
@@ -146,21 +145,13 @@ const Account = ({ token, setToken, user, setUser }) => {
               null
             }
             <button type='submit'>{isRegistered ? 'Login' : 'Register'}</button>
-            {
+            <br/>
+            <button className='login-register-button' onClick={(event) => {
+              event.preventDefault();
               isRegistered ?
-                <>
-                  <a onClick={(event) => {
-                    event.preventDefault();
-                    setIsRegistered(false);
-                  }}>Need to register a new user?</a>
-                </> :
-                <>
-                  <a onClick={(event) => {
-                    event.preventDefault();
-                    setIsRegistered(true);
-                  }}>Already have an account?</a>
-                </>
-            }
+              setIsRegistered(false) :
+              setIsRegistered(true); 
+            }}>{ isRegistered ? 'Need to register a new user?' : 'Already have an account?' }</button>
           </form>
       }
     </div>
