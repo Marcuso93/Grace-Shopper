@@ -2,14 +2,14 @@
 const client = require("../client")
 
 async function createReview({
-    userId, itemId, stars, description
+    userId, username, itemId, stars, description
 }) {
     try {
         const { rows: [review] } = await client.query(`
-            INSERT INTO reviews("userId", "itemId", stars, description)
-            VALUES($1, $2, $3, $4)
+            INSERT INTO reviews("userId", username, "itemId", stars, description)
+            VALUES($1, $2, $3, $4, $5)
             RETURNING *;
-        `, [userId, itemId, stars, description]);
+        `, [userId, username, itemId, stars, description]);
 
         return review
     } catch (error) {

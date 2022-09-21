@@ -127,6 +127,7 @@ async function getOrderHistoryByUserId(userId) {
   }
 }
 
+// TODO: I created these in case we decide we want to be able to use them
 // Updates order information-- NOT cart_inventory items
 // Can be used to 'delete' order by setting inactivated to true
 async function updateSubmittedOrder({ orderId, ...fields }) {

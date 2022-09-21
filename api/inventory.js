@@ -36,7 +36,7 @@ inventoryRouter.get('/:inventoryId', async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message })
   }
-})
+});
 
 inventoryRouter.get('/:inventoryId/reviews', async (req, res, next) => {
   const { inventoryId } = req.params;
@@ -47,7 +47,7 @@ inventoryRouter.get('/:inventoryId/reviews', async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message });
   }
-})
+});
 
 // TODO: will we need this?
 // inventoryRouter.get('/:inventoryId', async(req, res, next) =>{
@@ -62,8 +62,8 @@ inventoryRouter.get('/:inventoryId/reviews', async (req, res, next) => {
 // })
 
 inventoryRouter.post('/', requireAdmin, async (req, res, next) => {
-  const { name, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
-  const inventoryObj = { name, description, price, purchasedCount, stock, isPublic, isCustomizable };
+  const { name, image, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
+  const inventoryObj = { name, image, description, price, purchasedCount, stock, isPublic, isCustomizable };
 
   try {
     const newInventory = await createInventory(inventoryObj);
@@ -72,7 +72,7 @@ inventoryRouter.post('/', requireAdmin, async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message });
   }
-})
+});
 
 inventoryRouter.patch('/:inventoryId', requireAdmin, async (req, res, next) => {
   const { inventoryId } = req.params;
@@ -85,7 +85,7 @@ inventoryRouter.patch('/:inventoryId', requireAdmin, async (req, res, next) => {
   } catch ({ name, message }) {
     next({ name, message });
   }
-})
+});
 
 inventoryRouter.delete('/:inventoryId', requireAdmin, async (req, res, next) => {
   const { inventoryId } = req.params;
@@ -97,7 +97,7 @@ inventoryRouter.delete('/:inventoryId', requireAdmin, async (req, res, next) => 
   } catch ({ name, message }) {
     next({ name, message });
   }
-})
+});
 
 
 

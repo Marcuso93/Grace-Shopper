@@ -11,7 +11,7 @@ const {
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
-  getCartInventoryByUserId, 
+  getCartByUserId, 
   emailInUseCheck
 } = require('../db');
 
@@ -135,7 +135,7 @@ usersRouter.get('/:userId/cart', async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    const cart = await getCartInventoryByUserId({userId});
+    const cart = await getCartByUserId({userId});
 
     res.send(cart);
   } catch ({ name, message }) {

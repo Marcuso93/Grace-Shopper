@@ -5,7 +5,7 @@ const { requireLogin, requireAdmin } = require('./utils');
 const {
   createReview,
   // getReviewById,
-  // getReviewsByItemId,
+  getReviewsByItemId,
   removeReview,
   // getStarsByItemId,
   canEditReview,
@@ -15,17 +15,30 @@ const {
 
 //api requests below
 
+reviewsRouter.get('/item/:itemId', async (req, res, next) => {
+  const { itemId } = req.params;
+
+  try {
+    const reviews = await getReviewsByItemId(itemId);
+
+    res.send(reviews);
+  } catch ({ name, message }) {
+    next({name, message})
+  }
+})
+
 //post review
 reviewsRouter.post('/', requireLogin, async (req, res, next) => {
   try {
     const userId = req.user.id;
+    const username = req.user.username
     const { itemId, stars, description } = req.body;
     
-    const userReview = await createReview({ userId, itemId, stars, description });
+    const userReview = await createReview({ userId, username, itemId, stars, description });
 
     // will we need to return this?
-    const reviewId = userReview.id;
-    await addReviewToItem({ itemId, reviewId });
+    // const reviewId = userReview.id;
+    // await addReviewToItem({ itemId, reviewId });
 
     res.send(userReview);
   } catch ({ name, message }) {

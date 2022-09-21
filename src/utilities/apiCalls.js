@@ -63,6 +63,27 @@ export const getLocalUser = async () => {
 }
 
 export const fetchCart = async () => {
-  const data = await apiCall('/cart', "GET", null)
+  const data = await apiCall('/cart');
   return data || []
+}
+
+export const fetchInventory = async () => {
+    const data = await apiCall('/inventory');
+    return data || []
+}
+
+export const fetchReviewsByItemId = async (itemId) => {
+    const data = await apiCall(`/reviews/item/${itemId}`);
+    return data || []
+}
+
+export const postReview = async (token, { userId, username, itemId, stars, description }) => {
+    const data = await apiCall('/reviews', 'POST', token, {
+      userId,
+      username,
+      itemId,
+      stars,
+      description
+    })
+    return data || []
 }

@@ -1,30 +1,70 @@
-import React from "react";
-//import {images} from "./images"
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { fetchInventory } from '../utilities/apiCalls';
 
-const Inventory = () => {
-
+const Inventory = ({items, setItems, setFeaturedItem}) => {
+    
+    const history = useHistory();
     //have pics named with id
     ///can do a junction or by itself
-    let images = []
-    for(let i =0; i < images.length; i++) {
-        let image = `./images/cutting-board-${i}.png` 
-        images.push(image)
-        console.log(image)
+    const handleItemClick = (event, item) => {
+        event.preventDefault();
+        setFeaturedItem(item);
+        history.push(`/inventory/${item.id}`)
+
     }
-    console.log(images)
-  return <>
-    <h2> Inventory </h2>
+
+    useEffect(() => {
+        (async () => {
+            const inventory = await fetchInventory();
+            setItems(inventory);
+        })()
+    }, [])
+
+    return <>
+        <h2> Inventory </h2>
         <div className="inventory-container">
             {
-            images.map((img) => {
-            return <div key ={img.id}>
-                <img src={img} alt={img}/>
-                </div>
-            })
-        }
+                (items && items.length > 0) ?
+                items.map((item) => {
+                    return (
+                        <div 
+                            key={item.id} 
+                            className="item-box" 
+                            onClick={(event) => { 
+                                handleItemClick(event, item)
+                        }}>
+                            <img src={require(`${item.image}`)} className='inventory-img'/>
+                            <div className='item-details'>
+                                <h3 className='item-title'>{item.name}</h3><br/>
+                                <p>${item.price}.00</p>
+                                <div className='item-stars'></div>
+                                <p>{item.description}</p>
+                            </div>
+                        </div>
+                    )
+                }) :
+                <div>Nothing to display!</div>
+            }
         </div>
-  </>
+    </>
 }
 
 // <img src={require('./images/cutting-board-1.png')}  alt={''}/>
 export default Inventory
+
+    //FOR ADMIN USE
+    //<div>
+        {/* //   <h2>Add to Inventory </h2> */}
+           {/* <form  onSubmit> */}
+           {/* <input
+        //       required
+        //       type='text'
+        //       name='name'
+        //       placeholder='Name Required'
+        //       value={name}
+        //       onChange={(event) => setName(event.target.value)}
+        //     /> THEN DO INPUT FOR DESCRIPTION, PRICE, STOCK, ISCUSTOMIZABLE (MAYBE ADD A PICTURE) */}
+            
+        //</div> 
