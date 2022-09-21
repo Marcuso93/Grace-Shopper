@@ -3,6 +3,7 @@ const client = require("../client")
 
 async function createInventory({
   name,
+  image, 
   description,
   price,
   purchasedCount,
@@ -12,10 +13,10 @@ async function createInventory({
 }) {
   try {
     const { rows: [inventory] } = await client.query(`
-      INSERT INTO inventory( name, description, price, "purchasedCount", stock, "isActive", "isCustomizable") 
-      VALUES($1, $2, $3, $4, $5, $6, $7)  
+      INSERT INTO inventory( name, image, description, price, "purchasedCount", stock, "isActive", "isCustomizable") 
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)  
       RETURNING *;
-    `, [name, description, price, purchasedCount, stock, isActive, isCustomizable]);
+    `, [name, image, description, price, purchasedCount, stock, isActive, isCustomizable]);
 
     return inventory;
   } catch (error) {

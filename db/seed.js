@@ -42,6 +42,7 @@ async function buildTables() {
       CREATE TABLE inventory(
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
+        image VARCHAR(255),
         description TEXT NOT NULL,
         price INTEGER,
         "purchasedCount" INTEGER,
@@ -52,6 +53,7 @@ async function buildTables() {
       CREATE TABLE reviews(
         id SERIAL PRIMARY KEY,
         "userId" INTEGER REFERENCES users(id),
+        username VARCHAR(255) REFERENCES users(username),
         "itemId" INTEGER REFERENCES inventory(id),
         stars INTEGER,
         "isActive" BOOLEAN DEFAULT true,
@@ -72,12 +74,6 @@ async function buildTables() {
         price INTEGER,
         "isPurchased" BOOLEAN DEFAULT false,
         "orderId" INTEGER REFERENCES orders(id) DEFAULT null
-      );
-      CREATE TABLE item_reviews(
-        id SERIAL PRIMARY KEY,
-        "itemId" INTEGER REFERENCES inventory(id),
-        "reviewId" INTEGER REFERENCES reviews(id),
-        "isActive" BOOLEAN DEFAULT true
       );
     `)
     console.log("Finished building tables!");
@@ -102,9 +98,10 @@ async function createInitialData() {
     console.log("Starting to create inventory...")
     const inventoryToCreate = [
       {
-        name: "work desk",
+        name: "workshop or office desk",
+        image: "./images/table-1.png",
         price: "150",
-        description: "beetle kill wood and epoxy",
+        description: "beetle kill wood and epoxy hand crafted to specifications sure to stand the test of time ",
         purchasedCount: "0",
         stock: "10",
         isActive: "true",
@@ -112,9 +109,10 @@ async function createInitialData() {
       },
 
       {
-        name: "cutting board",
+        name: "exquisite cutting board made from pine and maple",
+        image: "./images/cutting-board-2.png",
         price: "65",
-        description: "hard wood with custom laser engraving",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
         isActive: "true",
@@ -127,10 +125,10 @@ async function createInitialData() {
 
     console.log("Starting to create reviews...")
     const reviewsToCreate = [
-      { userId: 1, itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
-      { userId: 2, itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
-      { userId: 3, itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
-      { userId: 4, itemId: 2, stars: 3, description: "Could use some more wood-work." },
+      { userId: 1, username: 'albert', itemId: 1, stars: 5, description: "This is quite possiably the best work desk thats ever existed in the history of man" },
+      { userId: 2, username: 'sandra', itemId: 1, stars: 4, description: "This work desk is so good i can't physically leave it four stars for being waaaaay too good" },
+      { userId: 3, username: 'glamgal', itemId: 2, stars: 4, description: "I will uses this when I cook! also this thing is so sturdy i could rely on it to fight off the law " },
+      { userId: 4, username: 'marcus', itemId: 2, stars: 3, description: "Could use some more wood-work." },
     ]
     const reviews = await Promise.all(reviewsToCreate.map(createReview))
     console.log(reviews)
@@ -173,4 +171,10 @@ buildTables()
 //   quantity INTEGER,
 //   price INTEGER,
 //   "isPurchased" BOOLEAN DEFAULT false
+// );
+// CREATE TABLE item_reviews(
+//   id SERIAL PRIMARY KEY,
+//   "itemId" INTEGER REFERENCES inventory(id),
+//   "reviewId" INTEGER REFERENCES reviews(id),
+//   "isActive" BOOLEAN DEFAULT true
 // );

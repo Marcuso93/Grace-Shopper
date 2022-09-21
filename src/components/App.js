@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactDom from 'react-dom';
+// import ReactDom from 'react-dom';
 import { NavLink, Route } from 'react-router-dom'; 
 // getAPIHealth is defined in our axios-services directory index.js
 // you can think of that directory as a collection of api adapters
@@ -10,6 +10,8 @@ import {
   Home,
   Account,
   Inventory,
+  FeaturedInventory,
+  CreateReview,
   Cart,
   Admin,
   Logout
@@ -23,6 +25,9 @@ const App = () => {
   const [user, setUser] = useState(false);
   const [token, setToken] = useState('');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [items, setItems] = useState([]);
+  const [featuredItem, setFeaturedItem] = useState([])
+  const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -88,7 +93,11 @@ const App = () => {
       </Route>
 
       <Route path="/inventory">
-        <Inventory/>
+        <Route path="/inventory/:itemId">
+          <FeaturedInventory featuredItem={featuredItem} setFeaturedItem={setFeaturedItem} setIsCreatingReview={setIsCreatingReview}/>
+        </Route>
+        <Inventory items={items} setItems={setItems} setFeaturedItem={setFeaturedItem} />
+        <CreateReview user={user} token={token} isCreatingReview={isCreatingReview} setIsCreatingReview={setIsCreatingReview} />
       </Route>
 
       <Route path="/account">
@@ -99,9 +108,13 @@ const App = () => {
         <Cart />
       </Route>
 
-      <Route path="/admin">
-        <Admin />
-      </Route>
+      {
+        (token && user && user.isAdmin) ?
+        <Route path="/admin">
+          <Admin token={token} user={user} />
+        </Route> :
+        null
+      }
 
       <Logout 
         isLoggingOut={isLoggingOut} 

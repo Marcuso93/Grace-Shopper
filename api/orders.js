@@ -52,6 +52,6 @@ ordersRouter.get('/user/:userId', async (req, res, next) => {
   }
 });
 
-// TODO: EDIT ORDER OR ITEM IN ORDER, REMOVE ITEM IN ORDER, DELETE ORDER? (Possibly for Admin to use?)
+// TODO (if we need): EDIT ORDER OR ITEM IN ORDER, REMOVE ITEM IN ORDER, DELETE ORDER? (Possibly for Admin to use?)
 
 module.exports = ordersRouter;
