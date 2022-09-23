@@ -64,7 +64,7 @@ export const getLocalUser = async () => {
 
 export const fetchCart = async ({userId, token}) => {
   const data = await apiCall(`/cart_inventory/user/${userId}`, 'GET', token);
-  // console.log(data)
+  console.log("data", data)
   return data || []
 }
 
