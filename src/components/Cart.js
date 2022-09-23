@@ -11,6 +11,7 @@ const Cart = ({user, setUser, token, setToken}) => {
   
   useEffect(() => {
     (async() => {
+      console.log('is user here', user)
       // TODO: fix localStorage
       if (!user) {
         const localUser = await getLocalUser();
@@ -29,14 +30,18 @@ const Cart = ({user, setUser, token, setToken}) => {
         }
       }
       console.log('user.id', user.id)
-      const cart = await fetchCart({userId: user.id, token});
+      if (user.id) {
+        const cart = await fetchCart({userId: user.id, token});
       if (cart.message) {
         alert(`Error: ${cart.message}.`)
       }
       console.log(cart);
       setCartItems(cart);
+      } else {
+        console.log("something")
+      }
     })()
-  }, [])
+  }, [user])
  
   return (
     <>
