@@ -1,14 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { fetchReviewsByItemId } from "../utilities/apiCalls";
+import { fetchReviewsByItemId, postNewItemToCart } from "../utilities/apiCalls";
+import FeaturedInventoryReviews from "./FeaturedInventoryReviews";
 
-const FeaturedInventory = ({featuredItem, setFeaturedItem, setIsCreatingReview}) => {
-  const [featuredItemReviews, setFeaturedItemReviews] = useState([]);
+const FeaturedInventory = ({
+  user,
+  token,
+  featuredItem, 
+  setFeaturedItem, 
+  setIsCreatingReview, 
+  featuredItemReviews, 
+  setFeaturedItemReviews
+}) => {
+  const [seeReviews, setSeeReviews] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [quantity, setQuantity] = useState('');
   const history = useHistory()
 
   const handleClose = () => {
     setFeaturedItem("")
     history.push("/inventory")
+  }
+
+  const handleAddToCart = async () => {
+    // alert if more quantity than stock
+    if (quantity > featuredItem.stock) {
+      alert(`For Item: ${featuredItem.name}, there are only ${featuredItem.stock} available.`)
+    }
+    const itemAdded = await postNewItemToCart(token, { 
+      userId: user.id,
+      inventoryId: featuredItem.id,
+      quantity,
+      price: featuredItem.price
+    })
+    if (itemAdded.message) {
+      alert(`Error: ${itemAdded.message}`)
+    } else if (itemAdded.id) {
+      setSuccess(true);
+      setIsAddingToCart(false);
+    } else {
+      alert('There was a problem adding this item to your cart.')
+    }
   }
     
   useEffect(() => {
@@ -21,22 +54,68 @@ const FeaturedInventory = ({featuredItem, setFeaturedItem, setIsCreatingReview})
   return (
     <div key={featuredItem.id} className="featuredInventory">
       <h1>{featuredItem.name}</h1>
-      {/* Add everything else */}
-      <h3>Reviews</h3>
       {
-        (featuredItemReviews && featuredItemReviews.length > 0) ?
-        featuredItemReviews.map(review => {
-          return (
-            (review.isActive) ?
-            <div key={review.id}>
-              <h3>User: {review.username}</h3>
-              {/* Map over review.stars here */}
-              <p>{review.description}</p>
-            </div> :
-            null
-          )
-        }) :
-        <div>No reviews for this item.</div>
+        (featuredItem.image) ?
+        <img src={require(`${featuredItem.image}`)} className='inventory-img' /> :
+        null
+      }
+      <p>{featuredItem.description}</p>
+      <p>Price: ${featuredItem.price}.00</p>
+      {
+        (featuredItem.isCustomizable) ?
+        <p>This item is customizable upon request.</p> :
+        null
+      }
+      <p>Stock Available: {featuredItem.stock}</p>
+      {
+        (!isAddingToCart && !success) ?
+        <>
+          <button onClick={(event => {
+            event.preventDefault();
+            setIsAddingToCart(true);
+          })}>Add to Cart</button> <br />
+        </> : 
+        null
+      }
+      {
+        (isAddingToCart) ?
+        <>
+          <span>How many do you want to add?</span>
+          <input
+            required
+            type='number'
+            name='quantity'
+            placeholder='Quantity'
+            value={quantity}
+            onChange={(event) => { setQuantity(event.target.value) }}
+          />
+          <button onClick={(event => {
+            event.preventDefault();
+            handleAddToCart();
+          })}>Add to Cart</button> <br />
+        </> :
+        null
+      }
+      {
+        success ?
+        <h3>This item has been added to your cart!</h3>         
+        : null
+      }
+      {
+        (!seeReviews) ?
+        <button className='login-register-button' onClick={(event) => {
+          event.preventDefault();
+          setSeeReviews(true);
+        }}>See Reviews...</button> :
+        <button className='login-register-button' onClick={(event) => {
+          event.preventDefault();
+          setSeeReviews(false);
+        }}>Hide Reviews...</button>
+      }
+      {
+        (seeReviews) ?
+        <FeaturedInventoryReviews featuredItemReviews={featuredItemReviews}/> :
+        null
       }
       <button onClick={(event) => {
         event.preventDefault();

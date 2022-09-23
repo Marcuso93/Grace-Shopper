@@ -29,6 +29,7 @@ async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased
 }
 
 // Will return all inventory in cart
+// TODO: JOIN inventory table onto this
 async function getCartByUserId({userId}) {
   try {
     const { rows: cart } = await client.query(`
