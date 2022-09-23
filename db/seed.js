@@ -129,6 +129,17 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "false"
       },
+
+      {
+        name: "Mini bar",
+        image: "./images/mini-bar.png",
+        price: "65",
+        description: "mini bar made out of beetle kill wood",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
     ]
     const inventory = await Promise.all(inventoryToCreate.map(createInventory))
     console.log(inventory)
