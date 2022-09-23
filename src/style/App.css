@@ -15,11 +15,27 @@ input[type=button] {
   color: var(--green);
   padding: 1rem;
 }
-
-.navbar{
-  background-color: black;
-  display: flex;
+body{
+  flex-direction: column; 
   justify-content: center;
+  font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
+  background-image: url("WoodBackground.jpg");
+}
+main{
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8rem;
+}
+
+.title{
+  z-index: 99;
+  background-color: rgb(7, 6, 4);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   border-bottom: 4px solid rgb(255, 255, 255);
   position: fixed;
   top: 0%;
@@ -27,40 +43,61 @@ input[type=button] {
   left: 0%;
   padding: .5rem;
   filter: drop-shadow(1px 1px 1px rgb(59, 59, 59));
+  
+}
+
+.navbar{
+  display: flex;
+  text-align: center;
+  padding-top: 10px;
+  font-size: 12pt;
+}
+.logo{
+  margin-right: 2rem;
+  color: rgb(255, 255, 255);
+  font-size: 12pt;
+  text-decoration-line: none;
+  font-family: 'Lora' ,serif;
+  background-color: rgb(7, 6, 4);
+  padding: 15px;
+  text-transform: uppercase;
+  transition: .3s;
+  padding-right: 10px;
+  max-width: 200px;
+  font-size: 14pt;
 }
 
 .navlink:hover {
+  color: rgb(185, 128, 20);
   background-size: 100% 3px;
   transition: .3s;
+  font-weight: 900;
+}
+.navlink:active{
+  color: rgb(185, 128, 20);
+  font-size: 11pt;
 }
 
 .navlink{
-  background-image: linear-gradient(90deg, rgb(138, 91, 4),rgb(119, 78, 39));
+  background-image: linear-gradient(90deg, rgb(185, 128, 20),rgb(119, 78, 39));
   background-size:0% 3px;
   background-repeat:no-repeat ;
   background-position: left bottom;
   transition: background-size 300ms ease ;
   margin-right: 2rem;
   color: rgb(255, 255, 255);
-  font-size: 16pt;
+  font-size: 12pt;
   text-decoration-line: none;
   font-family: 'Lora' ,serif;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(7, 6, 4);
   padding: 15px;
-  border-right: rgb(134, 103, 0) 1px solid ;
   text-transform: uppercase;
   transition: .3s;
-}
-
-
-main {
-  margin-top: 4.5em;
-  text-align: center;
+  padding-right: 10px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
+  justify-self: end;
 }
+
 
 .logout-popup {
   position: fixed;
@@ -130,9 +167,9 @@ button:active {
 
 .container {
   margin: 0 auto;
-  margin-top: 7rem;
+  margin-top: 1rem;
   position: relative;
-  width: 85%;
+  width: 70%;
   height: 0;
   padding-bottom: 38%;
   user-select: none;
@@ -145,10 +182,6 @@ button:active {
   position: absolute;
   width: 100%;
   height: 100%;
-}
-
-.default-img {
-  z-index: 9;
 }
 
 .container .slide_img img {
@@ -197,7 +230,7 @@ label span {
   height: 11px;
   position: absolute;
   text-align: center;
-  z-index: 99;
+  z-index: 1;
   cursor: default;
 }
 
@@ -220,7 +253,7 @@ label span {
 }
 
 .slide_img {
-  z-index: 1;
+  z-index: 0;
 }
 
 #i1:checked~#one,
@@ -228,7 +261,7 @@ label span {
 #i3:checked~#three,
 #i4:checked~#four,
 #i5:checked~#five {
-  z-index: 9;
+  z-index: 1;
   animation: scroll 1s ease-in-out;
 }
 
@@ -307,7 +340,8 @@ label span {
   }
 }
 .inventory-container{
-  padding: 2rem;
+
+  padding: 2rem 9rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -316,11 +350,12 @@ label span {
   cursor: pointer;
 }
 .item-box{
+  background-color: white;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   margin-top: 1rem;
-  border: #000000 1px solid;
+  border: #000000 3px solid;
   box-shadow: -2px 5px 15px -1px rgba(0,0,0,0.46);
   max-height: 20%;
 }
@@ -343,6 +378,14 @@ label span {
   font: 20pt;
 }
 
+.login{
+  flex-direction: column;
+  display: flex;
+  text-align: center;
+  max-width: 40%;
+  background-color: #fff;
+  padding: 30px;
+}
 
 .featuredInventory{
   position: fixed ;
@@ -360,14 +403,3 @@ label span {
   height: 50%;
   width: 40%;
 }
-
-/* @keyframes featuredInventoryAnimation{
-  from{
-      left: -500px;
-  }
-  to{
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-  }
-} */
