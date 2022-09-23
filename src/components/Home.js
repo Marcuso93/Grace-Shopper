@@ -1,12 +1,8 @@
 import React from "react";
 
-const handleChange = event =>{
-
-}
 
 const Home = () => {
   return <>
-    <h2> Home </h2>
     <div className="container">
 
       <input type="radio" id="i1" name="images" />
@@ -17,7 +13,7 @@ const Home = () => {
 
       <div className="slide_img" id="one">
 
-        <img src={require('./images/cutting-board-1.png')} className="default-img" alt={''} />
+        <img src={require('./images/cutting-board-1.png')}  alt={''} />
 
         <label className="prev" htmlFor="i5"><span>&#x2039;</span></label>
         <label className="next" htmlFor="i2"><span>&#x203a;</span></label>

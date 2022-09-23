@@ -49,6 +49,8 @@ const App = () => {
 
   return (
     <main>
+      <div className='title'>
+        <div className="logo">Kevin & co Woodworking</div>
       <nav className='navbar'>
         <NavLink to="/home" className="navlink" activeClassName="active">
           Home
@@ -89,6 +91,7 @@ const App = () => {
         }
 
       </nav>
+      </div>
 
       <Route path="/home">
         <Home />
