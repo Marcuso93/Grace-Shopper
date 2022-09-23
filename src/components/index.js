@@ -7,3 +7,4 @@ export { default as Admin} from "./Admin";
 export { default as Logout } from './Logout';
 export { default as FeaturedInventory } from './FeaturedInventory'
 export { default as CreateReview } from './CreateReview'
+export { default as FeaturedInventoryReviews} from './FeaturedInventoryReviews'

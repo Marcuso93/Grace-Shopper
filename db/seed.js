@@ -69,9 +69,9 @@ async function buildTables() {
       CREATE TABLE cart_inventory(
         id SERIAL PRIMARY KEY, 
         "userId" INTEGER REFERENCES users(id),
-        "inventoryId" INTEGER REFERENCES inventory(id),
+        "inventoryId" INTEGER NOT NULL REFERENCES inventory(id),
         quantity INTEGER,
-        price INTEGER,
+        price INTEGER NOT NULL,
         "isPurchased" BOOLEAN DEFAULT false,
         "orderId" INTEGER REFERENCES orders(id) DEFAULT null
       );
@@ -117,6 +117,17 @@ async function createInitialData() {
         stock: "10",
         isActive: "true",
         isCustomizable: "true"
+      },
+
+      {
+        name: "exquisite cutting board with epoxy",
+        image: "./images/cutting-board-7.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "false"
       },
     ]
     const inventory = await Promise.all(inventoryToCreate.map(createInventory))

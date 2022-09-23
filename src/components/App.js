@@ -28,6 +28,8 @@ const App = () => {
   const [items, setItems] = useState([]);
   const [featuredItem, setFeaturedItem] = useState([])
   const [isCreatingReview, setIsCreatingReview] = useState(false);
+  const [featuredItemReviews, setFeaturedItemReviews] = useState([]);
+
 
   useEffect(() => {
     (async () => {
@@ -97,10 +99,17 @@ const App = () => {
 
       <Route path="/inventory">
         <Route path="/inventory/:itemId">
-          <FeaturedInventory featuredItem={featuredItem} setFeaturedItem={setFeaturedItem} setIsCreatingReview={setIsCreatingReview}/>
+          <FeaturedInventory 
+            user={user}
+            token={token}
+            featuredItem={featuredItem} 
+            setFeaturedItem={setFeaturedItem} 
+            setIsCreatingReview={setIsCreatingReview} 
+            featuredItemReviews={featuredItemReviews} 
+            setFeaturedItemReviews={setFeaturedItemReviews}/>
         </Route>
         <Inventory items={items} setItems={setItems} setFeaturedItem={setFeaturedItem} />
-        <CreateReview user={user} token={token} isCreatingReview={isCreatingReview} setIsCreatingReview={setIsCreatingReview} />
+        <CreateReview user={user} token={token} isCreatingReview={isCreatingReview} setIsCreatingReview={setIsCreatingReview} featuredItemReviews={featuredItemReviews} setFeaturedItemReviews={setFeaturedItemReviews}/>
       </Route>
 
       <Route path="/account">
@@ -108,7 +117,7 @@ const App = () => {
       </Route>
 
       <Route path="/cart">
-        <Cart />
+        <Cart user={user} setUser={setUser} token={token} setToken={setToken}/>
       </Route>
 
       {

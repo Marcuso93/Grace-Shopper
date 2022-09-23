@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { postReview } from '../utilities/apiCalls';
 
-const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview }) => {
+const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, featuredItemReviews, setFeaturedItemReviews }) => {
   const [description, setDescription] = useState('');
+  // TODO: figure out stars
   const [stars, setStars] = useState('');
-
-  console.log('isCreatingReview.id', isCreatingReview.id)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,24 +19,30 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview }) =>
     
     if (newReview.message){
       alert(`${newReview.message}`)
+    } if (newReview.id) {
+      if (featuredItemReviews && featuredItemReviews.length > 0) {
+        setFeaturedItemReviews([newReview, ...featuredItemReviews])
+      }
+      resetState();
     } else {
-      setDescription('');
-      // setStars('');
-      setIsCreatingReview(false);
-      // TODO: update reviews on page
+      alert('There was an error in creating your review.')
     }
   }
   
-    const handleCancel = (event) => {
-      event.preventDefault();
-      setIsCreatingReview(false);
-      // setStars('');
-      setDescription('');
+  const handleCancel = (event) => {
+    event.preventDefault();
+    resetState();
+  }
+  
+  const resetState = () => {
+    setDescription('');
+    setStars('');
+    setIsCreatingReview(false);
     }
   
   return (
     isCreatingReview ?
-    <div>
+    <div className='create-review-popup'>
       <form onSubmit={ handleSubmit }>
         <h3>Create a Review</h3>
         {/* TODO: stars */}
