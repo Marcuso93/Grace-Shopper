@@ -42,6 +42,7 @@ async function attachUsersToOrders(orders){
 }
 
 // When user submits order
+// TODO: subtract quantity ordered from stock
 async function createNewOrder({userId, price}){
   try {
     const itemsInCart = await getCartByUserId({userId})

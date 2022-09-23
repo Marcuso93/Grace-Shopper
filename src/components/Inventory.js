@@ -19,6 +19,7 @@ const Inventory = ({items, setItems, setFeaturedItem}) => {
         (async () => {
             const inventory = await fetchInventory();
             setItems(inventory);
+            console.log(inventory)
         })()
     }, [])
 
@@ -35,7 +36,11 @@ const Inventory = ({items, setItems, setFeaturedItem}) => {
                             onClick={(event) => { 
                                 handleItemClick(event, item)
                         }}>
-                            <img src={require(`${item.image}`)} className='inventory-img'/>
+                            {
+                                (item.image) ?
+                                <img src={require(`${item.image}`)} className='inventory-img'/> :
+                                null
+                            }
                             <div className='item-details'>
                                 <h3 className='item-title'>{item.name}</h3><br/>
                                 <p>${item.price}.00</p>
@@ -66,5 +71,5 @@ export default Inventory
         //       value={name}
         //       onChange={(event) => setName(event.target.value)}
         //     /> THEN DO INPUT FOR DESCRIPTION, PRICE, STOCK, ISCUSTOMIZABLE (MAYBE ADD A PICTURE) */}
-            
+        ///**NEED TO UPDATE STOCK AS WELL**    
         //</div> 

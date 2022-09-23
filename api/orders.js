@@ -20,6 +20,7 @@ ordersRouter.get('/', async (req, res, next) => {
 // POST /api/orders
 // TODO: check if correct user?
 // TODO: requireLogin
+// TODO: Subtract quantity from stock of item
 ordersRouter.post('/', async (req, res, next) => {
   const {userId, price} = req.body;
 

@@ -62,8 +62,9 @@ export const getLocalUser = async () => {
   return data || []
 }
 
-export const fetchCart = async () => {
-  const data = await apiCall('/cart');
+export const fetchCart = async ({userId, token}) => {
+  const data = await apiCall(`/cart_inventory/user/${userId}`, 'GET', token);
+  // console.log(data)
   return data || []
 }
 
@@ -86,4 +87,14 @@ export const postReview = async (token, { userId, username, itemId, stars, descr
       description
     })
     return data || []
+}
+
+export const postNewItemToCart = async (token, {userId, inventoryId, quantity, price}) => {
+  const data = await apiCall('/cart_inventory', 'POST', token, {
+    userId, 
+    inventoryId, 
+    quantity, 
+    price
+  })
+  return data || []
 }
