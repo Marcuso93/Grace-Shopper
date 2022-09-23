@@ -15,7 +15,7 @@ const FeaturedInventory = ({
   const [seeReviews, setSeeReviews] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const history = useHistory()
 
   const handleClose = () => {

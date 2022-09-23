@@ -14,6 +14,8 @@ async function getCartItemById(id) {
   }
 }
 
+// TODO: check to see if item already in cart, either update just the quantity, 
+// or just alert them that it's already in the cart
 async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased=false }) {
   try {
     const { rows: [cart_item] } = await client.query(`
@@ -28,9 +30,8 @@ async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased
   }
 }
 
-// Will return all inventory in cart
-// TODO: JOIN inventory table onto this
-async function getCartByUserId({userId}) {
+// Will return all cart_inventory in cart
+async function getCartItemsByUserId({userId}) {
   try {
     const { rows: cart } = await client.query(`
       SELECT*
@@ -42,6 +43,31 @@ async function getCartByUserId({userId}) {
       return cart
     } else return false
   } catch(error) {
+    throw error
+  }
+}
+
+async function getDetailedUserCartByUserId({userId}) {
+  try {
+    // const cart_inventory = await getCartItemsByUserId({userId});
+    
+    // const itemsToReturn = [...cart_inventory];
+    // const includedItemIds = cart_inventory.map((_, index) => `$${index + 1}`).join(', ');
+    // const itemIds = cart_inventory.map(item => item.id);
+    // if (!itemIds?.length) return;
+    
+    const { rows: cartItems } = await client.query(`
+      SELECT inventory.id AS "inventoryId", cart_inventory.id AS "cartInventoryId",
+        cart_inventory."userId", inventory.name, inventory.image, inventory.description, 
+        inventory.price, inventory."isCustomizable", inventory.stock, cart_inventory.quantity 
+      FROM cart_inventory
+      JOIN inventory ON inventory.id = cart_inventory."inventoryId"
+      WHERE cart_inventory."userId"=$1 and cart_inventory."isPurchased"=false      
+    `, [userId]);
+
+    console.log('cartItems',cartItems);
+    return cartItems
+  } catch (error) {
     throw error
   }
 }
@@ -121,7 +147,8 @@ async function removeAllItemsFromCart(userId) {
 module.exports = {
   getCartItemById,
   addItemToCart,
-  getCartByUserId,
+  getCartItemsByUserId,
+  getDetailedUserCartByUserId,
   updateCartItem,
   removeItemFromCart,
   canEditCartInventory,
