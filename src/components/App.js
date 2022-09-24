@@ -125,6 +125,7 @@ const App = () => {
           setIsCreatingReview={setIsCreatingReview} 
           featuredItemReviews={featuredItemReviews} 
           setFeaturedItemReviews={setFeaturedItemReviews}/>
+          {/* TODO: EditReviews? */}
         <CreateInventory 
           user={user} 
           token={token} 

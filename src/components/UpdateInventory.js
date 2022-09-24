@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { patchInventory } from '../utilities/apiCalls'
+import { filterOutOldVersion } from "../utilities/utils";
 
 const UpdateInventory = ({ user, token, updatingInventory, setUpdatingInventory, items, setItems }) => {
   const [name, setName] = useState(updatingInventory.name);
@@ -11,14 +12,9 @@ const UpdateInventory = ({ user, token, updatingInventory, setUpdatingInventory,
   const [isActive, setIsActive] = useState(updatingInventory.isActive);
   const [purchasedCount, setPurchasedCount] = useState(updatingInventory.purchasedCount);
 
-  console.log('item in updating inventory', updatingInventory)
-  console.log('is user here?', user)
-
   const handleSubmit = async (event, itemId) => {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log('item id in submit', itemId)
 
     const updatedInventory = await patchInventory(itemId, {
       name,
@@ -34,7 +30,7 @@ const UpdateInventory = ({ user, token, updatingInventory, setUpdatingInventory,
     if (updatedInventory.message) {
       alert(`Error: ${updatedInventory.message}`);
     } else if (updatedInventory.id) {
-      setItems([updatedInventory, ...removeOldVersionOfItem(items, updatedInventory)]);
+      setItems([updatedInventory, ...filterOutOldVersion(items, updatedInventory)]);
       setUpdatingInventory(false);
     } else {
       alert('There was an error in creating this piece of inventory.')
@@ -44,12 +40,6 @@ const UpdateInventory = ({ user, token, updatingInventory, setUpdatingInventory,
   const handleCancel = async (event) => {
     event.preventDefault();
     setUpdatingInventory(false);
-  }
-
-  const removeOldVersionOfItem = (previousArray, updatedItem) => {
-    return previousArray.filter(item => {
-      return item.id != updatedItem.id;
-    })
   }
 
   return (

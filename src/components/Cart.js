@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
 import { fetchCart, getLocalUser } from "../utilities/apiCalls";
-import { checkLocalStorage } from "../utilities/utils";
+import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 
-//would need a local storage for cart
-//will need user and token
+// TODO:
+// local storage for visitor cart
+// update/remove items from cart
+// Note: when removing item and updating on page can use fn filterOutOldVersion from utils
+
 const Cart = ({user, setUser, token, setToken}) => {
   const [cartItems, setCartItems] = useState([])
 
@@ -25,7 +27,7 @@ const Cart = ({user, setUser, token, setToken}) => {
       } 
       if (user.id) {
         const cart = await fetchCart({userId: user.id, token});
-        if (cart.message && cart.name !== 'EmptyCart') {
+        if (cart.message && cart.name !== 'EmptyCart' && cart.name !== 'undefined') {
           alert(`Error: ${cart.message}.`)
         }
         setCartItems(cart);
@@ -39,7 +41,7 @@ const Cart = ({user, setUser, token, setToken}) => {
     <div className="cart-background">
       <h2> Cart </h2>
       {
-        (cartItems && cartItems.name === 'EmptyCart') ?
+        ((cartItems && cartItems.name === 'EmptyCart') || cartItems.length < 1) ?
         <div>Your cart is empty!</div> :
         null
       }

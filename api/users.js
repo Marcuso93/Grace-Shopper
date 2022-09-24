@@ -7,14 +7,14 @@ const { requireLogin, requireAdmin } = require('./utils');
 const {
   createUser,
   getUser,
-  // getUserById,
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
   getCartByUserId, 
   emailInUseCheck,
   makeUserAdminById,
-  removeUserAsAdminById
+  removeUserAsAdminById,
+  getDetailedUserCartByUserId
 } = require('../db');
 
 //api calls below
@@ -123,7 +123,13 @@ usersRouter.patch('/:userId', requireAdmin, async (req, res, next) => {
   const { userId } = req.params;
   const { isAdmin } = req.body;
 
-  // TODO: make it so the person logged can't change their own status
+  if (req.user.id === userId) {
+    res.send({
+      error: 'Error',
+      name: 'AdminConflictError',
+      message: 'An admin cannot change their admin status.'
+    })
+  }
 
   try {
     let user;
@@ -153,11 +159,19 @@ usersRouter.get('/:userId/reviews', async (req, res, next) => {
 });
 
 // get my cart
+// TODO: we seem to be using endpoint in cartInventoryRouter instead
 usersRouter.get('/:userId/cart', async (req, res, next) => {
   const { userId } = req.params;
 
+  if (req.user.id !== userId) {
+    res.status(401).send({
+      name: 'UnauthorizedUserError',
+      message: `User ${req.user ? req.user.username : null} is not authorized to view this cart.`
+    })
+  }
+
   try {
-    const cart = await getCartByUserId({userId});
+    const cart = await getDetailedUserCartByUserId({userId});
 
     res.send(cart);
   } catch ({ name, message }) {

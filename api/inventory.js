@@ -7,14 +7,10 @@ const {
   getInventory,
   getInventoryForAdmin,
   getInventoryById,
-  //getInventoryByName,
   deactivateInventory,
   updateInventory,
   getReviewsByItemId,
 } = require('../db')
-
-// TODO: create a way to attach reviews to inventory item
-// TODO: test requireAdmin
 
 //api requests below
 inventoryRouter.get('/', async (req, res, next) => {  

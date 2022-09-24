@@ -24,7 +24,7 @@ cartInventoryRouter.post('/',requireLogin, async (req, res, next) => {
     } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to add this item to the cart.`,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to add this item to the cart.`,
         "name": "UnauthorizedUserError"
       });
     }
@@ -48,7 +48,7 @@ cartInventoryRouter.patch('/:cartInventoryId', requireLogin, async(req, res, nex
     } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to update this cart item.`,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to update this cart item.`,
         "name": "UnauthorizedUserError"
       });
     }
@@ -71,7 +71,7 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
     } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to remove this cart item.`,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to remove this cart item.`,
         "name": "UnauthorizedUserError"
       });
     }
@@ -85,13 +85,18 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
 // TODO: requireLogin
 cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
   const { userId } = req.params;
-  // TODO: check that req.user.id matches (or isAdmin???)
+  console.log('userId', userId)
+  console.log('req.user', req.user)
+
+  if (req.user.id !== Number(userId)) {
+    res.status(403).send({
+      "name": "UnauthorizedUserError",
+      "message": `User ${req.user ? req.user.username : null} is not allowed to view this cart.`
+    })
+  }
 
   try {
-    // const cart = await getCartItemsByUserId({userId})
     const cart = await getDetailedUserCartByUserId({userId});
-
-    console.log('the cart from api', cart)
 
     res.send(cart.length? cart : {name: 'EmptyCart', message: 'The cart is empty!'})
   } catch ({name, message}) {
@@ -112,7 +117,7 @@ cartInventoryRouter.delete('/user/:userId', requireLogin, async(req, res, next) 
     } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to remove all items from this cart.`,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to remove all items from this cart.`,
         "name": "UnauthorizedUserError"
       });
     }

@@ -4,7 +4,6 @@ export const apiCall = async (url, method = 'GET', token, body) => {
   let data = false;
   try {
     const response = await fetch('http://localhost:4000/api' + url, setToken(getFetchOptions(method, body), token));
-    console.log('response', response)
     data = await response.json();
 
     if (data.error) {
@@ -97,7 +96,7 @@ export const postInventory = async ( token, {name, image, description, price, pu
   return data || []
 }
 
-export const deleteInventory = async (inventoryId, token) => {
+export const deactivateInventory = async (inventoryId, token) => {
   const data = await apiCall(`/inventory/${inventoryId}`, 'DELETE', token)
   return data || []
 }
