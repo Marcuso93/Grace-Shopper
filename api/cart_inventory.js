@@ -5,7 +5,7 @@ const {
   canEditCartInventory,
   removeItemFromCart,
   removeAllItemsFromCart,
-  getCartByUserId
+  getDetailedUserCartByUserId
 } = require('../db');
 const { requireLogin } = require('./utils');
 
@@ -88,7 +88,10 @@ cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
   // TODO: check that req.user.id matches (or isAdmin???)
 
   try {
-    const cart = await getCartByUserId({userId})
+    // const cart = await getCartItemsByUserId({userId})
+    const cart = await getDetailedUserCartByUserId({userId});
+
+    console.log('the cart from api', cart)
 
     res.send(cart.length? cart : {name: 'EmptyCart', message: 'The cart is empty!'})
   } catch ({name, message}) {

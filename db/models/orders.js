@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 const client = require("../client");
-const { getCartByUserId } = require("./cart_inventory");
+const { getCartItemsByUserId } = require("./cart_inventory");
 const { getAllUsers } = require("./user");
 
 // This will return all orders submitted by any user (for admin)
@@ -45,7 +45,7 @@ async function attachUsersToOrders(orders){
 // TODO: subtract quantity ordered from stock
 async function createNewOrder({userId, price}){
   try {
-    const itemsInCart = await getCartByUserId({userId})
+    const itemsInCart = await getCartItemsByUserId({userId})
 
     if (itemsInCart) {
       const { rows: [order] } = await client.query(`
@@ -93,7 +93,7 @@ async function attachCartItemsToOrders(orders) {
   try {
     const { rows: cartItems } = await client.query(`
       SELECT inventory.id AS "inventoryId", cart_inventory.id AS "cartInventoryId", 
-        inventory.name, inventory.description, cart_inventory.quantity, 
+        inventory.name, inventory.image, inventory.description, cart_inventory.quantity, 
         cart_inventory.price, cart_inventory."orderId"
       FROM inventory
       JOIN cart_inventory ON cart_inventory."inventoryId" = inventory.id
