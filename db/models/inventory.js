@@ -3,12 +3,12 @@ const client = require("../client")
 
 async function createInventory({
   name,
-  image, 
+  image,
   description,
   price,
   purchasedCount,
   stock,
-  isActive= true,
+  isActive = true,
   isCustomizable
 }) {
   try {
@@ -29,12 +29,25 @@ async function getInventory() {
     const { rows: inventory } = await client.query(`
       SELECT *
       FROM inventory
+      WHERE "isActive" = true
     `)
 
-    return inventory;
-
+    return inventory
   } catch (error) {
     throw error;
+  }
+}
+
+async function getInventoryForAdmin() {
+  try {
+    const { rows: inventory } = await client.query(`
+        SELECT *
+        FROM inventory
+      `)
+
+    return inventory
+  } catch (error) {
+    throw error
   }
 }
 
@@ -111,6 +124,7 @@ async function deactivateInventory({ inventoryId }) {
 module.exports = {
   createInventory,
   getInventory,
+  getInventoryForAdmin,
   getInventoryById,
   getInventoryByName,
   updateInventory,

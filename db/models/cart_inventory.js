@@ -48,14 +48,7 @@ async function getCartItemsByUserId({userId}) {
 }
 
 async function getDetailedUserCartByUserId({userId}) {
-  try {
-    // const cart_inventory = await getCartItemsByUserId({userId});
-    
-    // const itemsToReturn = [...cart_inventory];
-    // const includedItemIds = cart_inventory.map((_, index) => `$${index + 1}`).join(', ');
-    // const itemIds = cart_inventory.map(item => item.id);
-    // if (!itemIds?.length) return;
-    
+  try {    
     const { rows: cartItems } = await client.query(`
       SELECT inventory.id AS "inventoryId", cart_inventory.id AS "cartInventoryId",
         cart_inventory."userId", inventory.name, inventory.image, inventory.description, 

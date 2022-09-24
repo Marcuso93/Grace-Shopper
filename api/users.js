@@ -12,7 +12,9 @@ const {
   getUserByUsername,
   getAllUsers,
   getCartByUserId, 
-  emailInUseCheck
+  emailInUseCheck,
+  makeUserAdminById,
+  removeUserAsAdminById
 } = require('../db');
 
 //api calls below
@@ -116,6 +118,26 @@ usersRouter.post('/register', async (req, res, next) => {
     next({ name, message })
   }
 });
+
+usersRouter.patch('/:userId', requireAdmin, async (req, res, next) => {
+  const { userId } = req.params;
+  const { isAdmin } = req.body;
+
+  // TODO: make it so the person logged can't change their own status
+
+  try {
+    let user;
+    if (isAdmin) {
+      user = await makeUserAdminById({id: userId});
+    } else {
+      user = await removeUserAsAdminById({id: userId});
+    }
+    
+    res.send(user);
+  } catch ({name, message}) {
+    next({name, message})
+  }
+})
 
 // get my reviews
 usersRouter.get('/:userId/reviews', async (req, res, next) => {

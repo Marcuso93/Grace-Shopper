@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { fetchReviewsByItemId, postNewItemToCart } from "../utilities/apiCalls";
+import { useHistory, useParams } from "react-router-dom";
+import { fetchReviewsByItemId, postNewItemToCart, fetchInventoryById } from "../utilities/apiCalls";
 import FeaturedInventoryReviews from "./FeaturedInventoryReviews";
 
 const FeaturedInventory = ({
@@ -17,6 +17,8 @@ const FeaturedInventory = ({
   const [success, setSuccess] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const history = useHistory()
+
+  const { itemId } = useParams();
 
   const handleClose = () => {
     setFeaturedItem("")
@@ -46,7 +48,11 @@ const FeaturedInventory = ({
     
   useEffect(() => {
     (async () => {
-      const getReviews = await fetchReviewsByItemId(featuredItem.id);
+      if (itemId) {
+        const item = await fetchInventoryById(itemId);
+        setFeaturedItem(item);
+      }
+      const getReviews = await fetchReviewsByItemId(itemId ? itemId : featuredItem.id);
       setFeaturedItemReviews(getReviews);
     })()
   }, [])

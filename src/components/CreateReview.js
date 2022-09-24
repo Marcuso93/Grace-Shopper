@@ -4,7 +4,7 @@ import { postReview } from '../utilities/apiCalls';
 const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, featuredItemReviews, setFeaturedItemReviews }) => {
   const [description, setDescription] = useState('');
   // TODO: figure out stars
-  const [stars, setStars] = useState('');
+  const [stars, setStars] = useState(5);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

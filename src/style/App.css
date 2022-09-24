@@ -49,7 +49,7 @@ main{
 .navbar{
   display: flex;
   text-align: center;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   font-size: 12pt;
 }
 .logo{
@@ -59,11 +59,11 @@ main{
   text-decoration-line: none;
   font-family: 'Lora' ,serif;
   background-color: rgb(7, 6, 4);
-  padding: 15px;
+  padding: 10px;
   text-transform: uppercase;
   transition: .3s;
   padding-right: 10px;
-  max-width: 200px;
+  /* max-width: 300px; */
   font-size: 14pt;
 }
 
@@ -97,7 +97,13 @@ main{
   display: flex;
   justify-self: end;
 }
-
+a{
+  color: rgb(255, 255, 255);
+  text-transform: uppercase;
+  font-size: 12pt;
+  text-decoration-line: none;
+  font-family: 'Lora' ,serif;
+}
 
 .logout-popup {
   position: fixed;
@@ -358,10 +364,11 @@ label span {
   border: #000000 3px solid;
   box-shadow: -2px 5px 15px -1px rgba(0,0,0,0.46);
   max-height: 20%;
+  width: 90vw;
 }
 .inventory-img{
-  max-width: 20%;
-  max-height: 20%;
+  max-width: 33%;
+  /* max-height: 20%; */
 }
 .item-details{
   display: flex;
@@ -370,7 +377,7 @@ label span {
   margin: 10px;
   text-align: left;
 }
-.item-details:hover{
+.item-box:hover{
   background-color: lightgray;
 }
 .item-title{
@@ -406,7 +413,8 @@ label span {
   width: 90%;
 }
 
-.create-review-popup{
+.create-review-popup, .update-create-inventory{
+  /* overflow-y:scroll; */
   position: fixed;
   top: 50%;
   left: 50%;
@@ -416,7 +424,39 @@ label span {
   border-radius: 2em;
 }
 
-.create-review-popup textarea {
+.create-review-popup textarea,
+.update-create-inventory textarea {
   width: 75%;
   border-radius: 1em;
+}
+.cart-background{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+}
+.cart-item{
+  padding: 20px;
+}
+.admin-body{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+.create-inventory-button {
+  position: fixed;
+  bottom: 5%;
+  right: 7%;
+}
+.update-create-inventory{
+  background-color: rgb(78, 77, 77);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  width: 80vw;
+  max-width: 600px;
+  gap: 10px;
 }

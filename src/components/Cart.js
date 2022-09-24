@@ -7,12 +7,9 @@ import { checkLocalStorage } from "../utilities/utils";
 //will need user and token
 const Cart = ({user, setUser, token, setToken}) => {
   const [cartItems, setCartItems] = useState([])
-  console.log('user', user)
-  console.log('cartItems', cartItems)
 
   useEffect(() => {
     (async() => {
-      console.log('is user here', user)
       // TODO: fix localStorage
       if (!token) {
         const localToken = checkLocalStorage();
@@ -26,13 +23,11 @@ const Cart = ({user, setUser, token, setToken}) => {
           setUser(localUser); 
         }
       } 
-      console.log('user.id', user.id)
       if (user.id) {
         const cart = await fetchCart({userId: user.id, token});
         if (cart.message && cart.name !== 'EmptyCart') {
           alert(`Error: ${cart.message}.`)
         }
-        console.log(cart);
         setCartItems(cart);
       } else {
         console.log("No user.id")
@@ -41,7 +36,7 @@ const Cart = ({user, setUser, token, setToken}) => {
   }, [user])
  
   return (
-    <div>
+    <div className="cart-background">
       <h2> Cart </h2>
       {
         (cartItems && cartItems.name === 'EmptyCart') ?
@@ -52,7 +47,7 @@ const Cart = ({user, setUser, token, setToken}) => {
         (cartItems && cartItems.length > 0) ?
         cartItems.map(item => {
           return (
-            <div key={item.cartInventoryId}>
+            <div className="cart-item" key={item.cartInventoryId}>
               <h2>{item.name}</h2>
               {
                 (item.image) ?

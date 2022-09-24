@@ -5,6 +5,7 @@ const { requireAdmin } = require('./utils');
 const {
   createInventory,
   getInventory,
+  getInventoryForAdmin,
   getInventoryById,
   //getInventoryByName,
   deactivateInventory,
@@ -16,9 +17,19 @@ const {
 // TODO: test requireAdmin
 
 //api requests below
-inventoryRouter.get('/', async (req, res, next) => {
+inventoryRouter.get('/', async (req, res, next) => {  
   try {
     const getAllInventory = await getInventory();
+
+    res.send(getAllInventory);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+inventoryRouter.get('/admin', async (req, res, next) => {
+  try {
+    const getAllInventory = await getInventoryForAdmin();
 
     res.send(getAllInventory);
   } catch ({ name, message }) {
@@ -49,21 +60,20 @@ inventoryRouter.get('/:inventoryId/reviews', async (req, res, next) => {
   }
 });
 
-// TODO: will we need this?
-// inventoryRouter.get('/:inventoryId', async(req, res, next) =>{
-//   try {
-//     const { inventoryId } = req.params;
-//     const getInventoryId = await getInventoryById(inventoryId);
+inventoryRouter.get('/:inventoryId', async(req, res, next) =>{
+  try {
+    const { inventoryId } = req.params;
+    const item = await getInventoryById(inventoryId);
 
-//     res.send(getInventoryId)
-//   } catch({name, message}){
-//     next({name, message})
-//   }
-// })
+    res.send(item);
+  } catch({name, message}){
+    next({name, message})
+  }
+})
 
 inventoryRouter.post('/', requireAdmin, async (req, res, next) => {
-  const { name, image, description, price, purchasedCount, stock, isPublic, isCustomizable } = req.body;
-  const inventoryObj = { name, image, description, price, purchasedCount, stock, isPublic, isCustomizable };
+  const { name, image, description, price, purchasedCount, stock, isActive, isCustomizable } = req.body;
+  const inventoryObj = { name, image, description, price, purchasedCount, stock, isActive, isCustomizable };
 
   try {
     const newInventory = await createInventory(inventoryObj);

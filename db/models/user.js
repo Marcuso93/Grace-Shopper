@@ -23,6 +23,39 @@ async function createUser({ username, password, address, fullname, email, isAdmi
   }
 }
 
+async function makeUserAdminById({id}) {
+  try {
+    const response  = await client.query(`
+      UPDATE users
+      SET "isAdmin"=true
+        WHERE id=$1
+      RETURNING users.*;
+    `, [id])
+
+    // console.log('user in db fn',user)
+    console.log('db response',response)
+    return await getUserById(id)
+  } catch (error) {
+    throw error
+  }
+}
+
+async function removeUserAsAdminById({id}) {
+  try {
+    const response = await client.query(`
+      UPDATE users
+      SET "isAdmin"=false
+        WHERE id=$1
+      RETURNING users.*;
+    `, [id])
+
+    console.log('db response', response)
+    return await getUserById(id)
+  } catch (error) {
+    throw error
+  }
+}
+
 async function getUser({ username, password }) {
   try {
     const user = await getUserByUsername(username);
@@ -121,5 +154,7 @@ module.exports = {
   getUserById,
   getUserByUsername,
   getAllUsers,
-  emailInUseCheck
+  emailInUseCheck,
+  makeUserAdminById,
+  removeUserAsAdminById
 };

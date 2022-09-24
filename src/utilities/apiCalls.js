@@ -4,6 +4,7 @@ export const apiCall = async (url, method = 'GET', token, body) => {
   let data = false;
   try {
     const response = await fetch('http://localhost:4000/api' + url, setToken(getFetchOptions(method, body), token));
+    console.log('response', response)
     data = await response.json();
 
     if (data.error) {
@@ -62,15 +63,53 @@ export const getLocalUser = async () => {
   return data || []
 }
 
+export const patchAdminStatus = async(token, {userId, isAdmin}) => {
+  const data = await apiCall(`/users/${userId}`, 'PATCH', token, {isAdmin});
+  return data || []
+}
+
 export const fetchCart = async ({userId, token}) => {
   const data = await apiCall(`/cart_inventory/user/${userId}`, 'GET', token);
-  console.log("data", data)
   return data || []
 }
 
 export const fetchInventory = async () => {
     const data = await apiCall('/inventory');
     return data || []
+}
+
+export const fetchInventoryForAdmin = async () => {
+  const data = await apiCall('/inventory/admin');
+  return data || []
+}
+
+export const postInventory = async ( token, {name, image, description, price, purchasedCount, stock, isActive, isCustomizable}) => {
+  const data = await apiCall('/inventory', 'POST', token, {
+    name, 
+    image, 
+    description, 
+    price, 
+    purchasedCount, 
+    stock, 
+    isActive, 
+    isCustomizable
+  })
+  return data || []
+}
+
+export const deleteInventory = async (inventoryId, token) => {
+  const data = await apiCall(`/inventory/${inventoryId}`, 'DELETE', token)
+  return data || []
+}
+
+export const patchInventory = async ( inventoryId, fields, token ) => {
+  const data = await apiCall(`/inventory/${inventoryId}`, 'PATCH', token, fields)
+  return data || []
+}
+
+export const fetchInventoryById = async (itemId) =>{
+  const data = await apiCall(`/inventory/${itemId}`);
+  return data || []
 }
 
 export const fetchReviewsByItemId = async (itemId) => {
