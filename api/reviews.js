@@ -23,7 +23,7 @@ reviewsRouter.get('/item/:itemId', async (req, res, next) => {
 
     res.send(reviews);
   } catch ({ name, message }) {
-    next({name, message})
+    next({ name, message })
   }
 })
 
@@ -33,7 +33,7 @@ reviewsRouter.post('/', requireLogin, async (req, res, next) => {
     const userId = req.user.id;
     const username = req.user.username
     const { itemId, stars, description } = req.body;
-    
+
     const userReview = await createReview({ userId, username, itemId, stars, description });
 
     // will we need to return this?
@@ -47,7 +47,7 @@ reviewsRouter.post('/', requireLogin, async (req, res, next) => {
 })
 
 //Patch my Review 
-reviewsRouter.patch('/:reviewId',requireLogin, async (req, res, next) => {
+reviewsRouter.patch('/:reviewId', requireLogin, async (req, res, next) => {
   const { reviewId } = req.params;
   const { ...fields } = req.body;
 
@@ -62,18 +62,18 @@ reviewsRouter.patch('/:reviewId',requireLogin, async (req, res, next) => {
     } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to update this review `,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to update this review `,
         "name": "UnauthorizedUserError"
       });
     }
-    
+
   } catch ({ name, message }) {
     next({ name, message });
   }
 })
 
 //going to be delete review 
-reviewsRouter.delete('/:reviewId',requireLogin, async (req, res, next) => {
+reviewsRouter.delete('/:reviewId', requireLogin, async (req, res, next) => {
   const { reviewId } = req.params;
   const userId = req.user.id;
 
@@ -83,10 +83,10 @@ reviewsRouter.delete('/:reviewId',requireLogin, async (req, res, next) => {
       const deletedReview = await removeReview(reviewId);
 
       res.send(deletedReview);
-    }else {
+    } else {
       res.status(403).send({
         "error": "UnauthorizedUserError",
-        "message": `User ${req.user.username} is not allowed to remove this review `,
+        "message": `User ${req.user ? req.user.username : null} is not allowed to remove this review `,
         "name": "UnauthorizedUserError"
       });
     }
@@ -96,15 +96,13 @@ reviewsRouter.delete('/:reviewId',requireLogin, async (req, res, next) => {
   }
 })
 
-reviewsRouter.delete('/:reviewId/admin',requireAdmin, async (req, res, next) => {
+reviewsRouter.delete('/:reviewId/admin', requireAdmin, async (req, res, next) => {
   const { reviewId } = req.params;
 
   try {
-      const deletedReview = await removeReview(reviewId);
+    const deletedReview = await removeReview(reviewId);
 
-      res.send(deletedReview);
-
-
+    res.send(deletedReview);
   } catch ({ name, message }) {
     next({ name, message });
   }

@@ -5,8 +5,7 @@ const ordersRouter = express.Router();
 
 // Get all orders (FOR ADMIN ONLY)
 // GET /api/orders
-// TODO: requireAdmin
-ordersRouter.get('/', async (req, res, next) => {
+ordersRouter.get('/', requireAdmin, async (req, res, next) => {
   try {
     const orders = await getAllOrders();
 
@@ -18,8 +17,6 @@ ordersRouter.get('/', async (req, res, next) => {
 
 // Create/Submit new order
 // POST /api/orders
-// TODO: check if correct user?
-// TODO: requireLogin
 // TODO: Subtract quantity from stock of item
 ordersRouter.post('/', async (req, res, next) => {
   const {userId, price} = req.body;
@@ -40,10 +37,16 @@ ordersRouter.post('/', async (req, res, next) => {
 // GET /api/orders/user/:userId
 // TODO: This will include 'inactivated' (deleted) orders... 
 // we could filter them out on the front end when we don't want them
-// TODO: requireLogin
 ordersRouter.get('/user/:userId', async (req, res, next) => {
   const { userId } = req.params; 
   // TODO: check if req.user.id matches userId
+  if (req.user.id !== userId) {
+    res.status(401).send({
+      name: 'UnauthorizedUserError',
+      message: `User ${req.user ? req.user.username : null} is not authorized to see this order.`
+    })
+  }
+
   try {
     const orders = await getOrderHistoryByUserId(userId);
 

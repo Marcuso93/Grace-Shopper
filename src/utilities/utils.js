@@ -1,3 +1,5 @@
+// HANDLING LOCAL STORAGE:
+
 export const setTokenInLocalStorage = (token) => {
   localStorage.setItem('grace-shopper-jwt', JSON.stringify(token));
   console.log('Token set.')
@@ -17,4 +19,35 @@ export const checkLocalStorage = () => {
     console.log('No token found in storage.')
     return false;
   }
+}
+
+// FILTERING USERS FOR ADMIN:
+
+export const filterForCurrentAdmin = (usersData, userId) => {
+  return usersData.filter(userData => {
+    return userData.id === userId
+  })
+}
+
+export const filterForOtherAdmins = (usersData, userId) => {
+  return usersData.filter(userData => {
+    return userData.isAdmin
+  }).filter(userData => {
+    return userData.id !== userId
+  })
+}
+
+export const filterForNonAdmins = (usersData) => {
+  return usersData.filter(userData => {
+    return !userData.isAdmin
+  })
+}
+
+// UNIVERSAL UTILS:
+
+// Filter out the outdated version of an element from an array
+export const filterOutOldVersion = (prevArr, updatedElem) => {
+  return prevArr.filter(elem => {
+    return elem.id !== updatedElem.id;
+  })
 }

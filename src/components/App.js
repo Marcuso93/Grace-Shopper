@@ -12,6 +12,8 @@ import {
   Inventory,
   FeaturedInventory,
   CreateReview,
+  CreateInventory,
+  UpdateInventory,
   Cart,
   Admin,
   Logout
@@ -29,7 +31,8 @@ const App = () => {
   const [featuredItem, setFeaturedItem] = useState([])
   const [isCreatingReview, setIsCreatingReview] = useState(false);
   const [featuredItemReviews, setFeaturedItemReviews] = useState([]);
-
+  const [isCreatingInventory, setIsCreatingInventory] = useState(false);
+  const [updatingInventory, setUpdatingInventory] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -93,7 +96,7 @@ const App = () => {
       </nav>
       </div>
 
-      <Route path="/home">
+      <Route exact path={["/home", "/"]}>
         <Home />
       </Route>
 
@@ -108,8 +111,37 @@ const App = () => {
             featuredItemReviews={featuredItemReviews} 
             setFeaturedItemReviews={setFeaturedItemReviews}/>
         </Route>
-        <Inventory items={items} setItems={setItems} setFeaturedItem={setFeaturedItem} />
-        <CreateReview user={user} token={token} isCreatingReview={isCreatingReview} setIsCreatingReview={setIsCreatingReview} featuredItemReviews={featuredItemReviews} setFeaturedItemReviews={setFeaturedItemReviews}/>
+        <Inventory 
+          user={user} 
+          token={token} 
+          items={items} 
+          setItems={setItems} 
+          setFeaturedItem={setFeaturedItem} 
+          setUpdatingInventory={setUpdatingInventory}/>
+        <CreateReview 
+          user={user} 
+          token={token} 
+          isCreatingReview={isCreatingReview} 
+          setIsCreatingReview={setIsCreatingReview} 
+          featuredItemReviews={featuredItemReviews} 
+          setFeaturedItemReviews={setFeaturedItemReviews}/>
+          {/* TODO: EditReviews? */}
+        <CreateInventory 
+          user={user} 
+          token={token} 
+          isCreatingInventory={isCreatingInventory} 
+          setIsCreatingInventory={setIsCreatingInventory}
+          items={items} 
+          setItems={setItems}/>
+        <UpdateInventory 
+          user={user}
+          token={token}
+          updatingInventory={updatingInventory}
+          setUpdatingInventory={setUpdatingInventory}
+          items={items}
+          setItems={setItems}
+        />
+
       </Route>
 
       <Route path="/account">

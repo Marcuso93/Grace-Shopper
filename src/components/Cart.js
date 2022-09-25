@@ -1,18 +1,17 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
 import { fetchCart, getLocalUser } from "../utilities/apiCalls";
-import { checkLocalStorage } from "../utilities/utils";
+import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 
-//would need a local storage for cart
-//will need user and token
+// TODO:
+// local storage for visitor cart
+// update/remove items from cart
+// Note: when removing item and updating on page can use fn filterOutOldVersion from utils
+
 const Cart = ({user, setUser, token, setToken}) => {
   const [cartItems, setCartItems] = useState([])
-  console.log('user', user)
-  console.log('cartItems', cartItems)
 
   useEffect(() => {
     (async() => {
-      console.log('is user here', user)
       // TODO: fix localStorage
       if (!token) {
         const localToken = checkLocalStorage();
@@ -26,13 +25,11 @@ const Cart = ({user, setUser, token, setToken}) => {
           setUser(localUser); 
         }
       } 
-      console.log('user.id', user.id)
       if (user.id) {
         const cart = await fetchCart({userId: user.id, token});
-        if (cart.message && cart.name !== 'EmptyCart') {
+        if (cart.message && cart.name !== 'EmptyCart' && cart.name !== 'undefined') {
           alert(`Error: ${cart.message}.`)
         }
-        console.log(cart);
         setCartItems(cart);
       } else {
         console.log("No user.id")
@@ -41,10 +38,10 @@ const Cart = ({user, setUser, token, setToken}) => {
   }, [user])
  
   return (
-    <div>
+    <div className="cart-background">
       <h2> Cart </h2>
       {
-        (cartItems && cartItems.name === 'EmptyCart') ?
+        ((cartItems && cartItems.name === 'EmptyCart') || cartItems.length < 1) ?
         <div>Your cart is empty!</div> :
         null
       }
@@ -52,7 +49,7 @@ const Cart = ({user, setUser, token, setToken}) => {
         (cartItems && cartItems.length > 0) ?
         cartItems.map(item => {
           return (
-            <div key={item.cartInventoryId}>
+            <div className="cart-item" key={item.cartInventoryId}>
               <h2>{item.name}</h2>
               {
                 (item.image) ?
