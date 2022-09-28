@@ -58,8 +58,9 @@ const Home = () => {
         <label htmlFor="i4" className="dots" id="dot4"></label>
         <label htmlFor="i5" className="dots" id="dot5"></label>
       </div>
-
     </div>
+      <h1>Welcome</h1>
+      <p>Woodworking is an art where a tree never dies!</p>
   </>
 }
 
