@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { fetchCart, getLocalUser } from "../utilities/apiCalls";
+import { fetchCart, getLocalUser, postNewOrder, removeItemFromCart } from "../utilities/apiCalls";
 import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 
 // TODO:
@@ -8,7 +8,9 @@ import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 // Note: when removing item and updating on page can use fn filterOutOldVersion from utils
 
 const Cart = ({user, setUser, token, setToken}) => {
-  const [cartItems, setCartItems] = useState([])
+  const [cartItems, setCartItems] = useState([]);
+  const [cartPrice, setCartPrice] = useState(0);
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
   useEffect(() => {
     (async() => {
@@ -31,19 +33,83 @@ const Cart = ({user, setUser, token, setToken}) => {
           alert(`Error: ${cart.message}.`)
         }
         setCartItems(cart);
+        // setCartPrice(getPrice());
       } else {
         console.log("No user.id")
       }
     })()
   }, [user])
+
+  const handleRemoveItem = async (event, item) => {
+    // TODO: double check correct user to be able to remove from cart?
+    event.preventDefault();
+    event.stopPropagation();
+    const removedItem = await removeItemFromCart(token, item.cartInventoryId);
+
+    if (removedItem.message) {
+      alert(`Error: ${removedItem.message}`);
+    } else if (removedItem.id) {
+      setCartItems(filterOutOldVersion(cartItems, item));
+    } else {
+      alert(`There was an error removing this item from your cart.`)
+    }
+  }
+
+  const handlePlaceOrder = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    // TODO get this to work
+    setCartPrice(5000);
+    const orderDate = new Date().toString();
+
+    const newOrder = await postNewOrder(token, { 
+      userId: user.id, 
+      price: cartPrice,
+      orderDate
+    });
+
+    if (newOrder.message) {
+      alert(`Error: ${newOrder.message}.`);
+    } else if (newOrder.id) {
+      setCartItems([]);
+      setOrderSuccess(true);
+    } else {
+      alert('There was an error placing your order.')
+    }
+  }
+
+  // const getPrice = () => {
+  //   let arr = [];
+  //   let totalPrice = 0;
+  //   console.log('WTF', cartItems)
+  //   for (let i=0; i < cartItems.length; i++) {
+  //     console.log('INDIV ITEMS!!', cartItems[i])
+  //     // price += cartItems[i][price]
+  //   }
+  //   // cartItems.forEach(item => {
+  //   //   console.log('item!!!', item)
+  //   //   // totalPrice += item.price;
+  //   //   arr.push(item.price)
+  //   // })
+  //   console.log(arr)
+  //   console.log('totalPrice', totalPrice)
+  //   return totalPrice
+  // }
  
   return (
     <div className="cart-background">
       <h2> Cart </h2>
       {
-        ((cartItems && cartItems.name === 'EmptyCart') || cartItems.length < 1) ?
-        <div>Your cart is empty!</div> :
+        orderSuccess ?
+        <div>Your order was successfully placed. See the orders tab to review your order(s).</div>:
         null
+      }
+      {
+        ((cartItems && cartItems.name === 'EmptyCart') || (cartItems && cartItems.length < 1)) ?
+        <div>Your cart is empty!</div> :
+        <button onClick={(event) => {
+          handlePlaceOrder(event);
+        }}>Place Order</button>
       }
       {
         (cartItems && cartItems.length > 0) ?
@@ -64,7 +130,10 @@ const Cart = ({user, setUser, token, setToken}) => {
                 <p>This item is customizable upon request.</p> :
                 null
               }
-              <p>Items in stock: {item.stock}</p>
+              <p>{(item.stock && item.stock > 0) ? `Items in stock : ${ item.stock }` : 'Out of stock!'}</p>
+              <button onClick={(event) => {
+                handleRemoveItem(event, item);
+              }}>Remove</button>
             </div>
           )
         }):

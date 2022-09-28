@@ -43,16 +43,16 @@ async function attachUsersToOrders(orders){
 
 // When user submits order
 // TODO: subtract quantity ordered from stock
-async function createNewOrder({userId, price}){
+async function createNewOrder({userId, price, orderDate}){
   try {
     const itemsInCart = await getCartItemsByUserId({userId})
 
     if (itemsInCart) {
       const { rows: [order] } = await client.query(`
-        INSERT INTO orders("userId", price)
-        VALUES($1, $2)
+        INSERT INTO orders("userId", price, "orderDate")
+        VALUES($1, $2, $3)
         RETURNING*
-      `, [userId, price]);
+      `, [userId, price, orderDate]);
   
       await addCartToOrder({orderId: order.id, userId});
   
@@ -92,7 +92,7 @@ async function attachCartItemsToOrders(orders) {
   
   try {
     const { rows: cartItems } = await client.query(`
-      SELECT inventory.id AS "inventoryId", cart_inventory.id AS "cartInventoryId", 
+      SELECT cart_inventory.id AS "cartInventoryId", inventory.id AS "inventoryId",
         inventory.name, inventory.image, inventory.description, cart_inventory.quantity, 
         cart_inventory.price, cart_inventory."orderId"
       FROM inventory

@@ -136,3 +136,27 @@ export const postNewItemToCart = async (token, {userId, inventoryId, quantity, p
   })
   return data || []
 }
+
+export const removeItemFromCart = async (token, cartInventoryId) => {
+  const data = await apiCall (`/cart_inventory/${cartInventoryId}`, "DELETE", token)
+  return data || []
+}
+
+export const patchItemInCart = async (token, cartInventoryId, fields) => {
+  const data = await apiCall(`/cart_inventory/${cartInventoryId}`, "PATCH", token, fields)
+  return data || []
+}
+
+export const postNewOrder = async (token, {userId, price, orderDate}) => {
+  const data = await apiCall(`/orders`, "POST", token, {
+    userId,
+    price, 
+    orderDate
+  })
+  return data || []
+}
+
+export const fetchUserOrders = async (token, userId) => {
+  const data = await apiCall(`/orders/user/${userId}`, "GET", token)
+  return data || []
+}

@@ -15,6 +15,7 @@ import {
   CreateInventory,
   UpdateInventory,
   Cart,
+  Orders,
   Admin,
   Logout
 } from './index';
@@ -66,6 +67,14 @@ const App = () => {
         <NavLink to="/cart" className="navlink" activeClassName="active">
           Cart
         </NavLink>
+
+        {
+          (user && token) ?
+          <NavLink to="/orders" className="navlink" activeClassName="active">
+            Orders
+          </NavLink> :
+          null
+        }
 
         <NavLink to="/account" className="navlink" activeClassName="active">
           { (user && token) ? 'Account' : 'Login/Register' }
@@ -150,6 +159,10 @@ const App = () => {
 
       <Route path="/cart">
         <Cart user={user} setUser={setUser} token={token} setToken={setToken}/>
+      </Route>
+
+      <Route path="/orders">
+        <Orders user={user} setUser={setUser} token={token} setToken={setToken} />
       </Route>
 
       {

@@ -382,7 +382,7 @@ label span {
 }
 .item-title{
   font-weight: bolder;
-  font: 20pt;
+  font: 24pt;
 }
 
 .login{
@@ -478,4 +478,40 @@ label span {
 }
 .single-user p {
   text-align: left;
+}
+
+.statement{
+  color: white;
+}
+
+.orders{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 1rem;
+  gap:1rem;
+  font-size: 16pt;
+}
+.order-box{
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  margin: 10px;
+  text-align: left;
+  gap: 2rem;
+  font-size: 16pt;
+}
+.orderHistory{
+  font-family: 'Lora' ,serif;
+  font-size: 16pt;
+  background-color: rgb(7, 6, 4);
+  color: white;
+  font-weight: bolder;
+  padding: 15px;
+  padding-right:60px;
+  padding-left:60px;
+  border: 2px solid white;
 }
