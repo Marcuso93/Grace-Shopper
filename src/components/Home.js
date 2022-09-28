@@ -59,8 +59,11 @@ const Home = () => {
         <label htmlFor="i5" className="dots" id="dot5"></label>
       </div>
     </div>
+    <div className="statement">
       <h1>Welcome</h1>
+      <p>As a woodworker and sculpture, designing hand built unique items capturing the beauty of the woodgains and color to create functional and aesthetic works. With the use of CNC machining, laser cutting, and epoxy we are able to customize even further to suit your desires.</p>
       <p>Woodworking is an art where a tree never dies!</p>
+    </div>
   </>
 }
 

@@ -17,17 +17,19 @@ ordersRouter.get('/', requireAdmin, async (req, res, next) => {
 
 // Create/Submit new order
 // POST /api/orders
-// TODO: Subtract quantity from stock of item
+// TODO: Subtract quantity from stock of item!!!!
 ordersRouter.post('/', async (req, res, next) => {
-  const {userId, price} = req.body;
+  const {userId, price, orderDate} = req.body;
 
+  // TODO: check that cart isn't empty
   try {
-    const newOrder = await createNewOrder({userId, price});
+    const newOrder = await createNewOrder({userId, price, orderDate});
 
-    res.send( newOrder ? newOrder : {
-      name: 'EmptyCart',
-      message: 'The cart is empty, unable to create new order.'
-    });
+    // res.send( newOrder ? newOrder : {
+    //   name: 'EmptyCart',
+    //   message: 'The cart is empty, unable to create new order.'
+    // });
+    res.send(newOrder);
   } catch ({name, message}) {
     next({name, message})
   }
@@ -40,12 +42,13 @@ ordersRouter.post('/', async (req, res, next) => {
 ordersRouter.get('/user/:userId', async (req, res, next) => {
   const { userId } = req.params; 
   // TODO: check if req.user.id matches userId
-  if (req.user.id !== userId) {
-    res.status(401).send({
-      name: 'UnauthorizedUserError',
-      message: `User ${req.user ? req.user.username : null} is not authorized to see this order.`
-    })
-  }
+  // THIS DOESN'T WORK
+  // if (req.user.id !== userId) {
+  //   res.status(401).send({
+  //     name: 'UnauthorizedUserError',
+  //     message: `User ${req.user ? req.user.username : null} is not authorized to see this order.`
+  //   })
+  // }
 
   try {
     const orders = await getOrderHistoryByUserId(userId);

@@ -61,11 +61,11 @@ async function buildTables() {
       );
       CREATE TABLE orders(
         id SERIAL PRIMARY KEY,
-        "orderDate" TIMESTAMPTZ DEFAULT NOW(),
+        "orderDate" VARCHAR(255),
         "userId" INTEGER REFERENCES users(id),
         price INTEGER,
         inactivated BOOLEAN DEFAULT false
-      );
+        );
       CREATE TABLE cart_inventory(
         id SERIAL PRIMARY KEY, 
         "userId" INTEGER REFERENCES users(id),
@@ -74,10 +74,11 @@ async function buildTables() {
         price INTEGER NOT NULL,
         "isPurchased" BOOLEAN DEFAULT false,
         "orderId" INTEGER REFERENCES orders(id) DEFAULT null
-      );
-    `)
-    console.log("Finished building tables!");
-  } catch (error) {
+        );
+        `)
+          console.log("Finished building tables!");
+          // "orderDate" TIMESTAMPTZ DEFAULT NOW(),
+        } catch (error) {
     console.error("Error building tables!");
     throw error;
   }
@@ -168,7 +169,8 @@ async function createInitialData() {
     console.log('Finished building cart...')
 
     console.log('Building order...');
-    const order = await createNewOrder({userId: 1, price: 50000})
+    const newOrderDate = new Date().toString();
+    const order = await createNewOrder({userId: 1, price: 50000, orderDate: newOrderDate})
     console.log('ORDER:', order)
     console.log('Finished building order.')
 

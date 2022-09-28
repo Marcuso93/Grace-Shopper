@@ -30,6 +30,7 @@ const FeaturedInventory = ({
     if (quantity > featuredItem.stock) {
       alert(`For Item: ${featuredItem.name}, there are only ${featuredItem.stock} available.`)
     }
+    // TODO: get inventory IDs from users cart to double check they don't already have this item in the cart
     const itemAdded = await postNewItemToCart(token, { 
       userId: user.id,
       inventoryId: featuredItem.id,
