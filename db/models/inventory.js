@@ -32,9 +32,42 @@ async function getInventory() {
       WHERE "isActive" = true
     `)
 
-    return inventory
+    const inventoryWithStarsAttached = attachStarsToItems(inventory);
+
+    return inventoryWithStarsAttached
   } catch (error) {
     throw error;
+  }
+}
+
+async function attachStarsToItems(items) {
+  const itemsToReturn = [...items];
+  // console.log('items to return', itemsToReturn)
+  const includedItemIds = items.map((_, index) => `$${index + 1}`).join(', ');
+  // console.log('included IDs', includedItemIds)
+  const itemIds = items.map(item => item.id);
+  if (!itemIds?.length) return;
+
+  try {
+    const { rows: ratings } = await client.query(`
+      SELECT inventory.id AS "itemId", stars
+      FROM inventory
+      JOIN reviews ON reviews."itemId" = inventory.id
+      WHERE reviews."itemId" IN (${includedItemIds});
+    `, itemIds)
+
+    // console.log('stars', ratings)
+
+    for (const item of itemsToReturn) {
+      const starsToAdd = ratings.filter(rating => rating.itemId === item.id);
+      // console.log(starsToAdd)
+      starsToAdd.forEach(rating => delete rating.itemId)
+      item.ratings = starsToAdd;
+    }
+
+    return itemsToReturn;
+  } catch (error) {
+    throw error
   }
 }
 

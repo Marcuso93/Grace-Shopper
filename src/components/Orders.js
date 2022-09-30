@@ -5,7 +5,7 @@ import { checkLocalStorage } from '../utilities/utils';
 const Orders = ({ user, setUser, token, setToken }) => {
   const [orders, setOrders] = useState([]);
   
-  console.log('user', user)
+  // console.log('user', user)
 
   useEffect(() => {
     (async () => {
@@ -35,23 +35,27 @@ const Orders = ({ user, setUser, token, setToken }) => {
         
         // setCartPrice(getPrice());
       } else {
-        console.log("HEYY No user.id")
+        console.log("No user.id")
       }
     })()
   }, [user.id])
 
   return (
-    // TODO: when you log out, orders shoud go away
+    // TODO: when you log out, orders should go away
     (token) ?
     <div className='inventory-container'>
       <div className='orderHistory'>Orders History</div>
       {
         (orders && orders.length > 0) ?
         orders.map((order) => {
+          const date = new Date(Number(order.orderDate));
           return (
             <div key={order.id} className="orders">
               <div>Order ID: {order.id}</div>
-              <div>Order Date: {order.orderDate}</div>
+              {
+                // console.log(order)
+              }
+              <div>Order Date: {date.toLocaleString()}</div>
               <div>Price: ${order.price}.00</div>
               <div>
                 {

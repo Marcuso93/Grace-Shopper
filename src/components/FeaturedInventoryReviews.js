@@ -14,7 +14,7 @@ const FeaturedInventoryReviews = ({ featuredItemReviews }) => {
                 <div key={review.id}>
                   <h3>User: {review.username}</h3>
                   {/* Map over review.stars here */}
-                  <p>ToDo: Figure out stars here</p>
+                  <p>Rating: {review.stars}/5</p>
                   <p>{review.description}</p>
                 </div> :
                 null

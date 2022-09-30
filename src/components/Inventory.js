@@ -14,6 +14,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
         setItems(inventory)
       } else {
         const inventory = await fetchInventory();
+        // console.log(inventory)
         setItems(inventory);
       }
     })()
@@ -38,7 +39,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
   const handleEdit = async (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('item to edit', item)
+    // console.log('item to edit', item)
     setUpdatingInventory(item);
   }
 
@@ -48,6 +49,11 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
       {
         (items && items.length > 0) ?
           items.map((item) => {
+            let total = 0;
+            item.ratings.forEach(rating => {
+              total += rating.stars
+            })
+            const average = Math.round((total/item.ratings.length) * 10) / 10 ;
             return (
               <div
                 key={item.id}
@@ -66,8 +72,13 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
                   (user && user.isAdmin && !item.isActive) ?
                   <div>This item is inactive.</div> :
                   null
-                }
-                <p>${item.price}.00</p>
+                } 
+                {
+                  (average) ?
+                  <p>Rating: {average}/5</p> :
+                  <p>No rating available.</p>
+                } 
+                <p>Price: ${item.price}.00</p>
                 <div className='item-stars'></div>
                 <p>{item.description}</p>
                 {
