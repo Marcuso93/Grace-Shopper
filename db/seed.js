@@ -65,7 +65,7 @@ async function buildTables() {
         "userId" INTEGER REFERENCES users(id),
         price INTEGER,
         inactivated BOOLEAN DEFAULT false
-        );
+      );
       CREATE TABLE cart_inventory(
         id SERIAL PRIMARY KEY, 
         "userId" INTEGER REFERENCES users(id),
@@ -77,7 +77,7 @@ async function buildTables() {
         );
         `)
           console.log("Finished building tables!");
-          // "orderDate" TIMESTAMPTZ DEFAULT NOW(),
+    // "orderDate" TIMESTAMPTZ DEFAULT NOW(),
         } catch (error) {
     console.error("Error building tables!");
     throw error;
@@ -330,16 +330,23 @@ async function createInitialData() {
       { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
       { userId: 1, inventoryId: 2, quantity: 5, price: 10 },
       { userId: 2, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 2, inventoryId: 2, quantity: 5, price: 10}
+      { userId: 2, inventoryId: 2, quantity: 5, price: 10},
+      { userId: 3, inventoryId: 1, quantity: 2, price: 5000 },
+      { userId: 3, inventoryId: 2, quantity: 5, price: 10 },
+      { userId: 4, inventoryId: 1, quantity: 2, price: 5000 },
+      { userId: 4, inventoryId: 2, quantity: 5, price: 10 }
     ]
     const inventoryInCarts = await Promise.all(cartItems.map(addItemToCart));
     console.log('Inventory in carts:', inventoryInCarts);
     console.log('Finished building cart...')
 
     console.log('Building order...');
-    const newOrderDate = new Date().toString();
-    const order = await createNewOrder({userId: 1, price: 50000, orderDate: newOrderDate})
-    console.log('ORDER:', order)
+    const newOrderDate = new Date().getTime();
+    for (let i=1; i < 5; i++) {
+      const order = await createNewOrder({userId: i, price: 50000, orderDate: newOrderDate})
+      // const order = await createNewOrder({userId: i, price: 50000})
+      console.log('ORDER:', order)
+    }
     console.log('Finished building order.')
 
     console.log("Finished creating tables!")

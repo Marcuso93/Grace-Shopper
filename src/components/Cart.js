@@ -33,7 +33,7 @@ const Cart = ({user, setUser, token, setToken}) => {
           alert(`Error: ${cart.message}.`)
         }
         setCartItems(cart);
-        // setCartPrice(getPrice());
+        setCartPrice(getPrice());
       } else {
         console.log("No user.id")
       }
@@ -59,8 +59,8 @@ const Cart = ({user, setUser, token, setToken}) => {
     event.preventDefault();
     event.stopPropagation();
     // TODO get this to work
-    setCartPrice(5000);
-    const orderDate = new Date().toString();
+    setCartPrice(getPrice());
+    const orderDate = new Date().getTime();
 
     const newOrder = await postNewOrder(token, { 
       userId: user.id, 
@@ -78,23 +78,24 @@ const Cart = ({user, setUser, token, setToken}) => {
     }
   }
 
-  // const getPrice = () => {
-  //   let arr = [];
-  //   let totalPrice = 0;
-  //   console.log('WTF', cartItems)
-  //   for (let i=0; i < cartItems.length; i++) {
-  //     console.log('INDIV ITEMS!!', cartItems[i])
-  //     // price += cartItems[i][price]
-  //   }
-  //   // cartItems.forEach(item => {
-  //   //   console.log('item!!!', item)
-  //   //   // totalPrice += item.price;
-  //   //   arr.push(item.price)
-  //   // })
-  //   console.log(arr)
-  //   console.log('totalPrice', totalPrice)
-  //   return totalPrice
-  // }
+  const getPrice = () => {
+    // let arr = [];
+    let totalPrice = 0;
+
+    for (let i=0; i < cartItems.length; i++) {
+
+      totalPrice += cartItems[i]['price']
+    }
+    // arr.reduce()
+    // cartItems.forEach(item => {
+    //   console.log('item!!!', item)
+    //   // totalPrice += item.price;
+    //   arr.push(item.price)
+    // })
+    // console.log(arr)
+
+    return totalPrice
+  }
  
   return (
     <div className="cart-background">

@@ -13,7 +13,7 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
       userId: user.id, 
       username: user.username, 
       itemId: isCreatingReview.id, 
-      stars: 5, 
+      stars, 
       description 
     });
     
@@ -22,6 +22,7 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
     } if (newReview.id) {
       if (featuredItemReviews && featuredItemReviews.length > 0) {
         setFeaturedItemReviews([newReview, ...featuredItemReviews])
+        // TODO: update inventory page as well
       }
       resetState();
     } else {
@@ -45,8 +46,18 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
     <div className='create-review-popup'>
       <form onSubmit={ handleSubmit }>
         <h3>Create a Review</h3>
-        {/* TODO: stars */}
-        <div>Handle Stars</div>
+        {/* TODO: fix this stuff */}
+        <div>Rating:</div>
+        <input
+          required
+          type='number'
+          min='1'
+          max='5'
+          name='stars'
+          placeholder='Rating Required'
+          value={stars}
+          onChange={(event) => setStars(event.target.value)}
+        />
         <textarea 
           name='description'
           placeholder='Review'
