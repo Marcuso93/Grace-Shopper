@@ -110,9 +110,86 @@ async function createInitialData() {
       },
 
       {
+        name: "table",
+        image: "./images/table-3.png",
+        price: "75",
+        description: "table made out of beetle kill wood and epoxy",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+
+      {
+        name: "table",
+        image: "./images/table-4.png",
+        price: "1500",
+        description: "exoxy river table",
+        purchasedCount: "0",
+        stock: "2",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+
+      {
+        name: "cutting board",
+        image: "./images/cutting-board-1.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
         name: "exquisite cutting board made from pine and maple",
         image: "./images/cutting-board-2.png",
         price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
+        name: "cutting board",
+        image: "./images/cutting-board-3.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
+        name: "cutting board",
+        image: "./images/cutting-board-4.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
+        name: "cutting board",
+        image: "./images/cutting-board-5.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
+        name: "cheess board",
+        image: "./images/cutting-board-6.png",
+        price: "45",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -132,12 +209,103 @@ async function createInitialData() {
       },
 
       {
+        name: "cutting board",
+        image: "./images/cutting-board-8.png",
+        price: "65",
+        description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "true"
+      },
+
+      {
         name: "Mini bar",
         image: "./images/mini-bar.png",
-        price: "65",
+        price: "250",
         description: "mini bar made out of beetle kill wood",
         purchasedCount: "0",
         stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "coasters",
+        image: "./images/coasters.png",
+        price: "30",
+        description: "coasters with laser engraving",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "coasters",
+        image: "./images/coasters-2.png",
+        price: "25",
+        description: "6 piece coaster set with flowing grain",
+        purchasedCount: "0",
+        stock: "3",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "colorado",
+        image: "./images/colorado.png",
+        price: "40",
+        description: "colorado wall hanging",
+        purchasedCount: "0",
+        stock: "7",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "hangers",
+        image: "./images/hangers.png",
+        price: "35",
+        description: "coat hangers",
+        purchasedCount: "0",
+        stock: "3",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "Ice cream",
+        image: "./images/ice-cream.png",
+        price: "25",
+        description: "Ice cream wall art with epoxy coloring",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "tree of life",
+        image: "./images/tree.png",
+        price: "25",
+        description: "tree of life with epoxy",
+        purchasedCount: "0",
+        stock: "5",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "yoda",
+        image: "./images/yoda.png",
+        price: "30",
+        description: "yoda laser engraving, jamming out, wall art",
+        purchasedCount: "0",
+        stock: "10",
+        isActive: "true",
+        isCustomizable: "false"
+      },
+      {
+        name: "yin-yang",
+        image: "./images/yin-yang.png",
+        price: "40",
+        description: "yin-yang laser engraving, wall art",
+        purchasedCount: "0",
+        stock: "40",
         isActive: "true",
         isCustomizable: "false"
       },
