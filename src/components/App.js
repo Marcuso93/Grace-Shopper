@@ -60,7 +60,7 @@ const App = () => {
         <div className={ `hamburger${(menuOpen) ? '-open' : '-closed'}` } onClick={ () => (menuOpen) ? setMenuOpen(false) : setMenuOpen(true) }>
         <div class="menu-btn__burger"></div>
           </div>
-      <nav className={ `navbar${(menuOpen) ? '-here' : '-away'}` }>
+      <nav className={ `navbar${(menuOpen) ? '-here' : '-away'}` } onClick={ () => (menuOpen) ? setMenuOpen(false) : setMenuOpen(true) }>
         
         <NavLink to="/home" className="navlink" activeClassName="active">
           Home

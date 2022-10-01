@@ -132,7 +132,7 @@ const Cart = ({ user, setUser, token, setToken }) => {
                     }
                     <div className="cart-info">
                       <h2>{item.name}</h2>
-                      <p>Price: ${item.price}.00</p>
+                      <p>Price: ${item.price/100}</p>
                       {
                         (updatingItemId && item.cartInventoryId === updatingItemId) ?
                           <>
