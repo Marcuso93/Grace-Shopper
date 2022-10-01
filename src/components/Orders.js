@@ -50,9 +50,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
           return (
             <div key={order.id} className="orders">
               <div>Order ID: {order.id}</div>
-              {
-                // console.log(order)
-              }
               <div>Order Date: {date.toLocaleString()}</div>
               <div>Price: ${order.price}.00</div>
               <div>

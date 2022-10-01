@@ -93,8 +93,9 @@ async function getInventoryById(id) {
 
     if (!inventory) { return null }
 
-    return inventory;
+    const item = await attachStarsToItems([inventory]);
 
+    return item[0];
   } catch (error) {
     throw error;
   }

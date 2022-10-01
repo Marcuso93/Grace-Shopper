@@ -118,7 +118,7 @@ const App = () => {
             setFeaturedItem={setFeaturedItem} 
             setIsCreatingReview={setIsCreatingReview} 
             featuredItemReviews={featuredItemReviews} 
-            setFeaturedItemReviews={setFeaturedItemReviews}/>
+            setFeaturedItemReviews={setFeaturedItemReviews} />
         </Route>
         <Inventory 
           user={user} 
@@ -126,14 +126,17 @@ const App = () => {
           items={items} 
           setItems={setItems} 
           setFeaturedItem={setFeaturedItem} 
-          setUpdatingInventory={setUpdatingInventory}/>
+          setUpdatingInventory={setUpdatingInventory} />
         <CreateReview 
           user={user} 
           token={token} 
           isCreatingReview={isCreatingReview} 
           setIsCreatingReview={setIsCreatingReview} 
           featuredItemReviews={featuredItemReviews} 
-          setFeaturedItemReviews={setFeaturedItemReviews}/>
+          setFeaturedItemReviews={setFeaturedItemReviews}
+          items={items}
+          setItems={setItems} 
+          featuredItem={featuredItem} />
           {/* TODO: EditReviews? */}
         <CreateInventory 
           user={user} 

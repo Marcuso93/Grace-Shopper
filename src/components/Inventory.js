@@ -14,7 +14,6 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
         setItems(inventory)
       } else {
         const inventory = await fetchInventory();
-        // console.log(inventory)
         setItems(inventory);
       }
     })()
@@ -39,7 +38,6 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
   const handleEdit = async (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log('item to edit', item)
     setUpdatingInventory(item);
   }
 

@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { postReview } from '../utilities/apiCalls';
+import { filterOutOldVersion } from '../utilities/utils';
 
-const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, featuredItemReviews, setFeaturedItemReviews }) => {
+const CreateReview = ({ 
+  user, 
+  token, 
+  isCreatingReview, 
+  setIsCreatingReview, 
+  featuredItemReviews, 
+  setFeaturedItemReviews,
+  items,
+  setItems,
+  featuredItem 
+}) => {
   const [description, setDescription] = useState('');
-  // TODO: figure out stars
   const [stars, setStars] = useState(5);
 
   const handleSubmit = async (event) => {
@@ -20,10 +30,15 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
     if (newReview.message){
       alert(`${newReview.message}`)
     } if (newReview.id) {
-      if (featuredItemReviews && featuredItemReviews.length > 0) {
-        setFeaturedItemReviews([newReview, ...featuredItemReviews])
-        // TODO: update inventory page as well
-      }
+      setFeaturedItemReviews(
+        (featuredItemReviews && featuredItemReviews.length > 0) ?
+        [newReview, ...featuredItemReviews] : 
+        [newReview]
+      )
+
+      featuredItem.ratings.push({ stars });
+      setItems([featuredItem, ...filterOutOldVersion(items, featuredItem)]);
+
       resetState();
     } else {
       alert('There was an error in creating your review.')
@@ -37,7 +52,7 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
   
   const resetState = () => {
     setDescription('');
-    setStars('');
+    setStars(5);
     setIsCreatingReview(false);
     }
   
@@ -46,18 +61,15 @@ const CreateReview = ({ user, token, isCreatingReview, setIsCreatingReview, feat
     <div className='create-review-popup'>
       <form onSubmit={ handleSubmit }>
         <h3>Create a Review</h3>
-        {/* TODO: fix this stuff */}
-        <div>Rating:</div>
-        <input
+        <div>Rating:<input
           required
           type='number'
           min='1'
           max='5'
           name='stars'
-          placeholder='Rating Required'
           value={stars}
-          onChange={(event) => setStars(event.target.value)}
-        />
+          onChange={(event) => { setStars(Number(event.target.value)) }}
+        /></div>
         <textarea 
           name='description'
           placeholder='Review'
