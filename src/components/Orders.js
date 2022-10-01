@@ -4,8 +4,6 @@ import { checkLocalStorage } from '../utilities/utils';
 
 const Orders = ({ user, setUser, token, setToken }) => {
   const [orders, setOrders] = useState([]);
-  
-  // console.log('user', user)
 
   useEffect(() => {
     (async () => {
@@ -32,8 +30,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
         } else {
           setOrders(getOrders)
         }
-        
-        // setCartPrice(getPrice());
       } else {
         console.log("No user.id")
       }
@@ -52,9 +48,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
           return (
             <div key={order.id} className="orders">
               <div>Order ID: {order.id}</div>
-              {
-                // console.log(order)
-              }
               <div>Order Date: {date.toLocaleString()}</div>
               <div>Price: ${order.price}.00</div>
               <div>

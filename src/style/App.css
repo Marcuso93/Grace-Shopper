@@ -121,10 +121,10 @@ button {
   color: rgb(255, 255, 255);
   overflow: hidden;
   border: 1px solid rgb(175, 175, 175);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 7px 0px;
   margin: .9rem .5em;
   border-radius: 30px;
   background-color: rgb(10, 10, 9);
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 7px 0px;
   letter-spacing: .15rem;
   padding: .75em 1.5em;
   word-wrap: none;
@@ -368,7 +368,7 @@ label span {
 }
 .inventory-img{
   max-width: 33%;
-  /* max-height: 20%; */
+  max-height: 33%;
 }
 .item-details{
   display: flex;
@@ -394,23 +394,78 @@ label span {
   padding: 30px;
 }
 
-.featuredInventory{
+.featured-container {
   position: fixed ;
+  left: 0;
+  top: 4.5em;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-wrap: normal;
   background-color:rgb(78, 77, 77);
   color: white;
-  border: 1px solid black;
-  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: .7em;
+}
+
+/* TODO: media query to make this flex column when narrow and portrait  */
+.featuredInventory{
+  /* border: 1px solid black; */
+  /* border-radius: 20px; */
   padding: 1rem;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(5px 5px 10px #000);
-  transition: all 1s ease-in-out;
-  overflow-y: scroll;
-  height: 50%;
-  width: 40%;
-  height: 90%;
-  width: 90%;
+  /* transform: translate(-50%, -50%); */
+  /* filter: drop-shadow(5px 5px 10px #000); */
+  /* transition: all 1s ease-in-out; */
+  /* height: 50%; */
+  /* width: 40%; */
+  /* height: 90%; */
+  /* width: 90%; */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.featured-img {
+  max-width: 30%;
+}
+
+.featured-info {
+  display: flex;
+  flex-direction: column;
+  flex: 2 1 300px;
+  padding: 0 2em;
+  height: fit-content;
+}
+
+.featured-info h1, .featured-info button, .featured-info p {
+  margin-top: 0;
+}
+
+.review-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  text-align: left;
+  gap: 0.5em;
+  align-items: normal stretch flex-start;
+  justify-content: space-between;
+  margin-bottom: 4.5em;
+}
+
+.indiv-reviews {
+  width: 49%;
+  min-height: 8em;
+  font-size: smaller;
+  background-color: rgb(213, 211, 211);
+  color: black;
+  padding: 1em;
+  border-radius: 1em;
+  border: 1px solid rgb(175, 175, 175);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 7px 0px;
 }
 
 .create-review-popup, .update-create-inventory{
@@ -496,9 +551,6 @@ label span {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  padding-left: 20px;
   margin: 10px;
   text-align: left;
   gap: 2rem;

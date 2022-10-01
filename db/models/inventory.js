@@ -93,8 +93,9 @@ async function getInventoryById(id) {
 
     if (!inventory) { return null }
 
-    return inventory;
+    const item = await attachStarsToItems([inventory]);
 
+    return item[0];
   } catch (error) {
     throw error;
   }
@@ -113,6 +114,24 @@ async function getInventoryByName(name) {
 
   } catch (error) {
     throw error;
+  }
+}
+
+async function subtractItemQuantityFromStock(items) {
+  try {
+    items.forEach(async (item) => {
+      const inventory = await getInventoryById(item.inventoryId);
+      const stock = inventory.stock - item.quantity;
+
+      await updateInventory({
+        inventoryId: inventory.id,
+        stock
+      });
+    });
+
+    return
+  } catch (error) {
+    throw error
   }
 }
 
@@ -160,6 +179,7 @@ module.exports = {
   getInventoryForAdmin,
   getInventoryById,
   getInventoryByName,
+  subtractItemQuantityFromStock,
   updateInventory,
   deactivateInventory
 }

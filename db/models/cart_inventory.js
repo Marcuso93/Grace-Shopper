@@ -58,7 +58,6 @@ async function getDetailedUserCartByUserId({userId}) {
       WHERE cart_inventory."userId"=$1 and cart_inventory."isPurchased"=false      
     `, [userId]);
 
-    console.log('cartItems',cartItems);
     return cartItems
   } catch (error) {
     throw error

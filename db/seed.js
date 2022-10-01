@@ -74,11 +74,10 @@ async function buildTables() {
         price INTEGER NOT NULL,
         "isPurchased" BOOLEAN DEFAULT false,
         "orderId" INTEGER REFERENCES orders(id) DEFAULT null
-        );
-        `)
-          console.log("Finished building tables!");
+      );`)
+    console.log("Finished building tables!");
     // "orderDate" TIMESTAMPTZ DEFAULT NOW(),
-        } catch (error) {
+  } catch (error) {
     console.error("Error building tables!");
     throw error;
   }
@@ -327,14 +326,14 @@ async function createInitialData() {
     
     console.log('Building carts...');
     const cartItems = [
-      { userId: 1, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 1, inventoryId: 2, quantity: 5, price: 10 },
-      { userId: 2, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 2, inventoryId: 2, quantity: 5, price: 10},
-      { userId: 3, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 3, inventoryId: 2, quantity: 5, price: 10 },
-      { userId: 4, inventoryId: 1, quantity: 2, price: 5000 },
-      { userId: 4, inventoryId: 2, quantity: 5, price: 10 }
+      { userId: 1, inventoryId: 1, quantity: 1, price: 5000 },
+      { userId: 1, inventoryId: 2, quantity: 1, price: 10 },
+      { userId: 2, inventoryId: 3, quantity: 1, price: 5000 },
+      { userId: 2, inventoryId: 4, quantity: 1, price: 10},
+      { userId: 3, inventoryId: 5, quantity: 1, price: 5000 },
+      { userId: 3, inventoryId: 6, quantity: 1, price: 10 },
+      { userId: 4, inventoryId: 7, quantity: 1, price: 5000 },
+      { userId: 4, inventoryId: 8, quantity: 1, price: 10 }
     ]
     const inventoryInCarts = await Promise.all(cartItems.map(addItemToCart));
     console.log('Inventory in carts:', inventoryInCarts);

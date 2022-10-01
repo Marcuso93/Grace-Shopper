@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-catch */
 const client = require("../client");
 const { getCartItemsByUserId } = require("./cart_inventory");
+const { subtractItemQuantityFromStock } = require("./inventory");
 const { getAllUsers } = require("./user");
 
 // This will return all orders submitted by any user (for admin)
@@ -42,17 +43,19 @@ async function attachUsersToOrders(orders){
 }
 
 // When user submits order
-// TODO: subtract quantity ordered from stock
 async function createNewOrder({userId, price, orderDate}){
   try {
     const itemsInCart = await getCartItemsByUserId({userId})
 
     if (itemsInCart) {
+      await subtractItemQuantityFromStock(itemsInCart);
+
       const { rows: [order] } = await client.query(`
         INSERT INTO orders("userId", price, "orderDate")
         VALUES($1, $2, $3)
         RETURNING*
       `, [userId, price, orderDate]);
+
   
       await addCartToOrder({orderId: order.id, userId});
   
