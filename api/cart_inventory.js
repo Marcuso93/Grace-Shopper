@@ -85,8 +85,6 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
 // TODO: requireLogin
 cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
   const { userId } = req.params;
-  console.log('userId', userId)
-  console.log('req.user', req.user)
 
   if (req.user.id !== Number(userId)) {
     res.status(403).send({

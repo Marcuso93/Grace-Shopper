@@ -1,20 +1,18 @@
 import React, {useState, useEffect} from "react";
-import { fetchCart, getLocalUser, postNewOrder, removeItemFromCart } from "../utilities/apiCalls";
+import { fetchCart, getLocalUser, patchItemInCart, postNewOrder, removeItemFromCart } from "../utilities/apiCalls";
 import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 
 // TODO:
 // local storage for visitor cart
-// update/remove items from cart
-// Note: when removing item and updating on page can use fn filterOutOldVersion from utils
 
 const Cart = ({user, setUser, token, setToken}) => {
   const [cartItems, setCartItems] = useState([]);
-  const [cartPrice, setCartPrice] = useState(0);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [updatingItemId, setUpdatingItemId] = useState(false);
+  const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
     (async() => {
-      // TODO: fix localStorage
       if (!token) {
         const localToken = checkLocalStorage();
         if (localToken) {
@@ -33,39 +31,59 @@ const Cart = ({user, setUser, token, setToken}) => {
           alert(`Error: ${cart.message}.`)
         }
         setCartItems(cart);
-        setCartPrice(getPrice());
       } else {
         console.log("No user.id")
       }
     })()
   }, [user])
 
-  const handleRemoveItem = async (event, item) => {
-    // TODO: double check correct user to be able to remove from cart?
+  const handleUpdateItem = async (event, item) => {
     event.preventDefault();
     event.stopPropagation();
-    const removedItem = await removeItemFromCart(token, item.cartInventoryId);
+    
+    if (item.userId === user.id) {
+      const updatedCartItem = await patchItemInCart(token, item.cartInventoryId, { quantity })
 
-    if (removedItem.message) {
-      alert(`Error: ${removedItem.message}`);
-    } else if (removedItem.id) {
-      setCartItems(filterOutOldVersion(cartItems, item));
+      if (updatedCartItem.message) {
+        alert(`Error: ${updatedCartItem.message}`);
+      } else if (updatedCartItem.id) {
+        item.quantity = quantity;
+        setCartItems([item, ...filterOutOldVersion(cartItems, item)]);
+        setUpdatingItemId(false);
+      } else {
+        alert(`There was an error updating this item in your cart.`)
+      }
     } else {
-      alert(`There was an error removing this item from your cart.`)
+      alert(`Error: User ${user ? user.username : null} is not allowed to update this cart item.`)
+    }
+  }
+
+  const handleRemoveItem = async (event, item) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (item.userId === user.id) {
+      const removedItem = await removeItemFromCart(token, item.cartInventoryId);
+  
+      if (removedItem.message) {
+        alert(`Error: ${removedItem.message}`);
+      } else if (removedItem.id) {
+        setCartItems(filterOutOldVersion(cartItems, item));
+      } else {
+        alert(`There was an error removing this item from your cart.`)
+      }
+    } else {
+      alert(`Error: User ${user ? user.username : null} is not allowed to remove this cart item.`)
     }
   }
 
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-    // TODO get this to work
-    setCartPrice(getPrice());
-    const orderDate = new Date().getTime();
 
     const newOrder = await postNewOrder(token, { 
       userId: user.id, 
-      price: cartPrice,
-      orderDate
+      price: getPrice(),
+      orderDate: new Date().getTime()
     });
 
     if (newOrder.message) {
@@ -79,22 +97,9 @@ const Cart = ({user, setUser, token, setToken}) => {
   }
 
   const getPrice = () => {
-    // let arr = [];
-    let totalPrice = 0;
-
-    for (let i=0; i < cartItems.length; i++) {
-
-      totalPrice += cartItems[i]['price']
-    }
-    // arr.reduce()
-    // cartItems.forEach(item => {
-    //   console.log('item!!!', item)
-    //   // totalPrice += item.price;
-    //   arr.push(item.price)
-    // })
-    // console.log(arr)
-
-    return totalPrice
+    let arr = [];
+    cartItems.forEach(item => arr.push(item.price))
+    return arr.reduce((total, amount) => total + amount)
   }
  
   return (
@@ -124,7 +129,30 @@ const Cart = ({user, setUser, token, setToken}) => {
                   null
               }
               <p>Price: ${item.price}.00</p>
-              <p>Items in cart: {item.quantity}</p>
+              {
+                (updatingItemId && item.cartInventoryId === updatingItemId) ?
+                <>
+                  <form onSubmit={(event) => {
+                    handleUpdateItem(event, item)
+                  }}>
+                    <p>Quantity?
+                    <input
+                      required
+                      type='number'
+                      min='1'
+                      max={item.stock}
+                      defaultValue={item.quantity}
+                      onChange={(event) => setQuantity(event.target.value)}
+                    />
+                    <button type="submit">Update</button>
+                    <button onSubmit={(event) => {
+                      event.preventDefault();
+                      setUpdatingItemId(false);
+                    }}>Cancel</button></p>
+                  </form>
+                </> :
+                <p>Quantity in Cart: {item.quantity}</p>
+              }
               <p>{item.description}</p>
               {
                 item.isCustomizable ?
@@ -132,6 +160,10 @@ const Cart = ({user, setUser, token, setToken}) => {
                 null
               }
               <p>{(item.stock && item.stock > 0) ? `Items in stock : ${ item.stock }` : 'Out of stock!'}</p>
+              <button onClick={(event) => {
+                event.preventDefault();
+                setUpdatingItemId(item.cartInventoryId);
+              }}>Update</button>
               <button onClick={(event) => {
                 handleRemoveItem(event, item);
               }}>Remove</button>
@@ -142,6 +174,6 @@ const Cart = ({user, setUser, token, setToken}) => {
       }
     </div>
   )
-}
+};
 
 export default Cart

@@ -32,8 +32,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
         } else {
           setOrders(getOrders)
         }
-        
-        // setCartPrice(getPrice());
       } else {
         console.log("No user.id")
       }
