@@ -18,7 +18,7 @@ async function getAllOrders(){
     ordersWithUsers.forEach(order => delete order.userId)
 
     const ordersWithUsersAndItems = await attachCartItemsToOrders(ordersWithUsers);
-
+    console.log('HEYYY', ordersWithUsersAndItems)
     return ordersWithUsersAndItems
   } catch (error) {
     throw error
@@ -35,7 +35,7 @@ async function attachUsersToOrders(orders){
       const userToAdd = allUsers.filter(user => user.id === order.userId);
       order.user = userToAdd[0];
     })
-  
+
     return ordersToReturn
   } catch (error) {
     throw error

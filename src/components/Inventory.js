@@ -14,7 +14,6 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
         setItems(inventory)
       } else {
         const inventory = await fetchInventory();
-        console.log(inventory)
         setItems(inventory);
       }
     })()
@@ -27,7 +26,6 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
   }
 
   const handleDelete = async (e, Id) => {
-    // TODO: how to reactivate item
     e.stopPropagation()
     if (window.confirm("Are you sure you want to deactivate this inventory?")) {
       const deactivatedItem = await deactivateInventory(Id, token);
@@ -43,16 +41,19 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
   }
 
   return <>
-    <h2> Inventory </h2>
     <div className="inventory-container">
+      <h2 className='page-titles'> Inventory </h2>
       {
         (items && items.length > 0) ?
           items.map((item) => {
             let total = 0;
-            item.ratings.forEach(rating => {
-              total += rating.stars
-            })
-            const average = Math.round((total/item.ratings.length) * 10) / 10; 
+            let average = 0;
+            if (item.ratings && item.ratings.length > 0) {
+              item.ratings.forEach(rating => {
+                total += rating.stars
+              })
+              average = Math.round((total/item.ratings.length) * 10) / 10; 
+            }
             return (
               <div
                 key={item.id}
@@ -62,7 +63,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
               }}>
               {
                 (item.image) ?
-                <img src={require(`${item.image}`)} className='inventory-img' /> :
+                <img src={item.image} className='inventory-img' /> :
                 null
               }
               <div className='item-details'>
@@ -73,11 +74,11 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
                   null
                 } 
                 {
-                  (average) ?
+                  (average > 0) ?
                   <p>Rating: {average}/5</p> :
                   <p>No rating available.</p>
                 } 
-                <p>Price: ${item.price}.00</p>
+                <p>Price: ${item.price/100}</p>
                 <div className='item-stars'></div>
                 <p>{item.description}</p>
                 {

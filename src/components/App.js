@@ -70,14 +70,25 @@ const App = () => {
           Inventory
         </NavLink>
     
-        <NavLink to="/cart" className="navlink" activeClassName="active">
-          Cart
-        </NavLink>
 
         {
           (user && token) ?
-          <NavLink to="/orders" className="navlink" activeClassName="active">
-            Orders
+          <>
+            <NavLink to="/cart" className="navlink" activeClassName="active">
+              Cart
+            </NavLink>
+          
+            <NavLink to="/orders" className="navlink" activeClassName="active">
+              Orders
+            </NavLink> 
+          </> :
+          null
+        }
+
+        {
+          (user && token && user.isAdmin) ?
+          <NavLink to="/admin" className="navlink" activeClassName="active">
+            Users
           </NavLink> :
           null
         }
@@ -86,14 +97,6 @@ const App = () => {
           { (user && token) ? 'Account' : 'Login/Register' }
         </NavLink>
         
-        {
-          (user && token && user.isAdmin) ?
-          <NavLink to="/admin" className="navlink" activeClassName="active">
-            Admin
-          </NavLink> :
-          null
-        }
-
         {
           (token && user) ?
           <input
@@ -141,7 +144,8 @@ const App = () => {
           setFeaturedItemReviews={setFeaturedItemReviews}
           items={items}
           setItems={setItems} 
-          featuredItem={featuredItem} />
+          featuredItem={featuredItem} 
+          setFeaturedItem={setFeaturedItem}/>
           {/* TODO: EditReviews? */}
         <CreateInventory 
           user={user} 

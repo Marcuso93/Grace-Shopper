@@ -99,6 +99,7 @@ const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInvento
             type='number'
             name='stock'
             placeholder='Stock Required'
+            min='1'
             value={stock}
             onChange={(event) => setStock(event.target.value)}
           />
