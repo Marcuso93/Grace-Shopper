@@ -504,9 +504,9 @@ label span {
   text-align: left;
   width: 100%;
 }
-/* .item-box:hover{
+.item-box:hover{
   background-color: lightgray;
-} */
+}
 .item-title{
   font-weight: bolder;
   font: 24pt;
