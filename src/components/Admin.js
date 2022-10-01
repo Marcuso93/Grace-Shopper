@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { fetchAllUsers, patchAdminStatus } from "../utilities/apiCalls";
-import { 
+import {
   filterForOtherAdmins,
   filterForCurrentAdmin,
   filterForNonAdmins,
@@ -42,16 +42,15 @@ const Admin = ({ user, token }) => {
       alert("There was an error updating the user's admin status");
     }
   }
-  
-  return (
-    <>
-      <div className="admin-body">
-      <h2> Welcome back Admin </h2>
 
-        <h2> Review Users </h2>
-        <div id="all-users-container">
-          {
-            (allUsersData && allUsersData.length > 0) ?
+  return (
+    <div className="admin-body">
+      {/* <h2 className="page-titles"> Welcome back Admin </h2> */}
+
+      <h2 className="page-titles"> Review Users </h2>
+      <div id="all-users-container">
+        {
+          (allUsersData && allUsersData.length > 0) ?
             allUsersData.map((userData => {
               return (
                 <div key={userData.id} className='single-user'>
@@ -62,24 +61,23 @@ const Admin = ({ user, token }) => {
                   <p>Admin Status: {userData.isAdmin ? 'Yes' : 'No'}</p>
                   {
                     (userData.id !== user.id) ?
-                    <>
-                      <button onClick={(event) => {
-                        handleAdminStatusEdit(event, userData)
-                      }}>{userData.isAdmin ? 'Remove Admin' : 'Make Admin'}</button>
-                      <button>See Orders</button>
-                    </> :
-                    null
+                      <>
+                        <button onClick={(event) => {
+                          handleAdminStatusEdit(event, userData)
+                        }}>{userData.isAdmin ? 'Remove Admin' : 'Make Admin'}</button>
+                        <button>See Orders</button>
+                      </> :
+                      null
                   }
                   {/* TODO: Allow Admin to see user's orders */}
                 </div>
               )
             })) :
             <div>Nothing to show</div>
-          } 
-        </div>
+        }
       </div>
-    </>
+    </div>
   )
 }
-  
-  export default Admin
+
+export default Admin

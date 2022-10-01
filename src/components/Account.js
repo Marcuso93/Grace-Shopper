@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { loginUser, registerUser } from '../utilities/apiCalls';
 import { setTokenInLocalStorage } from '../utilities/utils';
 
+// TODO: update styling
+
 const Account = ({ token, setToken, user, setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

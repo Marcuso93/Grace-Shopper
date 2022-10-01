@@ -17,6 +17,7 @@ const FeaturedInventory = ({
   const [success, setSuccess] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
+  const [average, setAverage] = useState(0);
 
   const history = useHistory()
   const { itemId } = useParams();
@@ -69,8 +70,18 @@ const FeaturedInventory = ({
       }
       const getReviews = await fetchReviewsByItemId(itemId ? itemId : featuredItem.id);
       setFeaturedItemReviews(getReviews);
-      const cartItemCheck = await fetchCart({ userId: user.id, token });
-      setCartItems(cartItemCheck);
+      if (user) {
+        const cartItemCheck = await fetchCart({ userId: user.id, token });
+        setCartItems(cartItemCheck);
+        if (featuredItem.ratings && featuredItem.ratings.length > 0) {
+          let total = 0;
+          featuredItem.ratings.forEach(rating => {
+            total += rating.stars
+          })
+          const average = Math.round((total / featuredItem.ratings.length) * 10) / 10;
+          setAverage(average);
+        }
+      }
     })()
   }, [])
 
@@ -79,13 +90,18 @@ const FeaturedInventory = ({
       <div key={featuredItem.id} className="featuredInventory">
         {
           (featuredItem.image) ?
-            <img src={require(`${featuredItem.image}`)} className='featured-img' /> :
+            <img src={featuredItem.image} className='featured-img' /> :
             null
         }
         <div className="featured-info">
           <h1>{featuredItem.name}</h1>
           <p>Description: {featuredItem.description}</p>
-          <p>Price: ${featuredItem.price}.00</p>
+          <p>Price: ${featuredItem.price/100}</p>
+          {
+            (average > 0) ?
+            <p>Rating: {average}/5</p> :
+            <p>No ratings available for this item.</p>
+          }
           {
             (featuredItem.isCustomizable) ?
               <p>This item is customizable upon request.</p> :
@@ -93,9 +109,14 @@ const FeaturedInventory = ({
           }
           <p>Stock Available: {featuredItem.stock}</p>
           {
+            !user ?
+              <p>You must be logged in to add this item to your cart or review this item.</p> :
+              null
+          }
+          {
             (cartItems.length > 0 && itemAlreadyInCart()) ?
               <p>Note: This item is already in your cart. You can edit the quantity in the cart tab.</p> :
-              (!isAddingToCart && !success) ?
+              (!isAddingToCart && !success && user) ?
                 <>
                   <button onClick={(event => {
                     event.preventDefault();
@@ -114,6 +135,8 @@ const FeaturedInventory = ({
                     name='quantity'
                     style={{marginLeft: '1em', width: '3em'}}
                     placeholder='Quantity'
+                    min='1'
+                    max={featuredItem.stock}
                     value={quantity}
                     onChange={(event) => { setQuantity(event.target.value) }}
                   />
@@ -130,10 +153,14 @@ const FeaturedInventory = ({
               <h3>This item has been added to your cart!</h3>
               : null
           }
-          <button onClick={(event) => {
-            event.preventDefault();
-            setIsCreatingReview(featuredItem);
-          }}> Add Review </button>
+          {
+            user ?
+            <button onClick={(event) => {
+              event.preventDefault();
+              setIsCreatingReview(featuredItem);
+            }}> Add Review </button> :
+            null
+          }
           {
             !featuredItemReviews.length ?
             <div><br/>There are no reviews for this item.</div> :

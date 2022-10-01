@@ -99,8 +99,8 @@ async function createInitialData() {
     const inventoryToCreate = [
       {
         name: "workshop or office desk",
-        image: "./images/table-1.png",
-        price: "150",
+        image: "/images/table-1.png",
+        price: "15000",
         description: "beetle kill wood and epoxy hand crafted to specifications sure to stand the test of time ",
         purchasedCount: "0",
         stock: "10",
@@ -110,8 +110,8 @@ async function createInitialData() {
 
       {
         name: "table",
-        image: "./images/table-3.png",
-        price: "75",
+        image: "/images/table-3.png",
+        price: "7500",
         description: "table made out of beetle kill wood and epoxy",
         purchasedCount: "0",
         stock: "5",
@@ -121,8 +121,8 @@ async function createInitialData() {
 
       {
         name: "table",
-        image: "./images/table-4.png",
-        price: "1500",
+        image: "/images/table-4.png",
+        price: "150000",
         description: "exoxy river table",
         purchasedCount: "0",
         stock: "2",
@@ -132,8 +132,8 @@ async function createInitialData() {
 
       {
         name: "cutting board",
-        image: "./images/cutting-board-1.png",
-        price: "65",
+        image: "/images/cutting-board-1.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -143,8 +143,8 @@ async function createInitialData() {
 
       {
         name: "exquisite cutting board made from pine and maple",
-        image: "./images/cutting-board-2.png",
-        price: "65",
+        image: "/images/cutting-board-2.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -154,8 +154,8 @@ async function createInitialData() {
 
       {
         name: "cutting board",
-        image: "./images/cutting-board-3.png",
-        price: "65",
+        image: "/images/cutting-board-3.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -165,8 +165,8 @@ async function createInitialData() {
 
       {
         name: "cutting board",
-        image: "./images/cutting-board-4.png",
-        price: "65",
+        image: "/images/cutting-board-4.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -176,8 +176,8 @@ async function createInitialData() {
 
       {
         name: "cutting board",
-        image: "./images/cutting-board-5.png",
-        price: "65",
+        image: "/images/cutting-board-5.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -186,9 +186,9 @@ async function createInitialData() {
       },
 
       {
-        name: "cheess board",
-        image: "./images/cutting-board-6.png",
-        price: "45",
+        name: "cheese board",
+        image: "/images/cutting-board-6.png",
+        price: "4500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -198,8 +198,8 @@ async function createInitialData() {
 
       {
         name: "exquisite cutting board with epoxy",
-        image: "./images/cutting-board-7.png",
-        price: "65",
+        image: "/images/cutting-board-7.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "10",
@@ -209,8 +209,8 @@ async function createInitialData() {
 
       {
         name: "cutting board",
-        image: "./images/cutting-board-8.png",
-        price: "65",
+        image: "/images/cutting-board-8.png",
+        price: "6500",
         description: "hard wood cutting board perfect for durablity when cutting meats and vegies with custom laser engraving for custom messages ",
         purchasedCount: "0",
         stock: "5",
@@ -220,8 +220,8 @@ async function createInitialData() {
 
       {
         name: "Mini bar",
-        image: "./images/mini-bar.png",
-        price: "250",
+        image: "/images/mini-bar.png",
+        price: "25000",
         description: "mini bar made out of beetle kill wood",
         purchasedCount: "0",
         stock: "5",
@@ -230,8 +230,8 @@ async function createInitialData() {
       },
       {
         name: "coasters",
-        image: "./images/coasters.png",
-        price: "30",
+        image: "/images/coasters.png",
+        price: "3000",
         description: "coasters with laser engraving",
         purchasedCount: "0",
         stock: "5",
@@ -240,8 +240,8 @@ async function createInitialData() {
       },
       {
         name: "coasters",
-        image: "./images/coasters-2.png",
-        price: "25",
+        image: "/images/coasters-2.png",
+        price: "2500",
         description: "6 piece coaster set with flowing grain",
         purchasedCount: "0",
         stock: "3",
@@ -250,8 +250,8 @@ async function createInitialData() {
       },
       {
         name: "colorado",
-        image: "./images/colorado.png",
-        price: "40",
+        image: "/images/colorado.png",
+        price: "4000",
         description: "colorado wall hanging",
         purchasedCount: "0",
         stock: "7",
@@ -260,8 +260,8 @@ async function createInitialData() {
       },
       {
         name: "hangers",
-        image: "./images/hangers.png",
-        price: "35",
+        image: "/images/hangers.png",
+        price: "3500",
         description: "coat hangers",
         purchasedCount: "0",
         stock: "3",
@@ -270,8 +270,8 @@ async function createInitialData() {
       },
       {
         name: "Ice cream",
-        image: "./images/ice-cream.png",
-        price: "25",
+        image: "/images/ice-cream.png",
+        price: "2500",
         description: "Ice cream wall art with epoxy coloring",
         purchasedCount: "0",
         stock: "5",
@@ -280,8 +280,8 @@ async function createInitialData() {
       },
       {
         name: "tree of life",
-        image: "./images/tree.png",
-        price: "25",
+        image: "/images/tree.png",
+        price: "2500",
         description: "tree of life with epoxy",
         purchasedCount: "0",
         stock: "5",
@@ -290,8 +290,8 @@ async function createInitialData() {
       },
       {
         name: "yoda",
-        image: "./images/yoda.png",
-        price: "30",
+        image: "/images/yoda.png",
+        price: "3000",
         description: "yoda laser engraving, jamming out, wall art",
         purchasedCount: "0",
         stock: "10",
@@ -300,8 +300,8 @@ async function createInitialData() {
       },
       {
         name: "yin-yang",
-        image: "./images/yin-yang.png",
-        price: "40",
+        image: "/images/yin-yang.png",
+        price: "4000",
         description: "yin-yang laser engraving, wall art",
         purchasedCount: "0",
         stock: "40",
@@ -327,25 +327,26 @@ async function createInitialData() {
     console.log('Building carts...');
     const cartItems = [
       { userId: 1, inventoryId: 1, quantity: 1, price: 5000 },
-      { userId: 1, inventoryId: 2, quantity: 1, price: 10 },
-      { userId: 2, inventoryId: 3, quantity: 1, price: 5000 },
-      { userId: 2, inventoryId: 4, quantity: 1, price: 10},
-      { userId: 3, inventoryId: 5, quantity: 1, price: 5000 },
-      { userId: 3, inventoryId: 6, quantity: 1, price: 10 },
-      { userId: 4, inventoryId: 7, quantity: 1, price: 5000 },
-      { userId: 4, inventoryId: 8, quantity: 1, price: 10 }
+      { userId: 1, inventoryId: 2, quantity: 1, price: 5000 },
+      // { userId: 2, inventoryId: 3, quantity: 1, price: 5000 },
+      // { userId: 2, inventoryId: 4, quantity: 1, price: 10},
+      // { userId: 3, inventoryId: 5, quantity: 1, price: 5000 },
+      // { userId: 3, inventoryId: 6, quantity: 1, price: 10 },
+      // { userId: 4, inventoryId: 7, quantity: 1, price: 5000 },
+      // { userId: 4, inventoryId: 8, quantity: 1, price: 10 }
     ]
     const inventoryInCarts = await Promise.all(cartItems.map(addItemToCart));
     console.log('Inventory in carts:', inventoryInCarts);
     console.log('Finished building cart...')
 
     console.log('Building order...');
-    const newOrderDate = new Date().getTime();
-    for (let i=1; i < 5; i++) {
-      const order = await createNewOrder({userId: i, price: 50000, orderDate: newOrderDate})
-      // const order = await createNewOrder({userId: i, price: 50000})
-      console.log('ORDER:', order)
-    }
+    // const newOrderDate = new Date().getTime();
+    // for (let i=1; i < 5; i++) {
+    //   const order = await createNewOrder({userId: i, price: 50000, orderDate: newOrderDate})
+    //   // const order = await createNewOrder({userId: i, price: 50000})
+    //   console.log('ORDER:', order)
+    // }
+    const order = await createNewOrder({userId: 1, price: 10000, orderDate: new Date().getTime()})
     console.log('Finished building order.')
 
     console.log("Finished creating tables!")

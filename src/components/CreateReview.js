@@ -11,7 +11,8 @@ const CreateReview = ({
   setFeaturedItemReviews,
   items,
   setItems,
-  featuredItem 
+  featuredItem,
+  setFeaturedItem 
 }) => {
   const [description, setDescription] = useState('');
   const [stars, setStars] = useState(5);
@@ -36,8 +37,12 @@ const CreateReview = ({
         [newReview]
       )
 
-      featuredItem.ratings.push({ stars });
-      setItems([featuredItem, ...filterOutOldVersion(items, featuredItem)]);
+      let newItem = {
+        ...featuredItem
+      }
+      newItem.ratings.push({ stars });
+      setItems([newItem, ...filterOutOldVersion(items, newItem)]);
+      setFeaturedItem(newItem)
 
       resetState();
     } else {
@@ -54,7 +59,7 @@ const CreateReview = ({
     setDescription('');
     setStars(5);
     setIsCreatingReview(false);
-    }
+  }
   
   return (
     isCreatingReview ?

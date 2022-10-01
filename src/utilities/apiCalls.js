@@ -160,3 +160,8 @@ export const fetchUserOrders = async (token, userId) => {
   const data = await apiCall(`/orders/user/${userId}`, "GET", token)
   return data || []
 }
+
+export const fetchAllOrders = async () => {
+  const data = await apiCall(`/orders`)
+  return data || []
+}
