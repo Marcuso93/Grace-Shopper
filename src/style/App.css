@@ -115,7 +115,7 @@ display: flex;
   transition: all .5s ease-in-out;
 }
 
-@media screen and (min-width: 785px){
+@media screen and (min-width: 1000px){
   .menu-btn__burger::before,
   .menu-btn__burger::after{
     display: none;
@@ -125,7 +125,7 @@ display: flex;
   }
 }
 
-@media screen and (max-width: 785px){
+@media screen and (max-width: 1000px){
   .navbar-away{
     position: absolute;
     top: -800px;
