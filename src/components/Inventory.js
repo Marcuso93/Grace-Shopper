@@ -14,6 +14,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
         setItems(inventory)
       } else {
         const inventory = await fetchInventory();
+        console.log(inventory)
         setItems(inventory);
       }
     })()
@@ -51,7 +52,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
             item.ratings.forEach(rating => {
               total += rating.stars
             })
-            const average = Math.round((total/item.ratings.length) * 10) / 10 ;
+            const average = Math.round((total/item.ratings.length) * 10) / 10; 
             return (
               <div
                 key={item.id}

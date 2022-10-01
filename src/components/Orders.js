@@ -4,8 +4,6 @@ import { checkLocalStorage } from '../utilities/utils';
 
 const Orders = ({ user, setUser, token, setToken }) => {
   const [orders, setOrders] = useState([]);
-  
-  // console.log('user', user)
 
   useEffect(() => {
     (async () => {

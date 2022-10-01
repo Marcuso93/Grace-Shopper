@@ -441,7 +441,7 @@ label span {
   height: fit-content;
 }
 
-.featured-info h1, button, p {
+.featured-info h1, .featured-info button, .featured-info p {
   margin-top: 0;
 }
 

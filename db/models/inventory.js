@@ -117,6 +117,24 @@ async function getInventoryByName(name) {
   }
 }
 
+async function subtractItemQuantityFromStock(items) {
+  try {
+    items.forEach(async (item) => {
+      const inventory = await getInventoryById(item.inventoryId);
+      const stock = inventory.stock - item.quantity;
+
+      await updateInventory({
+        inventoryId: inventory.id,
+        stock
+      });
+    });
+
+    return
+  } catch (error) {
+    throw error
+  }
+}
+
 async function updateInventory({ inventoryId, ...fields }) {
   const setString = Object.keys(fields).map(
     (key, index) => `"${key}" =$${index + 1}`
@@ -161,6 +179,7 @@ module.exports = {
   getInventoryForAdmin,
   getInventoryById,
   getInventoryByName,
+  subtractItemQuantityFromStock,
   updateInventory,
   deactivateInventory
 }
