@@ -34,6 +34,8 @@ const App = () => {
   const [featuredItemReviews, setFeaturedItemReviews] = useState([]);
   const [isCreatingInventory, setIsCreatingInventory] = useState(false);
   const [updatingInventory, setUpdatingInventory] = useState(false);
+  const [menuOpen, setMenuOpen] =useState(false);
+
 
   useEffect(() => {
     (async () => {
@@ -55,7 +57,11 @@ const App = () => {
     <main>
       <div className='title'>
         <div className="logo">Kevin & co Woodworking</div>
-      <nav className='navbar'>
+        <div className={ `hamburger${(menuOpen) ? '-open' : '-closed'}` } onClick={ () => (menuOpen) ? setMenuOpen(false) : setMenuOpen(true) }>
+        <div class="menu-btn__burger"></div>
+          </div>
+      <nav className={ `navbar${(menuOpen) ? '-here' : '-away'}` }>
+        
         <NavLink to="/home" className="navlink" activeClassName="active">
           Home
         </NavLink>
@@ -104,9 +110,8 @@ const App = () => {
           /> :
           null
         }
-
-      </nav>
-      </div>
+        </nav>
+     </div>
 
       <Route exact path={["/home", "/"]}>
         <Home />
