@@ -8,20 +8,20 @@ import {
   filterOutOldVersion,
 } from "../utilities/utils";
 
-// TODO: Show user orders
-
 const Admin = ({ user, token }) => {
   const [allUsersData, setAllUsersData] = useState([])
 
   useEffect(() => {
-    (async () => {
-      const users = await fetchAllUsers()
-      setAllUsersData([
-        ...filterForCurrentAdmin(users, user.id),
-        ...filterForOtherAdmins(users, user.id),
-        ...filterForNonAdmins(users)
-      ])
-    })()
+    if (user && user.isAdmin) {
+      (async () => {
+        const users = await fetchAllUsers()
+        setAllUsersData([
+          ...filterForCurrentAdmin(users, user.id),
+          ...filterForOtherAdmins(users, user.id),
+          ...filterForNonAdmins(users)
+        ])
+      })()
+    }
   }, [])
 
   const handleAdminStatusEdit = async (event, userObj) => {
@@ -43,7 +43,13 @@ const Admin = ({ user, token }) => {
     }
   }
 
-  return (
+  if (!user || !user.isAdmin) {
+    return (
+      <div className="admin-body">
+        <h2 className="page-titles">You are not logged in as an Admin.</h2>
+      </div>
+    )
+  } else return (
     <div className="admin-body">
       {/* <h2 className="page-titles"> Welcome back Admin </h2> */}
 
@@ -61,15 +67,11 @@ const Admin = ({ user, token }) => {
                   <p>Admin Status: {userData.isAdmin ? 'Yes' : 'No'}</p>
                   {
                     (userData.id !== user.id) ?
-                      <>
-                        <button onClick={(event) => {
-                          handleAdminStatusEdit(event, userData)
-                        }}>{userData.isAdmin ? 'Remove Admin' : 'Make Admin'}</button>
-                        <button>See Orders</button>
-                      </> :
+                      <button onClick={(event) => {
+                        handleAdminStatusEdit(event, userData)
+                      }}>{userData.isAdmin ? 'Remove Admin' : 'Make Admin'}</button> :
                       null
                   }
-                  {/* TODO: Allow Admin to see user's orders */}
                 </div>
               )
             })) :

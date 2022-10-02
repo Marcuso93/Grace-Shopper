@@ -15,6 +15,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
       } else {
         const inventory = await fetchInventory();
         setItems(inventory);
+        console.log('inventory', inventory)
       }
     })()
   }, [user])
@@ -67,20 +68,24 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
                 null
               }
               <div className='item-details'>
-                <h3 className='item-title'>{item.name}</h3><br />
+                <h3 className='item-title'>{item.name}</h3>
+                <p style={{marginBottom: '1em'}}>{item.description}</p>
                 {
                   (user && user.isAdmin && !item.isActive) ?
-                  <div>This item is inactive.</div> :
+                  <p className='smaller-details'>This item is inactive.</p> :
                   null
                 } 
                 {
                   (average > 0) ?
-                  <p>Rating: {average}/5</p> :
-                  <p>No rating available.</p>
+                    <p className='smaller-details'>Rating: {average}/5</p> :
+                    <p className='smaller-details'>No rating available.</p>
                 } 
-                <p>Price: ${item.price/100}</p>
-                <div className='item-stars'></div>
-                <p>{item.description}</p>
+                <p className='smaller-details'>Price: ${item.price/100}</p>
+                {
+                  item.stock > 0 ?
+                  <p className='smaller-details'>In stock: {item.stock}</p> :
+                  <p className='smaller-details' style={{color: 'red'}}>Sorry, this item is out of stock!</p>
+                }
                 {
                   (user && user.isAdmin && token) ?
                   <>
