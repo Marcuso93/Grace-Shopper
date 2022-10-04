@@ -18,7 +18,7 @@ async function getAllOrders(){
     ordersWithUsers.forEach(order => delete order.userId)
 
     const ordersWithUsersAndItems = await attachCartItemsToOrders(ordersWithUsers);
-    console.log('HEYYY', ordersWithUsersAndItems)
+
     return ordersWithUsersAndItems
   } catch (error) {
     throw error

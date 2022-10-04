@@ -24,7 +24,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
       if (user) {
         if (user.isAdmin) {
           getOrders = await fetchAllOrders();
-          console.log(getOrders)
         } else if (user.id) {
           getOrders = await fetchUserOrders(token, user.id);
         }

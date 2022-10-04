@@ -10,7 +10,7 @@ const {
   // getStarsByItemId,
   canEditReview,
   updateReview,
-  addReviewToItem,
+  // addReviewToItem,
 } = require('../db')
 
 //api requests below

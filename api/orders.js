@@ -17,7 +17,6 @@ ordersRouter.get('/', requireAdmin, async (req, res, next) => {
 
 // Create/Submit new order
 // POST /api/orders
-// TODO: Subtract quantity from stock of item!!!!
 ordersRouter.post('/', async (req, res, next) => {
   const {userId, price, orderDate} = req.body;
 

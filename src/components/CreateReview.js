@@ -64,9 +64,9 @@ const CreateReview = ({
   return (
     isCreatingReview ?
     <div className='create-review-popup'>
-      <form onSubmit={ handleSubmit }>
+      <form className='large-form' onSubmit={ handleSubmit }>
         <h3>Create a Review</h3>
-        <div>Rating:<input
+        <div>Rating: <input
           required
           type='number'
           min='1'

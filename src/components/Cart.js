@@ -11,8 +11,6 @@ const Cart = ({ user, setUser, token, setToken }) => {
   const [updatingItemId, setUpdatingItemId] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
-  console.log(cartItems)
-
   useEffect(() => {
     (async () => {
       if (!token) {
@@ -179,14 +177,16 @@ const Cart = ({ user, setUser, token, setToken }) => {
                                   max={item.stock}
                                   defaultValue={item.quantity}
                                   onChange={(event) => setQuantity(event.target.value)}
-                                /> </p>
-                              <button className='quantity-form-buttons' type="submit">Update</button>
-                              <button className='quantity-form-buttons' type='button' onClick={(event) => {
-                                handleRemoveItem(event, item);
-                              }}>Remove</button>
-                              <button className='quantity-form-buttons' type="button" onClick={(event) => {
-                                handleCancel(event);
-                              }}>Cancel</button>
+                              /> </p>
+                              <div className="cart-three-buttons">
+                                <button className='quantity-form-buttons' type="submit">Update</button>
+                                <button className='quantity-form-buttons' type='button' onClick={(event) => {
+                                  handleRemoveItem(event, item);
+                                }}>Remove</button>
+                                <button className='quantity-form-buttons' type="button" onClick={(event) => {
+                                  handleCancel(event);
+                                }}>Cancel</button>
+                              </div>
                             </form>
                           </> :
                           <p className="quantity-p">Quantity in Cart: {item.quantity}</p>

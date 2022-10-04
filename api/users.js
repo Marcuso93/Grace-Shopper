@@ -10,7 +10,7 @@ const {
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
-  getCartByUserId, 
+  // getCartByUserId, 
   emailInUseCheck,
   makeUserAdminById,
   removeUserAsAdminById,

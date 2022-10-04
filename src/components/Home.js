@@ -2,7 +2,8 @@ import React from "react";
 
 
 const Home = () => {
-  return <>
+  return <div className="home-container">
+    <h1 className="page-titles">Welcome</h1>
     <div className="container">
 
       <input type="radio" id="i1" name="images" />
@@ -60,11 +61,11 @@ const Home = () => {
       </div>
     </div>
     <div className="statement">
-      <h1>Welcome</h1>
-      <p>As a woodworker and sculpture, designing hand built unique items capturing the beauty of the woodgains and color to create functional and aesthetic works. With the use of CNC machining, laser cutting, and epoxy we are able to customize even further to suit your desires.</p>
+      <p>As woodworkers, we design hand built, unique items that capture the beauty of the woodgrains and color to create functional and aesthetic works.</p> 
+      <p>With the use of CNC machining, laser cutting, and epoxy we are able to customize even further to suit your desires.</p>
       <p>Woodworking is an art where a tree never dies!</p>
     </div>
-  </>
+  </div>
 }
 
 export default Home

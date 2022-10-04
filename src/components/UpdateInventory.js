@@ -45,7 +45,7 @@ const UpdateInventory = ({ user, token, updatingInventory, setUpdatingInventory,
   return (
     (user && user.isAdmin && updatingInventory) ?
     <div className="update-create-inventory">
-      <form onSubmit={(event) => handleSubmit(event, updatingInventory.id) }>
+      <form className='large-forms' onSubmit={(event) => handleSubmit(event, updatingInventory.id) }>
         <h3>Update Inventory</h3>
         <div>Name:</div>
         <input
