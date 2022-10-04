@@ -87,36 +87,45 @@ const FeaturedInventory = ({
 
   return (
     <div className="featured-container">
+      <h2>Item ID: {featuredItem.id}</h2>
       <div key={featuredItem.id} className="featuredInventory">
-        {
-          (featuredItem.image) ?
-            <img src={featuredItem.image} className='featured-img' /> :
-            null
-        }
-        <div className="featured-info">
-          <h1>{featuredItem.name}</h1>
-          <p>Description: {featuredItem.description}</p>
-          <p>Price: ${featuredItem.price/100}</p>
+        <div className="featured-top">
           {
-            (average > 0) ?
-            <p>Rating: {average}/5</p> :
-            <p>No ratings available for this item.</p>
-          }
-          {
-            (featuredItem.isCustomizable) ?
-              <p>This item is customizable upon request.</p> :
+            (featuredItem.image) ?
+              <img src={featuredItem.image} className='featured-img' /> :
               null
           }
-          <p>Stock Available: {featuredItem.stock}</p>
-          {
-            !user ?
-              <p>You must be logged in to add this item to your cart or review this item.</p> :
-              null
-          }
+          <div className="featured-info">
+            <h1>{featuredItem.name}</h1>
+            <p>Description: {featuredItem.description}</p>
+            <p className="smaller-details">Price: ${featuredItem.price / 100}</p>
+            {
+              (average > 0) ?
+                <p className="smaller-details">Rating: {average}/5</p> :
+                <p className="smaller-details">No ratings available for this item.</p>
+            }
+            {
+              (featuredItem.isCustomizable) ?
+                <p className="smaller-details">This item is customizable upon request.</p> :
+                null
+            }
+            {
+              featuredItem.stock > 0 ?
+                <p className="smaller-details" style={{ marginBottom: '1em' }}>Stock Available: {featuredItem.stock}</p> :
+                <p className="smaller-details" style={{ color: 'red', marginBottom: '1em' }}>Sorry, This item is out of stock!</p>
+            }
+            {
+              !user ?
+                <p>You must be logged in to add this item to your cart or review this item.</p> :
+                null
+            }
+          </div>
+        </div>
+        <div className="featured-bottom">
           {
             (cartItems.length > 0 && itemAlreadyInCart()) ?
               <p>Note: This item is already in your cart. You can edit the quantity in the cart tab.</p> :
-              (!isAddingToCart && !success && user) ?
+              (!isAddingToCart && !success && user && featuredItem.stock > 0) ?
                 <>
                   <button onClick={(event => {
                     event.preventDefault();
@@ -133,7 +142,7 @@ const FeaturedInventory = ({
                     required
                     type='number'
                     name='quantity'
-                    style={{marginLeft: '1em', width: '3em'}}
+                    style={{ marginLeft: '1em', width: '3em' }}
                     placeholder='Quantity'
                     min='1'
                     max={featuredItem.stock}
@@ -144,7 +153,7 @@ const FeaturedInventory = ({
                 <button style={{ marginTop: '1em' }} onClick={(event => {
                   event.preventDefault();
                   handleAddToCart();
-                })}>Add to Cart</button> <br />
+                })}>Add to Cart</button>
               </> :
               null
           }
@@ -155,15 +164,15 @@ const FeaturedInventory = ({
           }
           {
             user ?
-            <button onClick={(event) => {
-              event.preventDefault();
-              setIsCreatingReview(featuredItem);
-            }}> Add Review </button> :
-            null
+              <button onClick={(event) => {
+                event.preventDefault();
+                setIsCreatingReview(featuredItem);
+              }}> Add Review </button> :
+              null
           }
           {
             !featuredItemReviews.length ?
-            <div><br/>There are no reviews for this item.</div> :
+              <p><br />There are no reviews for this item.</p> :
               !seeReviews ?
                 <button className='login-register-button' onClick={(event) => {
                   event.preventDefault();
@@ -175,14 +184,14 @@ const FeaturedInventory = ({
                 }}>Hide Reviews...</button>
           }
         </div>
-        <button onClick={handleClose}> Back </button> <br/>
-      </div>
-      <div>
-        {
-          (seeReviews) ?
-            <FeaturedInventoryReviews featuredItemReviews={featuredItemReviews} /> :
-            null
-        }
+        <div>
+          {
+            (seeReviews) ?
+              <FeaturedInventoryReviews featuredItemReviews={featuredItemReviews} /> :
+              null
+          }
+        </div>
+        <button id="back-button" onClick={handleClose}>Go Back</button>
       </div>
     </div>
   )

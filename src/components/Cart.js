@@ -11,6 +11,8 @@ const Cart = ({ user, setUser, token, setToken }) => {
   const [updatingItemId, setUpdatingItemId] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
+  console.log(cartItems)
+
   useEffect(() => {
     (async () => {
       if (!token) {
@@ -36,6 +38,12 @@ const Cart = ({ user, setUser, token, setToken }) => {
       }
     })()
   }, [user])
+
+  const setUpForUpdate = (event, item) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setUpdatingItemId(item.cartInventoryId);
+  }
 
   const handleUpdateItem = async (event, item) => {
     event.preventDefault();
@@ -96,6 +104,12 @@ const Cart = ({ user, setUser, token, setToken }) => {
     }
   }
 
+  const handleCancel = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setUpdatingItemId(false);
+  }
+
   const getPrice = () => {
     let arr = [];
     cartItems.forEach(item => arr.push(item.price))
@@ -107,15 +121,20 @@ const Cart = ({ user, setUser, token, setToken }) => {
     return (
       <div className="cart-container">
         <h2 className="page-titles"> Cart </h2>
-        <div>
-          {
-            orderSuccess ?
-              <div>Your order was successfully placed. See the orders tab to review your order(s).</div> :
-              null
-          }
+        <div className="cart-form">
           {
             ((cartItems && cartItems.name === 'EmptyCart') || (cartItems && cartItems.length < 1)) ?
-              <div className="cart-item" style={{textAlign: 'center'}}>Your cart is empty!</div> :
+              <div style={{ textAlign: 'center' }}>
+                {
+                  orderSuccess ?
+                    <>
+                      <p style={{marginTop: '1em'}}>Your order was successfully placed.</p>
+                      <p>See the orders tab to review your order(s).</p>
+                    </> :
+                    null
+                }
+                <p style={{marginTop: '1em'}}>Your cart is empty!</p>
+              </div> :
               <button onClick={(event) => {
                 handlePlaceOrder(event);
               }}>Place Order</button>
@@ -123,23 +142,36 @@ const Cart = ({ user, setUser, token, setToken }) => {
           {
             (cartItems && cartItems.length > 0) ?
               cartItems.map(item => {
-                return (
+                return (<>
                   <div className="cart-item" key={item.cartInventoryId}>
-                    {
-                      (item.image) ?
-                        <img src={item.image} className='inventory-img' /> :
-                        null
-                    }
-                    <div className="cart-info">
-                      <h2>{item.name}</h2>
-                      <p>Price: ${item.price/100}</p>
+                    <div className="cart-item-top">
+                      {
+                        (item.image) ?
+                          <img src={item.image} className='inventory-img' /> :
+                          null
+                      }
+                      <div className="cart-info">
+                        <h2>{item.name}</h2>
+                        <p>{item.description}</p>
+                        <p className="smaller-details">Price: ${item.price / 100}</p>
+                        <p className="smaller-details">{(item.stock && item.stock > 0) ? `Items in stock : ${item.stock}` : 'Out of stock!'}</p>
+                        {
+                          item.isCustomizable ?
+                            <p className="smaller-details">This item is customizable upon request.</p> :
+                            null
+                        }
+
+                      </div>
+                    </div>
+                    <div className="cart-item-bottom">
+
                       {
                         (updatingItemId && item.cartInventoryId === updatingItemId) ?
                           <>
                             <form onSubmit={(event) => {
                               handleUpdateItem(event, item)
                             }}>
-                              <p>Quantity?
+                              <p className='quantity-p'>Quantity?
                                 <input
                                   required
                                   type='number'
@@ -147,32 +179,33 @@ const Cart = ({ user, setUser, token, setToken }) => {
                                   max={item.stock}
                                   defaultValue={item.quantity}
                                   onChange={(event) => setQuantity(event.target.value)}
-                                />
-                                <button type="submit">Update</button>
-                                <button onSubmit={(event) => {
-                                  event.preventDefault();
-                                  setUpdatingItemId(false);
-                                }}>Cancel</button></p>
+                                /> </p>
+                              <button className='quantity-form-buttons' type="submit">Update</button>
+                              <button className='quantity-form-buttons' type='button' onClick={(event) => {
+                                handleRemoveItem(event, item);
+                              }}>Remove</button>
+                              <button className='quantity-form-buttons' type="button" onClick={(event) => {
+                                handleCancel(event);
+                              }}>Cancel</button>
                             </form>
                           </> :
-                          <p>Quantity in Cart: {item.quantity}</p>
+                          <p className="quantity-p">Quantity in Cart: {item.quantity}</p>
                       }
-                      <p>{item.description}</p>
                       {
-                        item.isCustomizable ?
-                          <p>This item is customizable upon request.</p> :
+                        !updatingItemId ?
+                          <div className="cart-info-buttons">
+                            <button onClick={(event) => {
+                              setUpForUpdate(event, item);
+                            }}>Update</button>
+                            <button onClick={(event) => {
+                              handleRemoveItem(event, item);
+                            }}>Remove</button>
+                          </div> :
                           null
                       }
-                      <p>{(item.stock && item.stock > 0) ? `Items in stock : ${item.stock}` : 'Out of stock!'}</p>
-                      <button onClick={(event) => {
-                        event.preventDefault();
-                        setUpdatingItemId(item.cartInventoryId);
-                      }}>Update</button>
-                      <button onClick={(event) => {
-                        handleRemoveItem(event, item);
-                      }}>Remove</button>
                     </div>
                   </div>
+                </>
                 )
               }) :
               null

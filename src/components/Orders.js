@@ -54,9 +54,9 @@ const Orders = ({ user, setUser, token, setToken }) => {
                 <div key={order.id} className="admin-indiv-orders">
                   <div className='order-info'>
                     <h3>Order ID: {order.id}</h3>
-                    <div>User name: {order.user.username}</div>
-                    <div>User address: {order.user.address}</div>
-                    <div>User email: {order.user.email}</div>
+                    <div>Username: {order.user.username}</div><br/>
+                    <div>Address: {order.user.address}</div>
+                    <div>Email: {order.user.email}</div><br/>
                     <div>Order Date: {date.toLocaleString()}</div>
                     <div>Order Price: ${order.price / 100}</div>
                   </div>
@@ -93,8 +93,8 @@ const Orders = ({ user, setUser, token, setToken }) => {
     )
   } else {
     return (
-      (token) ?
-        <div className='inventory-container'>
+      (user && token) ?
+        <div className='user-order-container'>
           <div className='page-titles'>Orders History</div>
           {
             (orders && orders.length > 0) ?
@@ -102,7 +102,7 @@ const Orders = ({ user, setUser, token, setToken }) => {
                 const date = new Date(Number(order.orderDate));
                 return (
                   <div key={order.id} className="orders">
-                    <div>Order ID: {order.id}</div>
+                    <h3>Order ID: {order.id}</h3>
                     <div>Order Date: {date.toLocaleString()}</div>
                     <div>Price: ${order.price / 100}</div>
                     <div>
@@ -110,17 +110,18 @@ const Orders = ({ user, setUser, token, setToken }) => {
                         (order.items && order.items.length > 0) ?
                           order.items.map((item) => {
                             return (
-                              <div key={item.cartInventoryId} className="inventory-container">
-                                <div className='item-box'>
+                              <div key={item.cartInventoryId} className="">
+                                <div className='order-item-box'>
                                   {
                                     (item.image) ?
                                       <img src={item.image} className='inventory-img' /> :
                                       null
                                   }
-                                  <div className='order-box'>
+                                  <div className='order-details'>
                                     <div className='item-title'>{item.name}</div>
-                                    <div>Price: ${item.price / 100}</div>
-                                    <div>Description: {item.description}</div>
+                                    <p>Price: ${item.price / 100}</p>
+                                    <p>Quantity: {item.quantity}</p>
+                                    <p>Description: {item.description}</p>
                                   </div>
                                 </div>
                               </div>
@@ -135,7 +136,10 @@ const Orders = ({ user, setUser, token, setToken }) => {
               null
           }
         </div> :
-        null
+        <div className='inventory-container'>
+          <div className='page-titles'>Orders History</div>
+          <div className='orders'>You must be logged in to view your orders.</div>
+        </div>
     )
   }
 }
