@@ -15,9 +15,9 @@ const Account = ({ token, setToken, user, setUser }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log('WHAT THE FUCK')
+
     const login = await loginUser(username, password);
-    console.log('login', login)
+
     if (login.error) {
       alert(`Error: ${login.message} If you do not have an account, please register.`);
     } else if (login.user && login.token) {
