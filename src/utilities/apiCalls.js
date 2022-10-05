@@ -1,9 +1,11 @@
-// const apiUrl = 'localhost:4000/api'
+// const apiUrl = 'https://localhost:4000/api'
+const apiUrl = 'https://vast-everglades-61298.herokuapp.com/api'
+
 
 export const apiCall = async (url, method = 'GET', token, body) => {
   let data = false;
   try {
-    const response = await fetch('https://localhost:4000/api' + url, setToken(getFetchOptions(method, body), token));
+    const response = await fetch(apiUrl + url, setToken(getFetchOptions(method, body), token));
     data = await response.json();
 
     if (data.error) {
