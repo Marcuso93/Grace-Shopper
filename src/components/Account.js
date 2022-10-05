@@ -60,22 +60,24 @@ const Account = ({ token, setToken, user, setUser }) => {
   }
 
   return (
-    <div className='login'>
-      <h2 className='account'>Account</h2>
+    <div className='cart-container'>
+      <h2 className='page-titles'>{(user && token) ? 'User Profile' : 'Account'}</h2>
       {
         (user && token) ?
-          <>
-            <h2>User Profile</h2>
-            <p>You are logged in as {user.username}.</p>
-          </> :
+          <div className='cart-form'>
+            <p style={{marginTop: '1em'}}>Welcome back!</p>
+            <p>Username: {user.username}</p>
+            <p>Full Name: {user.fullname}</p>
+            <p>Email: {user.email}</p>
+            <p>Address: {user.address}</p>
+          </div> :
           <form
-            className='login-form'
-            onSubmit={ (event) => {
+            className='large-forms'
+            onSubmit={(event) => {
               isRegistered ? handleLogin(event) : handleRegistration(event)
-          }}>
+            }}>
             <h3>{isRegistered ? "Login" : "Register"}</h3>
             <div>
-              <div> Username </div>
               <input
                 required
                 type='text'
@@ -86,7 +88,6 @@ const Account = ({ token, setToken, user, setUser }) => {
               />
             </div>
             <div>
-              <div> Password </div>
               <input
                 required
                 type='password'
@@ -98,62 +99,57 @@ const Account = ({ token, setToken, user, setUser }) => {
             </div>
             {
               !isRegistered ?
-              <>
-                <div>
-                  <div>Confirm Password</div>
-                  <input
-                    type='password'
-                    name='password-confirmation'
-                    placeholder='Password'
-                    value={passwordConfirmation}
-                    onChange={(event) => { setPasswordConfirmation(event.target.value) }}
-                  />
-                  {/* TODO: onscreen error messaging */}
-                </div>
-                <div>
-                  <div> Full Name </div>
-                  <input
-                    required
-                    type='text'
-                    name='fullname'
-                    placeholder='Full Name'
-                    value={fullname}
-                    onChange={(event) => { setFullName(event.target.value) }}
-                  />
-                </div>
-                <div>
-                  <div> Address </div>
-                  <input
-                    required
-                    type='text'
-                    name='address'
-                    placeholder='Address'
-                    value={address}
-                    onChange={(event) => { setAddress(event.target.value) }}
-                  />
-                </div>
-                <div>
-                  <div> Email </div>
-                  <input
-                    required
-                    type='text'
-                    name='email'
-                    placeholder='Email'
-                    value={email}
-                    onChange={(event) => { setEmail(event.target.value) }}
-                  />
-                </div>
-              </> :
-              null
+                <>
+                  <div>
+                    <input
+                      type='password'
+                      name='password-confirmation'
+                      placeholder='Confirm Password'
+                      value={passwordConfirmation}
+                      onChange={(event) => { setPasswordConfirmation(event.target.value) }}
+                    />
+                    {/* TODO: onscreen error messaging */}
+                  </div>
+                  <div>
+                    <input
+                      required
+                      type='text'
+                      name='fullname'
+                      placeholder='Full Name'
+                      value={fullname}
+                      onChange={(event) => { setFullName(event.target.value) }}
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      required
+                      name='address'
+                      placeholder='Address'
+                      value={address}
+                      onChange={(event) => { setAddress(event.target.value) }}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      required
+                      type='text'
+                      name='email'
+                      placeholder='Email'
+                      value={email}
+                      onChange={(event) => { setEmail(event.target.value) }}
+                    />
+                  </div>
+                </> :
+                null
             }
             <button type='submit'>{isRegistered ? 'Login' : 'Register'}</button>
-            <br/>
+            <br />
             <button className='login-register-button' onClick={(event) => {
               event.preventDefault();
               isRegistered ?
-              setIsRegistered(false) :
-              setIsRegistered(true); 
-            }}>{ isRegistered ? 'Need to register a new user?' : 'Already have an account?' }</button>
+                setIsRegistered(false) :
+                setIsRegistered(true);
+            }}>{isRegistered ? 'Need to register a new user?' : 'Already have an account?'}</button>
           </form>
       }
     </div>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { postInventory } from '../utilities/apiCalls';
 
-const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInventory, items, setItems}) => {
+const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInventory, items, setItems, updatingInventory}) => {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');   // image path
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState(0);
-  const [stock, setStock] = useState(0);
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
   const [isCustomizable, setIsCustomizable] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -45,17 +45,17 @@ const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInvento
     setName('');
     setImage('');
     setDescription('');
-    setPrice(0);
-    setStock(0);
+    setPrice('');
+    setStock('');
     setIsCustomizable(false);
     setIsActive(true);
   }
 
-  if (user && user.isAdmin) {
+  if (user && user.isAdmin && !updatingInventory) {
     return (
       (isCreatingInventory) ?
       <div className="update-create-inventory">
-        <form onSubmit={ handleSubmit }>
+        <form className='large-forms' onSubmit={ handleSubmit }>
           <h3>Create New Inventory</h3>
           <div>Name:</div>
           <input
@@ -87,11 +87,11 @@ const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInvento
           <div>Price:</div>
           <input
             required
-            type='text'
+            type='number'
             name='price'
             placeholder='Price Required'
             value={price}
-            onChange={(event) => setPrice(Number(event.target.value))}
+            onChange={(event) => setPrice(event.target.value)}
           />
           <div>Stock:</div>
           <input
@@ -102,7 +102,7 @@ const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInvento
             min='1'
             value={stock}
             onChange={(event) => setStock(event.target.value)}
-          />
+          /><br/>
           <label>This item is customizable: 
             <input
               type='checkbox'

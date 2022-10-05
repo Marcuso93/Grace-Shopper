@@ -71,7 +71,6 @@ const App = () => {
             Inventory
           </NavLink>
 
-
           {
             (user && token) ?
               <>
@@ -135,7 +134,8 @@ const App = () => {
           items={items}
           setItems={setItems}
           setFeaturedItem={setFeaturedItem}
-          setUpdatingInventory={setUpdatingInventory} />
+          setUpdatingInventory={setUpdatingInventory} 
+          isCreatingInventory={isCreatingInventory} />
         <CreateReview
           user={user}
           token={token}
@@ -154,7 +154,8 @@ const App = () => {
           isCreatingInventory={isCreatingInventory}
           setIsCreatingInventory={setIsCreatingInventory}
           items={items}
-          setItems={setItems} />
+          setItems={setItems} 
+          updatingInventory={updatingInventory}/>
         <UpdateInventory
           user={user}
           token={token}

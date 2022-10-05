@@ -98,7 +98,7 @@ const FeaturedInventory = ({
           <div className="featured-info">
             <h1>{featuredItem.name}</h1>
             <p>Description: {featuredItem.description}</p>
-            <p className="smaller-details">Price: ${featuredItem.price / 100}</p>
+            <p className="smaller-details" style={{marginTop: '1em'}}>Price: ${featuredItem.price / 100}</p>
             {
               (average > 0) ?
                 <p className="smaller-details">Rating: {average}/5</p> :
