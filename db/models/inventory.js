@@ -130,6 +130,25 @@ async function subtractItemQuantityFromStock(items) {
   }
 }
 
+
+async function addToInventoryPurchasedCount(items) {
+  try {
+    items.forEach(async (item) => {
+      const inventory = await getInventoryById(item.inventoryId);
+      const purchasedCount = inventory.purchasedCount + item.quantity;
+      
+      await updateInventory({
+        inventoryId: inventory.id,
+        purchasedCount
+      })
+    })
+
+    return
+  } catch (error) {
+    throw error
+  }
+}
+
 async function updateInventory({ inventoryId, ...fields }) {
   const setString = Object.keys(fields).map(
     (key, index) => `"${key}" =$${index + 1}`
@@ -176,5 +195,6 @@ module.exports = {
   getInventoryByName,
   subtractItemQuantityFromStock,
   updateInventory,
-  deactivateInventory
+  deactivateInventory,
+  addToInventoryPurchasedCount
 }

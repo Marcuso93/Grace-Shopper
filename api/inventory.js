@@ -12,7 +12,6 @@ const {
   getReviewsByItemId,
 } = require('../db')
 
-//api requests below
 inventoryRouter.get('/', async (req, res, next) => {  
   try {
     const getAllInventory = await getInventory();

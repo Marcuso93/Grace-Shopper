@@ -1,23 +1,20 @@
 const express = require('express');
 const usersRouter = express.Router();
-// const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
-const { requireLogin, requireAdmin } = require('./utils');
+const { requireAdmin } = require('./utils');
 const {
   createUser,
   getUser,
   getReviewsByUserId,
   getUserByUsername,
   getAllUsers,
-  // getCartByUserId, 
   emailInUseCheck,
   makeUserAdminById,
   removeUserAsAdminById,
   getDetailedUserCartByUserId
 } = require('../db');
 
-//api calls below
 usersRouter.get('/', requireAdmin, async (req, res, next) => {
   try {
     const allUsers = await getAllUsers();
@@ -159,7 +156,6 @@ usersRouter.get('/:userId/reviews', async (req, res, next) => {
 });
 
 // get my cart
-// TODO: we seem to be using endpoint in cartInventoryRouter instead
 usersRouter.get('/:userId/cart', async (req, res, next) => {
   const { userId } = req.params;
 

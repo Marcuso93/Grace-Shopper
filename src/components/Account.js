@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { loginUser, registerUser } from '../utilities/apiCalls';
 import { setTokenInLocalStorage } from '../utilities/utils';
 
-// TODO: update styling
 
 const Account = ({ token, setToken, user, setUser }) => {
   const [username, setUsername] = useState('');
@@ -16,7 +15,9 @@ const Account = ({ token, setToken, user, setUser }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    console.log('WHAT THE FUCK')
     const login = await loginUser(username, password);
+    console.log('login', login)
     if (login.error) {
       alert(`Error: ${login.message} If you do not have an account, please register.`);
     } else if (login.user && login.token) {
@@ -96,6 +97,11 @@ const Account = ({ token, setToken, user, setUser }) => {
                 value={password}
                 onChange={(event) => { setPassword(event.target.value) }}
               />
+              {
+                (password && password.length < 8) ?
+                <p style={{fontSize: '10pt', color: 'red'}}>Password must be at least 8 characters.</p> :
+                null
+              }
             </div>
             {
               !isRegistered ?
@@ -108,8 +114,12 @@ const Account = ({ token, setToken, user, setUser }) => {
                       value={passwordConfirmation}
                       onChange={(event) => { setPasswordConfirmation(event.target.value) }}
                     />
-                    {/* TODO: onscreen error messaging */}
                   </div>
+                  {
+                    (password && passwordConfirmation && (password != passwordConfirmation)) ?
+                    <p style={{fontSize: '10pt', color: 'red'}}>Passwords don't match!</p> :
+                    null
+                  }
                   <div>
                     <input
                       required

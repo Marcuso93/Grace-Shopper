@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 const client = require("../client");
 const { getCartItemsByUserId } = require("./cart_inventory");
-const { subtractItemQuantityFromStock } = require("./inventory");
+const { subtractItemQuantityFromStock, addToInventoryPurchasedCount } = require("./inventory");
 const { getAllUsers } = require("./user");
 
 // This will return all orders submitted by any user (for admin)
@@ -50,13 +50,14 @@ async function createNewOrder({userId, price, orderDate}){
     if (itemsInCart) {
       await subtractItemQuantityFromStock(itemsInCart);
 
+      await addToInventoryPurchasedCount(itemsInCart);
+
       const { rows: [order] } = await client.query(`
         INSERT INTO orders("userId", price, "orderDate")
         VALUES($1, $2, $3)
         RETURNING*
       `, [userId, price, orderDate]);
 
-  
       await addCartToOrder({orderId: order.id, userId});
   
       const orderWithCartItemsAttached = await attachCartItemsToOrders([order]);
@@ -131,7 +132,6 @@ async function getOrderHistoryByUserId(userId) {
   }
 }
 
-// TODO: I created these in case we decide we want to be able to use them
 // Updates order information-- NOT cart_inventory items
 // Can be used to 'delete' order by setting inactivated to true
 async function updateSubmittedOrder({ orderId, ...fields }) {
@@ -199,7 +199,7 @@ module.exports = {
   addCartToOrder,
   attachCartItemsToOrders,
   getOrderHistoryByUserId,
-  // updateSubmittedOrder,
-  // updateSingleItemInSubmittedOrder,
-  // removeSingleItemFromSubmittedOrder
+  updateSubmittedOrder,
+  updateSingleItemInSubmittedOrder,
+  removeSingleItemFromSubmittedOrder
 }

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { postInventory } from '../utilities/apiCalls';
 
-const CreateInventory = ({user, token, isCreatingInventory, setIsCreatingInventory, items, setItems, updatingInventory}) => {
+const CreateInventory = ({
+  user, 
+  token, 
+  isCreatingInventory, 
+  setIsCreatingInventory, 
+  items, 
+  setItems, 
+  updatingInventory
+}) => {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');   // image path
   const [description, setDescription] = useState('');

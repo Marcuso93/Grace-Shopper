@@ -31,12 +31,6 @@ apiRouter.use(async (req, res, next) => {
   }
 });
 
-// apiRouter.get('/', (req, res, next) => {
-//   res.send({
-//     message: 'API is under construction!',
-//   });
-// });
-
 apiRouter.get('/health', (req, res, next) => {
   res.send({
     healthy: true,
@@ -54,10 +48,6 @@ apiRouter.use('/inventory', inventoryRouter);
 // ROUTER: /api/reviews
 const reviewsRouter = require('./reviews');
 apiRouter.use('/reviews', reviewsRouter);
-
-// ROUTER: /api/cart
-const cartsRouter = require('./cart');
-apiRouter.use('/cart', cartsRouter);
 
 // ROUTER: /api/cart_inventory
 const cartInventoryRouter = require('./cart_inventory');

@@ -7,7 +7,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
 
   useEffect(() => {
     (async () => {
-      // TODO: fix localStorage
       if (!token) {
         const localToken = checkLocalStorage();
         if (localToken) {
@@ -69,7 +68,6 @@ const Orders = ({ user, setUser, token, setToken }) => {
                               order.items.map((item) => {
                                 return (
                                   <div className='items-info' key={item.id}>
-                                    {/* inventory id, name, price, quantity */}
                                     <h3>{item.name}</h3>
                                     <div>Inventory Id: {item.inventoryId}</div>
                                     <div>Price: ${item.price / 100}</div>
@@ -132,7 +130,9 @@ const Orders = ({ user, setUser, token, setToken }) => {
                   </div>
                 )
               }) :
-              null
+              <div className='orders'>
+                <div>No orders to display.</div>
+              </div>
           }
         </div> :
         <div className='inventory-container'>

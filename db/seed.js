@@ -1,13 +1,9 @@
 const {
-  //client,
-  // declare your model imports here
   createUser,
   createInventory,
   createReview,
   createNewOrder,
   addItemToCart,
-  //createReviews
-  // for example, User
 } = require('./');
 
 const client = require("./client")
@@ -76,7 +72,6 @@ async function buildTables() {
         "orderId" INTEGER REFERENCES orders(id) DEFAULT null
       );`)
     console.log("Finished building tables!");
-    // "orderDate" TIMESTAMPTZ DEFAULT NOW(),
   } catch (error) {
     console.error("Error building tables!");
     throw error;
@@ -107,7 +102,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "false"
       },
-
       {
         name: "table",
         image: "/images/table-3.png",
@@ -118,7 +112,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "false"
       },
-
       {
         name: "table",
         image: "/images/table-4.png",
@@ -129,7 +122,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "false"
       },
-
       {
         name: "cutting board",
         image: "/images/cutting-board-1.png",
@@ -140,7 +132,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "exquisite cutting board made from pine and maple",
         image: "/images/cutting-board-2.png",
@@ -151,7 +142,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "cutting board",
         image: "/images/cutting-board-3.png",
@@ -162,7 +152,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "cutting board",
         image: "/images/cutting-board-4.png",
@@ -173,7 +162,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "cutting board",
         image: "/images/cutting-board-5.png",
@@ -184,7 +172,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "cheese board",
         image: "/images/cutting-board-6.png",
@@ -195,7 +182,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "exquisite cutting board with epoxy",
         image: "/images/cutting-board-7.png",
@@ -206,7 +192,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "false"
       },
-
       {
         name: "cutting board",
         image: "/images/cutting-board-8.png",
@@ -217,7 +202,6 @@ async function createInitialData() {
         isActive: "true",
         isCustomizable: "true"
       },
-
       {
         name: "Mini bar",
         image: "/images/mini-bar.png",
@@ -328,25 +312,15 @@ async function createInitialData() {
     const cartItems = [
       { userId: 1, inventoryId: 1, quantity: 1, price: 5000 },
       { userId: 1, inventoryId: 2, quantity: 1, price: 5000 },
-      // { userId: 2, inventoryId: 3, quantity: 1, price: 5000 },
-      // { userId: 2, inventoryId: 4, quantity: 1, price: 10},
-      // { userId: 3, inventoryId: 5, quantity: 1, price: 5000 },
-      // { userId: 3, inventoryId: 6, quantity: 1, price: 10 },
-      // { userId: 4, inventoryId: 7, quantity: 1, price: 5000 },
-      // { userId: 4, inventoryId: 8, quantity: 1, price: 10 }
     ]
     const inventoryInCarts = await Promise.all(cartItems.map(addItemToCart));
     console.log('Inventory in carts:', inventoryInCarts);
     console.log('Finished building cart...')
 
     console.log('Building order...');
-    // const newOrderDate = new Date().getTime();
-    // for (let i=1; i < 5; i++) {
-    //   const order = await createNewOrder({userId: i, price: 50000, orderDate: newOrderDate})
-    //   // const order = await createNewOrder({userId: i, price: 50000})
-    //   console.log('ORDER:', order)
-    // }
+
     const order = await createNewOrder({userId: 1, price: 10000, orderDate: new Date().getTime()})
+    console.log('Order:', order);
     console.log('Finished building order.')
 
     console.log("Finished creating tables!")
@@ -362,18 +336,3 @@ buildTables()
   .then(createInitialData)
   .catch(console.error)
   .finally(() => client.end());
-
-// CREATE TABLE carts(
-//   id SERIAL PRIMARY KEY,
-//   "userId" INTEGER REFERENCES users(id),
-//   "inventoryId" INTEGER REFERENCES inventory(id),
-//   quantity INTEGER,
-//   price INTEGER,
-//   "isPurchased" BOOLEAN DEFAULT false
-// );
-// CREATE TABLE item_reviews(
-//   id SERIAL PRIMARY KEY,
-//   "itemId" INTEGER REFERENCES inventory(id),
-//   "reviewId" INTEGER REFERENCES reviews(id),
-//   "isActive" BOOLEAN DEFAULT true
-// );

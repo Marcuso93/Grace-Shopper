@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { fetchCart, getLocalUser, patchItemInCart, postNewOrder, removeItemFromCart } from "../utilities/apiCalls";
+import { 
+  fetchCart, 
+  getLocalUser, 
+  patchItemInCart, 
+  postNewOrder, 
+  removeItemFromCart 
+} from "../utilities/apiCalls";
 import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
-
-// TODO:
-// local storage for visitor cart
 
 const Cart = ({ user, setUser, token, setToken }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -115,7 +118,6 @@ const Cart = ({ user, setUser, token, setToken }) => {
   }
 
   if (user) {
-
     return (
       <div className="cart-container">
         <h2 className="page-titles"> Cart </h2>
@@ -158,11 +160,9 @@ const Cart = ({ user, setUser, token, setToken }) => {
                             <p className="smaller-details">This item is customizable upon request.</p> :
                             null
                         }
-
                       </div>
                     </div>
                     <div className="cart-item-bottom">
-
                       {
                         (updatingItemId && item.cartInventoryId === updatingItemId) ?
                           <>

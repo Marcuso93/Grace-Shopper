@@ -82,8 +82,7 @@ cartInventoryRouter.delete('/:cartInventoryId', requireLogin, async(req, res, ne
 
 // GET /api/cart_inventory/user/:userId
 // Get users cart by user ID
-// TODO: requireLogin
-cartInventoryRouter.get('/user/:userId', async (req, res, next) => {
+cartInventoryRouter.get('/user/:userId', requireLogin, async (req, res, next) => {
   const { userId } = req.params;
 
   if (req.user.id !== Number(userId)) {

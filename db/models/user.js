@@ -32,7 +32,6 @@ async function makeUserAdminById({id}) {
       RETURNING users.*;
     `, [id])
 
-    // return await getUserById(id)
     return user
   } catch (error) {
     throw error
@@ -48,7 +47,6 @@ async function removeUserAsAdminById({id}) {
       RETURNING users.*;
     `, [id])
 
-    // return await getUserById(id)
     return user
   } catch (error) {
     throw error
@@ -93,7 +91,7 @@ async function getUserById(userId) {
 
 // NOTE: This function needs to give login access to the user password.
 // If you need to use it somewhere else, make sure to delete user.password 
-// after using this function
+// AFTER using this function
 async function getUserByUsername(username) {
   try {
     const { rows: [user] } = await client.query(`
@@ -145,9 +143,7 @@ async function emailInUseCheck(emailInput) {
   }
 }
 
-
 module.exports = {
-  // add your database adapter fns here
   createUser,
   getUser,
   getUserById,

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import ReactDom from 'react-dom';
 import { NavLink, Route } from 'react-router-dom';
-// getAPIHealth is defined in our axios-services directory index.js
-// you can think of that directory as a collection of api adapters
-// where each adapter fetches specific info from our express server's /api route
-// import { getAPIHealth } from '../axios-services';
 import '../style/App.css';
 import {
   Home,
@@ -24,7 +19,6 @@ import { checkLocalStorage } from '../utilities/utils';
 
 
 const App = () => {
-  // const [APIHealth, setAPIHealth] = useState('');
   const [user, setUser] = useState(false);
   const [token, setToken] = useState('');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -35,7 +29,6 @@ const App = () => {
   const [isCreatingInventory, setIsCreatingInventory] = useState(false);
   const [updatingInventory, setUpdatingInventory] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
 
   useEffect(() => {
     (async () => {
@@ -55,13 +48,24 @@ const App = () => {
   }, []);
 
   return (
-    <main>
+    <main  onClick={() => { 
+      if (menuOpen) {
+      setMenuOpen(false)
+    }}}>
       <div className='title'>
         <div className="logo">Kevin & co Woodworking</div>
-        <div className={`hamburger${(menuOpen) ? '-open' : '-closed'}`} onClick={() => (menuOpen) ? setMenuOpen(false) : setMenuOpen(true)}>
-          <div class="menu-btn__burger"></div>
+        <div 
+          className={`hamburger${(menuOpen) ? '-open' : '-closed'}`} 
+          onClick={() => 
+            (menuOpen) ? setMenuOpen(false) : setMenuOpen(true)
+        }>
+          <div className="menu-btn__burger"></div>
         </div>
-        <nav className={`navbar${(menuOpen) ? '-here' : '-away'}`} onClick={() => (menuOpen) ? setMenuOpen(false) : setMenuOpen(true)}>
+        <nav 
+          className={`navbar${(menuOpen) ? '-here' : '-away'}`} 
+          onClick={() => 
+            (menuOpen) ? setMenuOpen(false) : setMenuOpen(true)
+        }>
 
           <NavLink to="/home" className="navlink" activeClassName="active">
             Home
@@ -128,6 +132,7 @@ const App = () => {
             featuredItemReviews={featuredItemReviews}
             setFeaturedItemReviews={setFeaturedItemReviews} />
         </Route>
+        
         <Inventory
           user={user}
           token={token}
@@ -147,7 +152,6 @@ const App = () => {
           setItems={setItems}
           featuredItem={featuredItem}
           setFeaturedItem={setFeaturedItem} />
-        {/* TODO: EditReviews? */}
         <CreateInventory
           user={user}
           token={token}
@@ -162,9 +166,7 @@ const App = () => {
           updatingInventory={updatingInventory}
           setUpdatingInventory={setUpdatingInventory}
           items={items}
-          setItems={setItems}
-        />
-
+          setItems={setItems}/>
       </Route>
 
       <Route path="/account">
@@ -190,10 +192,6 @@ const App = () => {
         setToken={setToken}
       />
     </main>
-    // <div className="app-container">
-    //   <h1>Hello, World!</h1>
-    //   <p>API Status: {APIHealth}</p>
-    // </div>
   );
 };
 

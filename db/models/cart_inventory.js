@@ -14,8 +14,6 @@ async function getCartItemById(id) {
   }
 }
 
-// TODO: check to see if item already in cart, either update just the quantity, 
-// or just alert them that it's already in the cart
 async function addItemToCart({ userId, inventoryId, quantity, price, isPurchased=false }) {
   try {
     const { rows: [cart_item] } = await client.query(`
