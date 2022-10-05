@@ -51,7 +51,6 @@ const Admin = ({ user, token }) => {
     )
   } else return (
     <div className="admin-body">
-      {/* <h2 className="page-titles"> Welcome back Admin </h2> */}
 
       <h2 className="page-titles"> Review Users </h2>
       <div id="all-users-container">

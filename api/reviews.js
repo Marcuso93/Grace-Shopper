@@ -4,16 +4,11 @@ const { requireLogin, requireAdmin } = require('./utils');
 
 const {
   createReview,
-  // getReviewById,
   getReviewsByItemId,
   removeReview,
-  // getStarsByItemId,
   canEditReview,
   updateReview,
-  // addReviewToItem,
 } = require('../db')
-
-//api requests below
 
 reviewsRouter.get('/item/:itemId', async (req, res, next) => {
   const { itemId } = req.params;
@@ -35,10 +30,6 @@ reviewsRouter.post('/', requireLogin, async (req, res, next) => {
     const { itemId, stars, description } = req.body;
 
     const userReview = await createReview({ userId, username, itemId, stars, description });
-
-    // will we need to return this?
-    // const reviewId = userReview.id;
-    // await addReviewToItem({ itemId, reviewId });
 
     res.send(userReview);
   } catch ({ name, message }) {
@@ -72,7 +63,7 @@ reviewsRouter.patch('/:reviewId', requireLogin, async (req, res, next) => {
   }
 })
 
-//going to be delete review 
+// delete review 
 reviewsRouter.delete('/:reviewId', requireLogin, async (req, res, next) => {
   const { reviewId } = req.params;
   const userId = req.user.id;

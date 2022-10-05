@@ -4,7 +4,15 @@ import { useHistory } from 'react-router-dom';
 import { fetchInventory, deactivateInventory, fetchInventoryForAdmin } from '../utilities/apiCalls';
 import { filterOutOldVersion } from '../utilities/utils';
 
-const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingInventory, isCreatingInventory }) => {
+const Inventory = ({ 
+  user, 
+  token, 
+  items, 
+  setItems, 
+  setFeaturedItem, 
+  setUpdatingInventory, 
+  isCreatingInventory 
+}) => {
   const history = useHistory();
 
   useEffect(() => {
@@ -73,7 +81,7 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
                   <p style={{ marginBottom: '1em' }}>{item.description}</p>
                   {
                     (user && user.isAdmin && !item.isActive) ?
-                      <p className='smaller-details'>This item is inactive.</p> :
+                      <p className='smaller-details' style={{color: 'red'}}>This item is inactive.</p> :
                       null
                   }
                   {
@@ -85,11 +93,14 @@ const Inventory = ({ user, token, items, setItems, setFeaturedItem, setUpdatingI
                   {
                     item.stock > 0 ?
                       <p className='smaller-details'>In stock: {item.stock}</p> :
-                      <p className='smaller-details' style={{ color: 'red' }}>Sorry, this item is out of stock!</p>
+                      <p className='smaller-details' style={{ color: 'red' }}>
+                        { (user && user.isAdmin) ? 'Not In Stock' : 'Sorry, this item is out of stock!' }
+                      </p>
                   }
                   {
                     (user && user.isAdmin && token) ?
                       <>
+                        <p className='smaller-details'>Items sold: {item.purchasedCount}</p>
                         {
                           item.isActive ?
                             <button className="delete" onClick={(e) => handleDelete(e, item.id)}>Deactivate Item</button> :

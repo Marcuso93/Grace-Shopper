@@ -130,12 +130,12 @@ const FeaturedInventory = ({
                   <button onClick={(event => {
                     event.preventDefault();
                     setIsAddingToCart(true);
-                  })}>Add to Cart</button> <br />
+                  })}>Add to Cart</button>
                 </> :
                 null
           }
           {
-            (isAddingToCart) ?
+            (user && token && isAddingToCart) ?
               <>
                 <span>How many do you want to add?
                   <input
@@ -172,7 +172,7 @@ const FeaturedInventory = ({
           }
           {
             !featuredItemReviews.length ?
-              <p><br />There are no reviews for this item.</p> :
+              <p><br/>There are no reviews for this item.</p> :
               !seeReviews ?
                 <button className='login-register-button' onClick={(event) => {
                   event.preventDefault();
