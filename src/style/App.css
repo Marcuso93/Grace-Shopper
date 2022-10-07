@@ -942,12 +942,12 @@ label span {
   }
   .hamburger-closed {
     z-index: 101;
-    opacity: 100%;
+    /* opacity: 100%; */
     transition: .3s;
   }
   .hamburger-open {
     z-index: 101;
-    opacity: 100%;
+    /* opacity: 100%; */
     transition: .3s;
   }
   .hamburger-open .menu-btn__burger {
