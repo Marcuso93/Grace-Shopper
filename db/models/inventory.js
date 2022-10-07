@@ -69,11 +69,13 @@ async function attachStarsToItems(items) {
 async function getInventoryForAdmin() {
   try {
     const { rows: inventory } = await client.query(`
-        SELECT *
-        FROM inventory
-      `)
+      SELECT *
+      FROM inventory
+    `);
 
-    return inventory
+    const inventoryWithStarsAttached = attachStarsToItems(inventory);
+
+    return inventoryWithStarsAttached
   } catch (error) {
     throw error
   }
