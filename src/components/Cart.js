@@ -113,7 +113,7 @@ const Cart = ({ user, setUser, token, setToken }) => {
 
   const getPrice = () => {
     let arr = [];
-    cartItems.forEach(item => arr.push(item.price))
+    cartItems.forEach(item => arr.push(item.price * item.quantity))
     return arr.reduce((total, amount) => total + amount)
   }
 
