@@ -14,8 +14,6 @@ const Cart = ({ user, setUser, token, setToken }) => {
   const [updatingItemId, setUpdatingItemId] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
-  console.log('orderSuccess', orderSuccess)
-
   useEffect(() => {
     (async () => {
       if (!token) {
