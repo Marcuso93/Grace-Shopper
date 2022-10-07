@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { 
-  fetchCart, 
-  getLocalUser, 
-  patchItemInCart, 
-  postNewOrder, 
-  removeItemFromCart 
+import {
+  fetchCart,
+  getLocalUser,
+  patchItemInCart,
+  postNewOrder,
+  removeItemFromCart
 } from "../utilities/apiCalls";
 import { checkLocalStorage, filterOutOldVersion } from "../utilities/utils";
 
@@ -13,6 +13,8 @@ const Cart = ({ user, setUser, token, setToken }) => {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [updatingItemId, setUpdatingItemId] = useState(false);
   const [quantity, setQuantity] = useState(0);
+
+  console.log('orderSuccess', orderSuccess)
 
   useEffect(() => {
     (async () => {
@@ -99,7 +101,7 @@ const Cart = ({ user, setUser, token, setToken }) => {
       alert(`Error: ${newOrder.message}.`);
     } else if (newOrder.id) {
       setCartItems([]);
-      setOrderSuccess(true);
+      setOrderSuccess(newOrder);
     } else {
       alert('There was an error placing your order.')
     }
@@ -117,23 +119,57 @@ const Cart = ({ user, setUser, token, setToken }) => {
     return arr.reduce((total, amount) => total + amount)
   }
 
-  if (user) {
+  if (orderSuccess) {
+    const date = new Date(Number(orderSuccess.orderDate));
+    return (
+      <>
+        <div className='admin-orders'>
+          <div className='page-titles'>Order Confirmation</div>
+          <div key={orderSuccess.id} className="admin-indiv-orders">
+            <div className='order-info'>
+              <h3>Order ID: {orderSuccess.id}</h3>
+              <div>Username: {user.username}</div><br />
+              <div>Address: {user.address}</div>
+              <div>Email: {user.email}</div><br />
+              <div>Order Date: {date.toLocaleString()}</div>
+              <div>Order Price: ${orderSuccess.price / 100}</div>
+            </div>
+            <div className='orders-right-side'>
+              {
+                (orderSuccess.items && orderSuccess.items.length > 0) ?
+                  <>
+                    <h3>Items in Order</h3>
+                    <div className='items-container'>
+                      {
+                        orderSuccess.items.map((item) => {
+                          return (
+                            <div className='items-info' key={item.id}>
+                              <h3>{item.name}</h3>
+                              <div>Inventory Id: {item.inventoryId}</div>
+                              <div>Price: ${item.price / 100}</div>
+                              <div>Quantity: {item.quantity}</div>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </> :
+                  null
+              }
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  } else if (user) {
     return (
       <div className="cart-container">
         <h2 className="page-titles"> Cart </h2>
         <div className="cart-form">
           {
-            ((cartItems && cartItems.name === 'EmptyCart') || (cartItems && cartItems.length < 1)) ?
+            (!orderSuccess && ((cartItems && cartItems.name === 'EmptyCart') || (cartItems && cartItems.length < 1))) ?
               <div style={{ textAlign: 'center' }}>
-                {
-                  orderSuccess ?
-                    <>
-                      <p style={{marginTop: '1em'}}>Your order was successfully placed.</p>
-                      <p>See the orders tab to review your order(s).</p>
-                    </> :
-                    null
-                }
-                <p style={{marginTop: '1em'}}>Your cart is empty!</p>
+                <p style={{ marginTop: '1em' }}>Your cart is empty!</p>
               </div> :
               <button onClick={(event) => {
                 handlePlaceOrder(event);
@@ -177,7 +213,7 @@ const Cart = ({ user, setUser, token, setToken }) => {
                                   max={item.stock}
                                   defaultValue={item.quantity}
                                   onChange={(event) => setQuantity(event.target.value)}
-                              /> </p>
+                                /> </p>
                               <div className="cart-three-buttons">
                                 <button className='quantity-form-buttons' type="submit">Update</button>
                                 <button className='quantity-form-buttons' type='button' onClick={(event) => {
