@@ -70,17 +70,17 @@ const FeaturedInventory = ({
       }
       const getReviews = await fetchReviewsByItemId(itemId ? itemId : featuredItem.id);
       setFeaturedItemReviews(getReviews);
+      if (featuredItem.ratings && featuredItem.ratings.length > 0) {
+        let total = 0;
+        featuredItem.ratings.forEach(rating => {
+          total += rating.stars
+        })
+        const average = Math.round((total / featuredItem.ratings.length) * 10) / 10;
+        setAverage(average);
+      }
       if (user) {
         const cartItemCheck = await fetchCart({ userId: user.id, token });
         setCartItems(cartItemCheck);
-        if (featuredItem.ratings && featuredItem.ratings.length > 0) {
-          let total = 0;
-          featuredItem.ratings.forEach(rating => {
-            total += rating.stars
-          })
-          const average = Math.round((total / featuredItem.ratings.length) * 10) / 10;
-          setAverage(average);
-        }
       }
     })()
   }, [])
