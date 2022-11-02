@@ -3,7 +3,7 @@ const { Client } = require('pg');
 const DB_NAME = 'grace-dev';
 
 const DB_URL =
-  process.env.DATABASE_URL || `postgres://localhost:5432/${DB_NAME}`;
+  process.env.DATABASE_URL || `postgresql://GabrielGuild:v2_3vGWZ_eAzRpq438777wLkVZx99VKN@db.bit.io/GabrielGuild/Grace-shopper?sslmode=require`;
 
 let client;
 
